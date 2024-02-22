@@ -1,18 +1,17 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const formContext = createContext();
 
-export const formProvider = ({childern}) =>{
-
-    return <formContext.Provider value={{}}>
-        {childern}
+export const FormProvider = ({ children }) => {
+    return <formContext.Provider value={{ }}>
+        {children}
     </formContext.Provider>
 }
 
-export const useForm = ()=>{
+export const useForm = () => {
     const formContextValue = useContext(formContext)
-    if(!formContextValue){
-        throw new Error("useAuth used outside of the provider")
+    if (!formContextValue) {
+        throw new Error("useForm used outside of the provider")
     }
     return formContextValue
 }

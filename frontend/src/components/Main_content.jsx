@@ -12,7 +12,7 @@ function MainContent() {
         language: '',
         length: ''
     });
-
+    const [click, setClick] = useState(1)
 
     const AISearch = async () => {
         try {
@@ -40,13 +40,10 @@ function MainContent() {
             setContent(text)
             setLoading(false)
 
-
-
         } catch (error) {
             console.log("error occur while fetchid the api key", error)
         }
     }
-
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setSelectedValues(prevState => ({
@@ -57,8 +54,6 @@ function MainContent() {
 
     const handleClick = async (e) => {
         e.preventDefault()
-        console.log("selected values", selectedValues)
-        AISearch()
         if (selectedValues.category) {
             setTitle(`Article based on ${selectedValues.category}`)
         }
@@ -73,10 +68,20 @@ function MainContent() {
             if (response.ok) {
                 const res_data = await response.json()
                 console.log("response from server", res_data)
+                setClick(res_data.count)
             }
-        } catch (error) {
+            else if (response.status === 400) {
+                const data = await response.json();
+                alert(data.message);
+            } else {
+                console.error("Error:", response.statusText);
+                AISearch()
+            }
+        }
+        catch (error) {
             console.log(error)
         }
+
     }
     const handleSave = async (event) => {
         event.preventDefault()
@@ -155,9 +160,16 @@ function MainContent() {
                             </select>
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-primary" onClick={handleClick}>
-                        Search
-                    </button>
+                    {!selectedValues.category || !selectedValues.language || !selectedValues.length ? (
+                        <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
+                            Search
+                        </button>
+                    ) : (
+                        <button type="submit" className="btn btn-primary" onClick={handleClick}>
+                            Search
+                        </button>
+                    )}
+
                 </form>
 
             </section>
@@ -171,10 +183,13 @@ function MainContent() {
                             <div className="card-body">
                                 {/* <h5 className="card-title">Special title treatment</h5> */}
                                 <div className="content">
-                                    {/* {content.length > 0 ? (loading ? <Loading /> : content) : "My Article"} */}
-                                    {
-                                        loading ? <Loading /> : content
-                                    }
+                                    {!selectedValues.category || !selectedValues.language || !selectedValues.length ? (
+                                        <div></div>
+                                    ) : (
+                                        <div className="content">
+                                            {loading ? <Loading /> : content}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className='my-3'>
                                     <a href="/" className="btn btn-primary" onClick={handleSave}>

@@ -41,11 +41,11 @@ function Navbar() {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item ">
-                                    <div className='upgrade d-flex'>
-                                        <button className="btn btn-primary mx-1">Login</button>
-                                        <button className="btn btn-primary mx-1">Signup</button>
-                                        <NavLink to="/subscription"><button className='btn btn-primary mx-1'>Upgrade plan</button></NavLink>
-                                    </div>
+                                        <div className='upgrade d-flex'>
+                                            {/* <button className="btn btn-primary mx-1">logout</button> */}
+                                            <NavLink to="/signup"><button className="btn btn-primary mx-1">Signup</button></NavLink>
+                                            <NavLink to="/subscription"><button className='btn btn-primary mx-1'>Upgrade plan</button></NavLink>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>

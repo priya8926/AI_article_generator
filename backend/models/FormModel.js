@@ -13,6 +13,7 @@ const formSchema = new mongoose.Schema({
         type : String,
         require : true
     }
+    
 })
 const article =  mongoose.model("article" , formSchema);
 module.exports = article
