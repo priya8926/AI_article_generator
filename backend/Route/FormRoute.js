@@ -6,8 +6,6 @@ const FormRoute = express.Router()
 FormRoute.route("/category").post(async (req, res) => {
     try {
         const clickCount = await article.countDocuments({})
-        console.log(clickCount)
-
         if (clickCount > 2) {
             res.status(400).json({ message: "Search limit exceeded. Please upgrade your plan." });
         } else {
@@ -36,28 +34,17 @@ FormRoute.route("/category").post(async (req, res) => {
 })
 FormRoute.route("/content").post(async (req, res) => {
     try {
-        const clickCount = await articleContent.countDocuments({})
-        console.log(clickCount)
+        const { content, title } = req.body
 
-        if (clickCount > 2) {
-            res.status(400).json({ message: "Search limit exceeded. Please upgrade your plan." });
-        }else{
-        try {
-            const { content, title } = req.body
-
-            const createContent = new articleContent({ content, title })
-            await createContent.save()
-            res.status(200).json({
-                message: "content received successfully", createContent
-            })
-        } catch (error) {
-            console.log("error fetching content")
-            res.status(500).json({ error: "Error saving content to database" });
-        }
+        const createContent = new articleContent({ content, title })
+        await createContent.save()
+        res.status(200).json({
+            message: "content received successfully", createContent
+        })
+    } catch (error) {
+        console.log("error fetching content")
+        res.status(500).json({ error: "Error saving content to database" });
     }
-}catch (error) {
-    console.log("clicking count error", error)
-    res.status(500).json({ message: "Internal server error" });
-}
+
 })
 module.exports = FormRoute

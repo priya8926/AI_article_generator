@@ -12,7 +12,6 @@ function MainContent() {
         language: '',
         length: ''
     });
-    const [click, setClick] = useState(1)
 
     const AISearch = async () => {
         try {
@@ -54,9 +53,7 @@ function MainContent() {
 
     const handleClick = async (e) => {
         e.preventDefault()
-        if (selectedValues.category) {
-            setTitle(`Article based on ${selectedValues.category}`)
-        }
+       
         try {
             const response = await fetch(`http://localhost:8083/api/category`, {
                 method: "POST",
@@ -68,14 +65,18 @@ function MainContent() {
             if (response.ok) {
                 const res_data = await response.json()
                 console.log("response from server", res_data)
-                setClick(res_data.count)
+                if (selectedValues.category) {
+                    setTitle(`Article based on ${selectedValues.category}`)
+                }
+                AISearch()
             }
             else if (response.status === 400) {
                 const data = await response.json();
                 alert(data.message);
+                setContent("")
+                return ;
             } else {
-                console.error("Error:", response.statusText);
-                AISearch()
+                // console.error("Error:", response.statusText);
             }
         }
         catch (error) {
