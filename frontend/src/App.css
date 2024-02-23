@@ -63,6 +63,10 @@
   justify-content: end;
   width: 57vw;
 }
+.signup{
+  justify-content: end;
+  width: 71vw;
+}
 
 .card-upgrade {
   height: 67vh;
