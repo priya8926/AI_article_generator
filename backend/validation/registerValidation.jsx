@@ -1,6 +1,6 @@
 const { z } = require("zod")
 
-const registerValidation = z.object({
+const RegisterValidation = z.object({
     username: z
         .string({ required_error: "Name is required" })
         .trim()
@@ -22,4 +22,4 @@ const registerValidation = z.object({
         .min(7, "Password must be atleast 7 character")
         .max(30, "Password must not be more than 30 character"),
 })
-module.exports = registerValidation;
+module.exports = RegisterValidation;

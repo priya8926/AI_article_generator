@@ -1,26 +1,49 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const formContext = createContext();
 
 export const FormProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("token"))
-
+    const [user, setUser] = useState()
     let isLoggedIn = !!token // true if token exixts
     console.log("token : ", token)
     console.log("is logged in ", isLoggedIn)
+
+    const AuthenticationToken = `Bearer ${token}`
 
     // to store the token in local storage
     const setTokenLocalStorage = (serverToken) => {
         setToken(serverToken)
         return localStorage.setItem("token", serverToken)
     }
+    // to get current logged in user data 
+    useEffect(() => {
+        const getUserData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8083/api/user`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: AuthenticationToken
+                    }
+                })
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("logged in user data", data.userData)
+                    setUser(data.userData)
+                }
+            } catch (error) {
+                console.log(error, "error fetching user data")
+            }
+        }
+        getUserData()
+    }, [])
 
     // logout functionality
-    const logoutUser = ()=>{
+    const logoutUser = () => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage ,logoutUser,isLoggedIn}}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken }}>
         {children}
     </formContext.Provider>
 }

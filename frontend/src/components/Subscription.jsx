@@ -1,8 +1,14 @@
-import React,{useState} from 'react'
-import { NavLink } from 'react-router-dom'
+import React,{useEffect, useState} from 'react'
+import { NavLink, Navigate } from 'react-router-dom'
+import { useForm } from '../store/User'
 
 function Subscription() {
-    
+    const {isLoggedIn} =useForm()
+    useEffect(()=>{
+        if(isLoggedIn === false){
+            Navigate('/')
+        }
+    },[isLoggedIn])
     const handleBtnClick = () => {
        
     }

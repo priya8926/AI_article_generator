@@ -5,6 +5,7 @@ import { useForm } from '../store/User'
 
 function Navbar() {
     const { isLoggedIn } = useForm()
+    
     return (
         <>
             <section>
@@ -32,7 +33,7 @@ function Navbar() {
 
 
                                             <li className="nav-item">
-                                                <NavLink className="nav-link active" aria-current="page" to="/">
+                                                <NavLink className="nav-link active" aria-current="page" to="/home">
                                                     Home
                                                 </NavLink>
                                             </li>
@@ -51,6 +52,7 @@ function Navbar() {
                                                     <NavLink to="/logout"><button className="btn btn-primary mx-1">Logout</button></NavLink>
 
                                                     <NavLink to="/subscription"><button className='btn btn-primary mx-1'>Upgrade plan</button></NavLink>
+                                                    <NavLink to="/signup"><button className='btn btn-primary mx-1'>Signup</button></NavLink>
                                                 </div>
 
                                             </li>
@@ -62,7 +64,7 @@ function Navbar() {
                                                 {/* <button className="btn btn-primary mx-1">logout</button> */}
                                                 <NavLink to="/signup"><button className="btn btn-primary mx-1">Signup</button></NavLink>
 
-                                                <NavLink to="/login"><button className="btn btn-primary mx-1">Login</button></NavLink>
+                                                <NavLink to="/"><button className="btn btn-primary mx-1">Login</button></NavLink>
                                             </div>
                                         </li>
                                     )}

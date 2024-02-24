@@ -9,7 +9,7 @@ function Logout() {
     }, [logoutUser])
     return (
         <>
-            <Navigate to="/login" />
+            <Navigate to="/" />
         </>
     )
 }

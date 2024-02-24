@@ -39,7 +39,8 @@ function Signup() {
           phone: "",
           password: ""
         })
-        navigate("/")
+        alert("Registration successful")
+        navigate("/home")
       }
       console.log(response)
     } catch (error) {
@@ -83,7 +84,7 @@ function Signup() {
                   </div>
                   <div className='d-flex'>
                     <button type='submit' className='btn btn-primary mx-2'>Register Now</button>
-                    <NavLink to="/login"><button type='submit' className='btn btn-primary mx-2'>Login</button></NavLink>
+                    <NavLink to="/"><button type='submit' className='btn btn-primary mx-2'>Login</button></NavLink>
                   </div>
                 </form>
               </div>

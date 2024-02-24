@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
@@ -20,23 +20,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  clickCount : {
+    type : Number , 
+    default : 0,
+  },
   isAdmin: {
     type: Boolean,
     default: false,
   },
 });
-
-userSchema.pre("save" , async function (){
-  console.log("pre method" , this)
+// Middleware to hash the password before saving
+userSchema.pre("save", async function (next) {
+  console.log("pre method", this)
   const user = this
-  if(!user.isModified("password")){
-    next()
+  if (!user.isModified("password")) {
+    next()  //Call next only if password is not modified
   }
 
   // Hash the  password with saltround
   try {
     const saltround = await bcrypt.genSalt(10)
-    const hash_password = bcrypt.hash("password" , saltround)
+    const hash_password = bcrypt.hash("password", saltround)
     user.password = hash_password
   } catch (error) {
     console.log(error)
@@ -44,9 +48,9 @@ userSchema.pre("save" , async function (){
 })
 
 //compare the password
-userSchema.methods.comparePassword = async function(password){
+userSchema.methods.comparePassword = async function (password) {
   try {
-    return await bcrypt.compare(password , this.password)
+    return await bcrypt.compare(password, this.password)
   } catch (error) {
     console.log(error)
   }

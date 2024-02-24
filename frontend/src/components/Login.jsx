@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import {useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User';
 
 function Login() {
@@ -34,7 +34,8 @@ function Login() {
                     email: "",
                     password: ""
                 })
-                navigate("/")
+                alert("Login successful")
+                navigate("/home")
             } else {
                 alert("invalid credential")
             }
@@ -71,6 +72,7 @@ function Login() {
                                     </div>
                                     <div className='d-flex'>
                                         <button type='submit' className='btn btn-primary'>Login Now</button>
+
                                     </div>
                                 </form>
                             </div>

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import Loading from './Loading';
 import { saveAs } from 'file-saver';
+import { useForm } from '../store/User';
+import { useNavigate } from 'react-router-dom';
+
 
 function MainContent() {
     const [content, setContent] = useState("")
@@ -12,6 +15,10 @@ function MainContent() {
         language: '',
         length: ''
     });
+    const [clickCount, setClickCount] = useState(0)
+    const navigate = useNavigate()
+    const { isLoggedIn, AuthenticationToken } = useForm();
+
 
     const AISearch = async () => {
         try {
@@ -53,7 +60,29 @@ function MainContent() {
 
     const handleClick = async (e) => {
         e.preventDefault()
-       
+        try {
+            const countResponse = await fetch("http://localhost:8083/api/search", {
+                method: "POST",
+                headers: {
+                    Authorization: AuthenticationToken,
+                    "Content-Type": "application/json"
+                }
+            })
+            const countData = await countResponse.json()
+            if (countResponse.ok) {
+                setClickCount(20- (countData.clickCount))
+                AISearch()
+            }
+            else if (countResponse.status === 401) {
+                alert(countData.message)
+                console.log("countdata : ", countData)
+                setContent("")
+                return
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
         try {
             const response = await fetch(`http://localhost:8083/api/category`, {
                 method: "POST",
@@ -65,18 +94,6 @@ function MainContent() {
             if (response.ok) {
                 const res_data = await response.json()
                 console.log("response from server", res_data)
-                if (selectedValues.category) {
-                    setTitle(`Article based on ${selectedValues.category}`)
-                }
-                AISearch()
-            }
-            else if (response.status === 400) {
-                const data = await response.json();
-                alert(data.message);
-                setContent("")
-                return ;
-            } else {
-                // console.error("Error:", response.statusText);
             }
         }
         catch (error) {
@@ -114,6 +131,12 @@ function MainContent() {
             console.log(error)
         }
     }
+    useEffect(() => {
+        if (isLoggedIn === false) {
+            navigate("/")
+        }
+    })
+
     return (
         <>
 
@@ -162,15 +185,18 @@ function MainContent() {
                         </div>
                     </div>
                     {!selectedValues.category || !selectedValues.language || !selectedValues.length ? (
-                        <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
-                            Search
-                        </button>
+                        <>
+                            <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
+                                Search
+                            </button>
+
+                        </>
                     ) : (
                         <button type="submit" className="btn btn-primary" onClick={handleClick}>
                             Search
                         </button>
                     )}
-
+                    <p>You have remaining {clickCount} searches</p>
                 </form>
 
             </section>
