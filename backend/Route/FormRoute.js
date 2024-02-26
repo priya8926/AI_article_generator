@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const article = require("../models/FormModel")
 const articleContent = require("../models/ContentModel")
@@ -5,6 +6,7 @@ const User = require("../models/User")
 const UserMiddleware = require("../middleware/UserMiddleware")
 const FormRoute = express.Router()
 const bcrypt = require("bcryptjs")
+const razorpay = require("razorpay")
 
 // Form category logic
 FormRoute.route("/category").post(async (req, res) => {
@@ -104,6 +106,7 @@ FormRoute.route("/user").get(UserMiddleware, async (req, res) => {
         // res.status(200).json({msg : "hii user"})
     } catch (error) {
         console.log("error fetching user data ", error)
+        res.status(500).json({ error: "Internal server error" });
     }
 })
 //count button click event
@@ -120,4 +123,31 @@ FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
     }
 })
 
+// payment methos
+
+const instance = new razorpay({
+    key_id: process.env.Key_Id,
+    key_secret: process.env.Key_Secret,
+});
+
+FormRoute.route('/verify').post(async (req, res) => {
+    try {
+        const options = {
+            amount: 19900, // amount in the smallest currency unit
+            currency: "INR",
+        };
+        const order = await instance.orders.create(options)
+        console.log(order)
+        res.status(200).json(order)
+    } catch (error) {
+        console.log("error creating order", error)
+    }
+})
+ FormRoute.route("/paymentVerification").post(async(req,res)=>{
+    try {
+        res.status(200).json({message : "hello from payment"})
+    } catch (error) {
+        console.log("error in payment verification " , error)
+    }
+ })
 module.exports = FormRoute

@@ -9,14 +9,18 @@ const corsOptions = {
     credential: true
 
 }
+
 app.use(cors(corsOptions))
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 const FormRoute = require("./Route/FormRoute");
 
 const connectdb = require("./Database/Db");
 
 app.use("/api", FormRoute)
+app.get("/api/getkey", (req, res) =>
+    res.status(200).json({ key: process.env.Key_Id }))
 const PORT = 8083
 
 connectdb().then(() => {

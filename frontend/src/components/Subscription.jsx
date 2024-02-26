@@ -1,16 +1,67 @@
-import React,{useEffect, useState} from 'react'
-import { NavLink, Navigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const {isLoggedIn} =useForm()
-    useEffect(()=>{
-        if(isLoggedIn === false){
+    const { isLoggedIn } = useForm()
+    const Navigate = useNavigate();
+    // const [amount, setAmount] = useState(199)
+    useEffect(() => {
+        if (isLoggedIn === false) {
             Navigate('/')
         }
-    },[isLoggedIn])
-    const handleBtnClick = () => {
-       
+    }, [isLoggedIn])
+
+    const amount = 199
+    const handleBtnClick = async () => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/verify`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ amount })
+            })
+            if (response.ok) {
+                const data = await response.json();
+                console.log("data :", data)
+
+                const keyResponse = await fetch(`http://localhost:8083/api/getkey`, {
+                    method: "GET"
+                })
+                if (keyResponse.ok) {
+                    const key = await keyResponse.json();
+                    console.log("key ", key)
+
+                    const options = {
+                        key: key, // Enter the Key ID generated from the Dashboard
+                        amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        currency: "INR",
+                        name: "Patel Priya",
+                        description: "Payment Test Transaction",
+                        image: "https://avatars.githubusercontent.com/u/135525235?s=400&u=fc8738b279e32358b3e0906b049e635bab1f7373&v=4",
+                        order_id: data.id, 
+                        callback_url: "http://localhost:8083/api/paymentVerification",
+                        prefill: {
+                            name: "Gaurav Kumar",
+                            email: "gaurav.kumar@example.com",
+                            contact: "9000090000"
+                        },
+                        notes: {
+                            address: "Razorpay Corporate Office"
+                        },
+                        theme: {
+                            color: "#3399cc"
+                        }
+                    };
+
+                    const razor = new Razorpay(options);
+                    razor.open();
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
         <>
@@ -22,7 +73,7 @@ function Subscription() {
                             <div className="col">
                                 <div className=" card card-upgrade" >
                                     <div className="card-body">
-                                        <h5 className="card-title">$0/month</h5>
+                                        <h5 className="card-title">₹0/month</h5>
                                         <p className="card-text mt-4"> </p>
                                         <ul>
                                             <li>20 Article Generation: Subscribers can generate 20 articles without any restrictions on length or frequency.</li>
@@ -30,8 +81,8 @@ function Subscription() {
                                             <li>Revolutionize Content Creation: Join a community of satisfied subscribers and revolutionize the content creation process with AI-powered tools.</li>
                                         </ul>
                                         <div>
-                                            <NavLink to="/signup" >
-                                                <button className="btn btn-primary upgrade-btn" onClick={handleBtnClick}>Free signup</button>
+                                            <NavLink>
+                                                <button className="btn btn-primary upgrade-btn disabled" >Your Current plan</button>
                                             </NavLink>
                                         </div>
                                     </div>
@@ -41,7 +92,7 @@ function Subscription() {
                             <div className="col">
                                 <div className="card card-upgrade" >
                                     <div className="card-body">
-                                        <h5 className="card-title">$9.99/month</h5>
+                                        <h5 className="card-title">{`₹${amount}/month`}</h5>
                                         <p className="card-text mt-4"></p>
                                         <ul>
                                             <li>50 Article Generation: Subscribers can generate 50 articles without any restrictions on length or frequency.</li>
@@ -49,8 +100,8 @@ function Subscription() {
                                             <li>Enhanced Content Quality: Premium AI models and advanced language processing algorithms ensure articles of exceptional quality and relevance.</li>
                                         </ul>
                                         <div>
-                                            <NavLink to="/payment">
-                                                <button className="btn btn-primary upgrade-btn">Upgrade</button>
+                                            <NavLink >
+                                                <button className="btn btn-primary upgrade-btn" onClick={handleBtnClick}>Upgrade</button>
                                             </NavLink>
                                         </div>
                                     </div>
@@ -60,7 +111,7 @@ function Subscription() {
                             <div className="col">
                                 <div className=" card card-upgrade" >
                                     <div className="card-body">
-                                        <h5 className="card-title">$19.99/month</h5>
+                                        <h5 className="card-title">{`₹${amount}/month`}</h5>
                                         <p className="card-text mt-4"> </p>
                                         <ul>
                                             <li>Unlimited Article Generation: Subscribers can generate unlimited number of articles without any restrictions on length or frequency.</li>
@@ -68,8 +119,8 @@ function Subscription() {
                                             <li>Priority Support: Priority customer support is provided to subscribers, addressing questions, concerns, or technical issues promptly.</li>
                                         </ul>
                                         <div>
-                                            <NavLink to="/payment" >
-                                                <button className="btn btn-primary upgrade-btn"> Upgrade</button>
+                                            <NavLink  >
+                                                <button className="btn btn-primary upgrade-btn" onClick={handleBtnClick}> Upgrade</button>
                                             </NavLink>
                                         </div>
                                     </div>

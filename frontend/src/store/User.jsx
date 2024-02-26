@@ -35,8 +35,10 @@ export const FormProvider = ({ children }) => {
                 console.log(error, "error fetching user data")
             }
         }
-        getUserData()
-    }, [])
+        if(isLoggedIn){
+            getUserData()
+        } 
+    }, [isLoggedIn])
 
     // logout functionality
     const logoutUser = () => {

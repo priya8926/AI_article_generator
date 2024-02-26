@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function MainContent() {
     const [content, setContent] = useState("")
     const [loading, setLoading] = useState(false)
-    const [title, setTitle] = useState("Title of your article")
+    const [title, setTitle] = useState("")
     const [selectedValues, setSelectedValues] = useState({
         category: '',
         language: '',
@@ -60,6 +60,7 @@ function MainContent() {
 
     const handleClick = async (e) => {
         e.preventDefault()
+        setTitle(selectedValues.category)
         try {
             const countResponse = await fetch("http://localhost:8083/api/search", {
                 method: "POST",
@@ -70,13 +71,13 @@ function MainContent() {
             })
             const countData = await countResponse.json()
             if (countResponse.ok) {
-                setClickCount(20- (countData.clickCount))
+                setClickCount(20 - (countData.clickCount))
                 AISearch()
             }
             else if (countResponse.status === 401) {
-                alert(countData.message)
                 console.log("countdata : ", countData)
                 setContent("")
+                alert(countData.message)
                 return
             }
 
@@ -196,7 +197,7 @@ function MainContent() {
                             Search
                         </button>
                     )}
-                    <p>You have remaining {clickCount} searches</p>
+                    <p >You have remaining {clickCount} searches</p>
                 </form>
 
             </section>
@@ -205,7 +206,7 @@ function MainContent() {
                     <div className="container px-5">
                         <div className="card ">
                             <div className="card-header text-center">
-                                {title}
+                                {`title of your article ${title}`}
                             </div>
                             <div className="card-body">
                                 {/* <h5 className="card-title">Special title treatment</h5> */}
