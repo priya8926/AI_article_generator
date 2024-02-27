@@ -7,6 +7,9 @@ const UserMiddleware = require("../middleware/UserMiddleware")
 const FormRoute = express.Router()
 const bcrypt = require("bcryptjs")
 const razorpay = require("razorpay")
+// const { hmac_sha256 } = require('crypto-js');
+const crypto = require('crypto');
+
 
 // Form category logic
 FormRoute.route("/category").post(async (req, res) => {
@@ -133,21 +136,39 @@ const instance = new razorpay({
 FormRoute.route('/verify').post(async (req, res) => {
     try {
         const options = {
-            amount: 19900, // amount in the smallest currency unit
+            amount: req.body.amount * 100, // amount in the smallest currency unit
             currency: "INR",
         };
         const order = await instance.orders.create(options)
-        console.log(order)
+        console.log("order created: ", order)
         res.status(200).json(order)
     } catch (error) {
         console.log("error creating order", error)
+        res.status(500).json({ error: "Failed to create order" });
     }
 })
- FormRoute.route("/paymentVerification").post(async(req,res)=>{
+// payment verfication logic
+FormRoute.route("/paymentVerification").post(async (req, res) => {
     try {
-        res.status(200).json({message : "hello from payment"})
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body
+        
+        // Concatenate order_id and razorpay_payment_id for HMAC hashing
+        const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
+
+        const generated_signature = crypto.createHmac('sha256', process.env.Key_Secret).update(dataToHash).digest("hex")
+
+        // Compare generated signature with Razorpay signature
+        if (generated_signature == razorpay_signature) {
+            console.log("Payement verfication successfull")
+            res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`)
+        } else {
+            console.log("Signature mismatch, payment verification failed");
+        }
+        console.log("Received signature:", razorpay_signature )
+        console.log("Generated signature:", generated_signature)
     } catch (error) {
-        console.log("error in payment verification " , error)
+        console.log("error in payment verification ", error)
+        res.status(500).json({ error: "Payment verification failed" });
     }
- })
+})
 module.exports = FormRoute

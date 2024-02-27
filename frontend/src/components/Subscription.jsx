@@ -12,8 +12,7 @@ function Subscription() {
         }
     }, [isLoggedIn])
 
-    const amount = 199
-    const handleBtnClick = async () => {
+    const handleBtnClick = async (amount) => {
         try {
             const response = await fetch(`http://localhost:8083/api/verify`, {
                 method: "POST",
@@ -34,8 +33,8 @@ function Subscription() {
                     console.log("key ", key)
 
                     const options = {
-                        key: key, // Enter the Key ID generated from the Dashboard
-                        amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        key: key.key, // Enter the Key ID generated from the Dashboard
+                        amount: data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                         currency: "INR",
                         name: "Patel Priya",
                         description: "Payment Test Transaction",
@@ -51,16 +50,16 @@ function Subscription() {
                             address: "Razorpay Corporate Office"
                         },
                         theme: {
-                            color: "#3399cc"
+                            color: "#   0d6efd"
                         }
                     };
 
-                    const razor = new Razorpay(options);
+                    const razor = new window.Razorpay(options);
                     razor.open();
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.log("error in payment",error);
         }
     }
     return (
@@ -92,7 +91,7 @@ function Subscription() {
                             <div className="col">
                                 <div className="card card-upgrade" >
                                     <div className="card-body">
-                                        <h5 className="card-title">{`₹${amount}/month`}</h5>
+                                        <h5 className="card-title">₹199/month</h5>
                                         <p className="card-text mt-4"></p>
                                         <ul>
                                             <li>50 Article Generation: Subscribers can generate 50 articles without any restrictions on length or frequency.</li>
@@ -101,7 +100,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink >
-                                                <button className="btn btn-primary upgrade-btn" onClick={handleBtnClick}>Upgrade</button>
+                                                <button className="btn btn-primary upgrade-btn" onClick={()=>handleBtnClick(199)}>Upgrade</button>
                                             </NavLink>
                                         </div>
                                     </div>
@@ -111,7 +110,7 @@ function Subscription() {
                             <div className="col">
                                 <div className=" card card-upgrade" >
                                     <div className="card-body">
-                                        <h5 className="card-title">{`₹${amount}/month`}</h5>
+                                        <h5 className="card-title">₹499/month</h5>
                                         <p className="card-text mt-4"> </p>
                                         <ul>
                                             <li>Unlimited Article Generation: Subscribers can generate unlimited number of articles without any restrictions on length or frequency.</li>
@@ -120,7 +119,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink  >
-                                                <button className="btn btn-primary upgrade-btn" onClick={handleBtnClick}> Upgrade</button>
+                                                <button className="btn btn-primary upgrade-btn" onClick={()=>handleBtnClick(499)}> Upgrade</button>
                                             </NavLink>
                                         </div>
                                     </div>

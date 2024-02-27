@@ -7,6 +7,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Error from './components/Error'
+import PaymentSuccess from './components/PaymentSuccess';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/home" element={<Main_content />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path='/signup' element={<Signup />} />
+          <Route path='/paymentsuccess' element={<PaymentSuccess />} />
           <Route path='/logout' element={<Logout />} />
           <Route path='*' element={<Error />} />
         </Routes>
