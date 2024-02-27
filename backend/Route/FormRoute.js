@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs")
 const razorpay = require("razorpay")
 // const { hmac_sha256 } = require('crypto-js');
 const crypto = require('crypto');
+const payment = require('../models/PaymentSuccess')
 
 
 // Form category logic
@@ -136,7 +137,7 @@ const instance = new razorpay({
 FormRoute.route('/verify').post(async (req, res) => {
     try {
         const options = {
-            amount: req.body.amount * 100, // amount in the smallest currency unit
+            amount: Number(req.body.amount * 100), // amount in the smallest currency unit
             currency: "INR",
         };
         const order = await instance.orders.create(options)
@@ -151,7 +152,7 @@ FormRoute.route('/verify').post(async (req, res) => {
 FormRoute.route("/paymentVerification").post(async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body
-        
+
         // Concatenate order_id and razorpay_payment_id for HMAC hashing
         const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
 
@@ -160,11 +161,12 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
         // Compare generated signature with Razorpay signature
         if (generated_signature == razorpay_signature) {
             console.log("Payement verfication successfull")
+            await payment.create({ razorpay_order_id, razorpay_payment_id, razorpay_signature })
             res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`)
         } else {
             console.log("Signature mismatch, payment verification failed");
         }
-        console.log("Received signature:", razorpay_signature )
+        console.log("Received signature:", razorpay_signature)
         console.log("Generated signature:", generated_signature)
     } catch (error) {
         console.log("error in payment verification ", error)

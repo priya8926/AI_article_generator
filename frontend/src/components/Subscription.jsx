@@ -50,7 +50,7 @@ function Subscription() {
                             address: "Razorpay Corporate Office"
                         },
                         theme: {
-                            color: "#   0d6efd"
+                            color: "#0d6efd"
                         }
                     };
 
