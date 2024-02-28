@@ -11,7 +11,6 @@ function Subscription() {
             Navigate('/')
         }
     }, [isLoggedIn])
-
     const handleBtnClick = async (amount) => {
         try {
             const response = await fetch(`http://localhost:8083/api/verify`, {
@@ -36,14 +35,14 @@ function Subscription() {
                         key: key.key, // Enter the Key ID generated from the Dashboard
                         amount: data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                         currency: "INR",
-                        name: "Patel Priya",
+                        name: "priya",
                         description: "Payment Test Transaction",
                         image: "https://avatars.githubusercontent.com/u/135525235?s=400&u=fc8738b279e32358b3e0906b049e635bab1f7373&v=4",
-                        order_id: data.id, 
+                        order_id: data.id,
                         callback_url: "http://localhost:8083/api/paymentVerification",
                         prefill: {
-                            name: "Gaurav Kumar",
-                            email: "gaurav.kumar@example.com",
+                            name: "priya patel",
+                            email: "priya.patel@example.com",
                             contact: "9000090000"
                         },
                         notes: {
@@ -59,7 +58,7 @@ function Subscription() {
                 }
             }
         } catch (error) {
-            console.log("error in payment",error);
+            console.log("error in payment", error);
         }
     }
     return (
@@ -100,7 +99,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink >
-                                                <button className="btn btn-primary upgrade-btn" onClick={()=>handleBtnClick(199)}>Upgrade</button>
+                                                <button className="btn btn-primary upgrade-btn" onClick={() => handleBtnClick(199)}>Upgrade</button>
                                             </NavLink>
                                         </div>
                                     </div>
@@ -119,7 +118,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink  >
-                                                <button className="btn btn-primary upgrade-btn" onClick={()=>handleBtnClick(499)}> Upgrade</button>
+                                                <button className="btn btn-primary upgrade-btn" onClick={() => handleBtnClick(499)}> Upgrade</button>
                                             </NavLink>
                                         </div>
                                     </div>

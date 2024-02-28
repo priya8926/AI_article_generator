@@ -18,8 +18,7 @@ function MainContent() {
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
     const { isLoggedIn, AuthenticationToken } = useForm();
-
-
+    
     const AISearch = async () => {
         try {
             setLoading(true)

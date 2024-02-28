@@ -6,7 +6,7 @@ const User = require("../models/User")
 const UserMiddleware = require("../middleware/UserMiddleware")
 const FormRoute = express.Router()
 const bcrypt = require("bcryptjs")
-const razorpay = require("razorpay")
+const Razorpay = require("razorpay")
 // const { hmac_sha256 } = require('crypto-js');
 const crypto = require('crypto');
 const payment = require('../models/PaymentSuccess')
@@ -129,7 +129,7 @@ FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
 
 // payment methos
 
-const instance = new razorpay({
+const instance = new Razorpay({
     key_id: process.env.Key_Id,
     key_secret: process.env.Key_Secret,
 });
