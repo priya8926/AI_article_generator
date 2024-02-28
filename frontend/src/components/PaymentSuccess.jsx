@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { NavLink, useSearchParams } from 'react-router-dom'
 
 function PaymentSuccess() {
     const searchQuery = useSearchParams()[0]
@@ -13,6 +13,7 @@ function PaymentSuccess() {
                     }} />
                     <h5>Payment Successfull</h5>
                     <p>Refrence no: {referenceNo}</p>
+                    <NavLink to = "/home"><button className='btn btn-primary'>Goto Home page</button></NavLink>
                 </div>
             </div>
         </>

@@ -17,24 +17,24 @@ export const FormProvider = ({ children }) => {
         return localStorage.setItem("token", serverToken)
     }
     // to get current logged in user data 
-        const getUserData = async () => {
-            try {
-                const response = await fetch(`http://localhost:8083/api/user`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: AuthenticationToken
-                    }
-                })
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("logged in user data", data.userData)
-                    setUser(data.userData)
+    const getUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/user`, {
+                method: "GET",
+                headers: {
+                    Authorization: AuthenticationToken,
                 }
-            } catch (error) {
-                console.log(error, "error fetching user data")
+            })
+            if (response.ok) {
+                const data = await response.json();
+                console.log("logged in user data", data.userData)
+                setUser(data.userData)
             }
+        } catch (error) {
+            console.log(error, "error fetching user data")
         }
-       useEffect(() => {
+    }
+    useEffect(() => {
         if (isLoggedIn) {
             getUserData();
         }
@@ -45,7 +45,7 @@ export const FormProvider = ({ children }) => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken , getUserData }}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user }}>
         {children}
     </formContext.Provider>
 }

@@ -162,15 +162,64 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
         if (generated_signature == razorpay_signature) {
             console.log("Payement verfication successfull")
             await payment.create({ razorpay_order_id, razorpay_payment_id, razorpay_signature })
+
+            const isPayment = await payment.findOne({ razorpay_payment_id: razorpay_payment_id })
+            console.log("is payment", isPayment)
+
             res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`)
+
         } else {
             console.log("Signature mismatch, payment verification failed");
         }
-        console.log("Received signature:", razorpay_signature)
-        console.log("Generated signature:", generated_signature)
+        // console.log("Received signature:", razorpay_signature)
+        // console.log("Generated signature:", generated_signature)
     } catch (error) {
         console.log("error in payment verification ", error)
         res.status(500).json({ error: "Payment verification failed" });
+    }
+})
+
+//subscription plan
+FormRoute.route("/createSubscription").post(async(req,res) =>{
+    try {
+        // Extract necessary parameters from the request body
+        const { plan_id, total_count, quantity, customer_notify, start_at, expire_by, addons, offer_id, notes } = req.body;
+
+        // Construct options object for the cURL request
+        const options = {
+            url: 'https://api.razorpay.com/v1/subscriptions',
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${Buffer.from('rzp_test_BegMW1Oi3V4TF6:AnXbKcRMcBxpzO2usLRJaylA').toString('base64')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                plan_id,
+                total_count,
+                quantity,
+                customer_notify,
+                start_at,
+                expire_by,
+                addons,
+                offer_id,
+                notes
+            })
+        };
+
+        // Make a request to Razorpay API to create the subscription
+        const response = await fetch('https://api.razorpay.com/v1/subscriptions', options);
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Subscription created:', data);
+            res.status(200).json({ message: 'Subscription created successfully', data });
+        } else {
+            console.error('Failed to create subscription:', data);
+            res.status(500).json({ error: 'Failed to create subscription' });
+        }
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        res.status(500).json({ error: 'Failed to create subscription' });
     }
 })
 module.exports = FormRoute
