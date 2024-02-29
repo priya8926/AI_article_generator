@@ -122,6 +122,7 @@ FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
             res.status(401).json({ message: "your search limit exceeded! please upgrade your plan" })
         }
         res.status(200).json({ clickCount: req.user.clickCount })
+        console.log("req body", req.user)
     } catch (error) {
         console.log("Error while counting button click", error)
     }
@@ -152,8 +153,6 @@ FormRoute.route('/verify').post(async (req, res) => {
 FormRoute.route("/paymentVerification").post(async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body
-        console.log("req.body", req.body)
-
         // Concatenate order_id and razorpay_payment_id for HMAC hashing
         const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
 
@@ -224,12 +223,30 @@ FormRoute.route("/createSubscription").post(async (req, res) => {
 })
 
 // create subscriptio active if user subscribe
-FormRoute.route("/active/:pay_id").get(async (req,res)=>{
+FormRoute.route("/paymentid").post(async (req, res) => {
     try {
-        const isActive=  req.params.paymentId499;
-        console.log(isActive,"is Active");
+        const paymentId = req.body.paymentId;
+        console.log("payment id  received ", paymentId)
+        res.status(200).json({ message: "payment id received" })
+        console.log("req body", req.body)
     } catch (error) {
-        console.log("error" , error)
+        console.log("error", error)
+    }
+})
+// get payment id and store in mangodb 
+FormRoute.route("/active").get(async (req, res) => {
+    try {
+        const payId = req.params.pay_id
+        if (!payId) {
+            return res.status(400).json({ message: 'Payment ID is required' });
+        }
+        const user = await User.findOne({ paymentId: payId })
+        const plan = req.body.plan_id
+        user.subscription = 'active';
+        await user.save()
+        res.status(200).json({ message: 'Subscription activated successfully' });
+    } catch (error) {
+        console.log("error", error)
     }
 })
 module.exports = FormRoute

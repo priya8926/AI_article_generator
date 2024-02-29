@@ -70,7 +70,7 @@ function MainContent() {
             })
             const countData = await countResponse.json()
             if (countResponse.ok) {
-                setClickCount(20 - (countData.clickCount))
+                setClickCount(countData.clickCount)
                 AISearch()
             }
             else if (countResponse.status === 401) {
@@ -196,7 +196,7 @@ function MainContent() {
                             Search
                         </button>
                     )}
-                    <p >You have remaining {clickCount} searches</p>
+                    <p >You search the article for {clickCount} times</p>
                 </form>
 
             </section>

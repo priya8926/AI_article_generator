@@ -13,6 +13,28 @@ export const FormProvider = ({ children }) => {
     const searchQuery = useSearchParams()[0]
     const referenceNo = searchQuery.get("reference")
 
+    // Function to send payment ID to backend
+    const sendPaymentIdToBackend = async (paymentId) => {
+        try {
+            if (!paymentId) {
+                throw new Error("Payment ID is required");
+            }
+            const response = await fetch(`http://localhost:8083/api/paymentid`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ paymentId })
+            })
+            if (response.ok) {
+                console.log("payment id sent to backend successfully")
+            } else {
+                console.log("Failed to store payment ID")
+            }
+        } catch (error) {
+            console.log(error, "error to the send the payment in backend")
+        }
+    }
     useEffect(() => {
         if (referenceNo) {
             const amount = localStorage.getItem("selectedAmount")
@@ -25,7 +47,12 @@ export const FormProvider = ({ children }) => {
             }
         }
     }, [referenceNo])
-
+    useEffect(() => {
+        // Send the payment ID to the backend when it's available
+        if (paymentId) {
+            sendPaymentIdToBackend(paymentId);
+        }
+    }, [paymentId]);
 
 
     let isLoggedIn = !!token // true if token exixts
@@ -57,6 +84,7 @@ export const FormProvider = ({ children }) => {
             console.log(error, "error fetching user data")
         }
     }
+
     useEffect(() => {
         if (isLoggedIn) {
             getUserData();
@@ -68,7 +96,7 @@ export const FormProvider = ({ children }) => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId ,referenceNo}}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo }}>
         {children}
     </formContext.Provider>
 }

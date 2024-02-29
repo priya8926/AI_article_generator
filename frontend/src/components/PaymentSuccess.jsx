@@ -1,9 +1,25 @@
 import React, { useEffect } from 'react'
-import { NavLink, useSearchParams } from 'react-router-dom'
+import { NavLink, useParams, useSearchParams } from 'react-router-dom'
 
 function PaymentSuccess() {
+    const params = useParams()
     const searchQuery = useSearchParams()[0]
     const referenceNo = searchQuery.get("reference")
+
+    const isSubscribe = async(payId)=>{
+try {
+    const response = await fetch(`http://localhost:8083/api/active/${params.payId}`,{
+        method:'GET',
+    })
+    if(response.ok){
+        const data = await  response.json(); 
+        console.log("subscription status " , data)
+        
+    }
+} catch (error) {
+    console.log("error")
+}
+    }
     return (
         <>
             <div>

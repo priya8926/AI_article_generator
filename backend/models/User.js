@@ -26,7 +26,8 @@ const userSchema = new mongoose.Schema({
   },
   subscription: {
     type: String,
-    default: "deactive"
+    // enum: ['active', 'expired'],
+    default : 'active'
   },
   isAdmin: {
     type: Boolean,

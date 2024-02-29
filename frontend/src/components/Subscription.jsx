@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useParams, useSearchParams } from 'react-router-d
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const { isLoggedIn, user,paymentId , setPaymentId } = useForm()
+    const { isLoggedIn, user, paymentId, setPaymentId } = useForm()
     const Navigate = useNavigate();
     useEffect(() => {
         if (isLoggedIn === false) {
@@ -83,7 +83,7 @@ function Subscription() {
                     const razor = new window.Razorpay(options);
                     razor.open();
 
-                    localStorage.setItem("selectedAmount" , amount)
+                    localStorage.setItem("selectedAmount", amount)
                     razor.on('payment.success', async function (paymentData) {
                         const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
                             method: 'POST',
@@ -98,7 +98,6 @@ function Subscription() {
                         if (subResponse.ok) {
                             const subData = await subResponse.json();
                             console.log('Subscription created:', subData);
-                            console.log("paymentd data" , paymentData)
                             setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
                         }
                     })
@@ -106,7 +105,7 @@ function Subscription() {
             } else {
                 console.error('Failed to create subscription:', response.statusText);
             }
-
+        
         } catch (error) {
             console.log("error in payment", error);
         }
@@ -149,7 +148,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink >
-                                            <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                                <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
                                             </NavLink>
                                         </div>
                                     </div>
@@ -168,7 +167,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink  >
-                                            <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                                <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
                                             </NavLink>
                                         </div>
                                     </div>

@@ -20,7 +20,9 @@ const UserMiddleware = async (req, res, next) =>{
 
         const userData = await User.findOne({ email: isVerified.email }).select({ password: 0 })
         console.log("logged in user data ", userData)
-
+        if (!userData) {
+            return res.status(404).json({ message: "User not found" });
+        }
         req.user = userData;
         req.token = jwtToken;
         req.userId = userData._id;
