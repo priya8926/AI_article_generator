@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
+    const { isLoggedIn, user,paymentId , setPaymentId } = useForm()
+    const Navigate = useNavigate();
+    useEffect(() => {
+        if (isLoggedIn === false) {
+            Navigate('/')
+        }
+    }, [isLoggedIn])
     const currentTimestamp = Date.now(); // Get current timestamp in milliseconds
     const futureTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Set start_at to be 24 hours from now
-    const { isLoggedIn, user } = useForm()
+
     const [subscriptionData, setSubscriptionData] = useState({
         plan_id: "plan_NgG9DZEKg6JtL2",
         total_count: 6,
@@ -13,7 +20,7 @@ function Subscription() {
         customer_notify: 1,
         // start_at: futureTimestamp,
         expire_by: futureTimestamp,
-        addons: [   
+        addons: [
             {
                 item: {
                     name: 'Delivery charges',
@@ -22,7 +29,7 @@ function Subscription() {
                 }
             }
         ],
-        offer_id: 'offer_JHD834hjbxzhd38d',
+        offer_id: 'offer_NgI3ME2M1v5e2D',
         notes: {
             notes_key_1: 'Tea, Earl Grey, Hot',
             notes_key_2: 'Tea, Earl Grey… decaf.'
@@ -30,13 +37,8 @@ function Subscription() {
     });
 
 
-    const Navigate = useNavigate();
-    useEffect(() => {
-        if (isLoggedIn === false) {
-            Navigate('/')
-        }
-    }, [isLoggedIn])
-    const handleBtnClick = async (amount) => {
+    const handleBtnClick = async (amount, e) => {
+
         try {
             const response = await fetch(`http://localhost:8083/api/verify`, {
                 method: "POST",
@@ -80,26 +82,33 @@ function Subscription() {
 
                     const razor = new window.Razorpay(options);
                     razor.open();
+
+                    localStorage.setItem("selectedAmount" , amount)
+                    razor.on('payment.success', async function (paymentData) {
+                        const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                ...subscriptionData,
+                                plan_id: amount === 199 ? "plan_NgG9DZEKg6JtL2" : " plan_Ngb8Io644bPXR6"
+                            })
+                        });
+                        if (subResponse.ok) {
+                            const subData = await subResponse.json();
+                            console.log('Subscription created:', subData);
+                            console.log("paymentd data" , paymentData)
+                            setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
+                        }
+                    })
                 }
+            } else {
+                console.error('Failed to create subscription:', response.statusText);
             }
+
         } catch (error) {
             console.log("error in payment", error);
-        }
-        const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(subscriptionData)
-        });
-
-        if (response.ok) {
-            const data = await subResponse.json();
-            console.log('Subscription created:', data);
-            // Handle successful subscription creation
-        } else {
-            console.error('Failed to create subscription:', response.statusText);
-            // Handle subscription creation failure
         }
     }
     return (
@@ -140,9 +149,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink >
-                                                <button className="btn btn-primary upgrade-btn" onClick={() => handleBtnClick(199)} >Upgrade
-                                                    {/* {isPayment ? 'Your current plan' : "Upgrade plan"} */}
-                                                </button>
+                                            <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
                                             </NavLink>
                                         </div>
                                     </div>
@@ -161,7 +168,7 @@ function Subscription() {
                                         </ul>
                                         <div>
                                             <NavLink  >
-                                                <button className="btn btn-primary upgrade-btn" onClick={() => handleBtnClick(499)}> Upgrade</button>
+                                            <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
                                             </NavLink>
                                         </div>
                                     </div>

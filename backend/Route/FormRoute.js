@@ -152,6 +152,7 @@ FormRoute.route('/verify').post(async (req, res) => {
 FormRoute.route("/paymentVerification").post(async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body
+        console.log("req.body", req.body)
 
         // Concatenate order_id and razorpay_payment_id for HMAC hashing
         const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
@@ -163,11 +164,10 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
             console.log("Payement verfication successfull")
             await payment.create({ razorpay_order_id, razorpay_payment_id, razorpay_signature })
 
-            const isPayment = await payment.findOne({ razorpay_payment_id: razorpay_payment_id })
-            console.log("is payment", isPayment)
-
+            // const isPayment = await payment.findOne({ razorpay_payment_id: razorpay_payment_id })
+            // console.log("is payment", isPayment)
+            res.locals.paymentId = razorpay_payment_id;
             res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`)
-
         } else {
             console.log("Signature mismatch, payment verification failed");
         }
@@ -180,7 +180,7 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
 })
 
 //subscription plan
-FormRoute.route("/createSubscription").post(async(req,res) =>{
+FormRoute.route("/createSubscription").post(async (req, res) => {
     try {
         // Extract necessary parameters from the request body
         const { plan_id, total_count, quantity, customer_notify, start_at, expire_by, addons, offer_id, notes } = req.body;
@@ -220,6 +220,16 @@ FormRoute.route("/createSubscription").post(async(req,res) =>{
     } catch (error) {
         console.error('Error creating subscription:', error);
         res.status(500).json({ error: 'Failed to create subscription' });
+    }
+})
+
+// create subscriptio active if user subscribe
+FormRoute.route("/active/:pay_id").get(async (req,res)=>{
+    try {
+        const isActive=  req.params.paymentId499;
+        console.log(isActive,"is Active");
+    } catch (error) {
+        console.log("error" , error)
     }
 })
 module.exports = FormRoute

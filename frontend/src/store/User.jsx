@@ -1,10 +1,33 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export const formContext = createContext();
 
 export const FormProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [user, setUser] = useState()
+    const [paymentId, setPaymentId] = useState({
+        '199': localStorage.getItem("paymentId199"),
+        '499': localStorage.getItem("paymentId499")
+    });
+    const searchQuery = useSearchParams()[0]
+    const referenceNo = searchQuery.get("reference")
+
+    useEffect(() => {
+        if (referenceNo) {
+            const amount = localStorage.getItem("selectedAmount")
+            if (amount === "199") {
+                localStorage.setItem("paymentId199", referenceNo);
+                setPaymentId(prev => ({ ...prev, '199': referenceNo }));
+            } else if (amount === "499") {
+                localStorage.setItem("paymentId499", referenceNo);
+                setPaymentId(prev => ({ ...prev, '499': referenceNo }));
+            }
+        }
+    }, [referenceNo])
+
+
+
     let isLoggedIn = !!token // true if token exixts
     console.log("token : ", token)
     console.log("is logged in ", isLoggedIn)
@@ -45,7 +68,7 @@ export const FormProvider = ({ children }) => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user }}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId ,referenceNo}}>
         {children}
     </formContext.Provider>
 }

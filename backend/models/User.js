@@ -20,9 +20,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  clickCount : {
-    type : Number , 
-    default : 0,
+  clickCount: {
+    type: Number,
+    default: 0,
+  },
+  subscription: {
+    type: String,
+    default: "deactive"
   },
   isAdmin: {
     type: Boolean,

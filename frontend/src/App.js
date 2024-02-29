@@ -14,7 +14,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+     
         <Navbar />
         <Routes>
           <Route path='/' element={<Login />} />
@@ -25,7 +25,6 @@ function App() {
           <Route path='/logout' element={<Logout />} />
           <Route path='*' element={<Error />} />
         </Routes>
-      </BrowserRouter>
     </>
   );
 }
