@@ -17,7 +17,7 @@ function MainContent() {
     });
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
-    const { isLoggedIn, AuthenticationToken } = useForm();
+    const { isLoggedIn, AuthenticationToken , paymentId } = useForm();
     
     const AISearch = async () => {
         try {
@@ -66,7 +66,8 @@ function MainContent() {
                 headers: {
                     Authorization: AuthenticationToken,
                     "Content-Type": "application/json"
-                }
+                },
+                body : JSON.stringify({paymentId})
             })
             const countData = await countResponse.json()
             if (countResponse.ok) {

@@ -6,19 +6,19 @@ function PaymentSuccess() {
     const searchQuery = useSearchParams()[0]
     const referenceNo = searchQuery.get("reference")
 
-    const isSubscribe = async(payId)=>{
-try {
-    const response = await fetch(`http://localhost:8083/api/active/${params.payId}`,{
-        method:'GET',
-    })
-    if(response.ok){
-        const data = await  response.json(); 
-        console.log("subscription status " , data)
-        
-    }
-} catch (error) {
-    console.log("error")
-}
+    const isSubscribe = async (payId) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/active/${params.payId}`, {
+                method: 'GET',
+            })
+            if (response.ok) {
+                const data = await response.json();
+                console.log("subscription status ", data)
+
+            }
+        } catch (error) {
+            console.log("error")
+        }
     }
     return (
         <>
@@ -29,6 +29,7 @@ try {
                     }} />
                     <h5>Payment Successfull</h5>
                     <p>Refrence no: {referenceNo}</p>
+                    {alert("Payment sucessfully!!")}
                     <NavLink to="/home"><button className='btn btn-primary'>Goto Home page</button></NavLink>
                 </div>
             </div>

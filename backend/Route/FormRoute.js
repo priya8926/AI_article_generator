@@ -30,8 +30,6 @@ FormRoute.route("/category").post(async (req, res) => {
     } catch (error) {
         console.log(error)
     }
-
-
 })
 //  article content saved 
 FormRoute.route("/content").post(async (req, res) => {
@@ -116,14 +114,25 @@ FormRoute.route("/user").get(UserMiddleware, async (req, res) => {
 //count button click event
 FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
     try {
-        req.user.clickCount = (req.user.clickCount || 0) + 1;
-        await req.user.save();
-        if (req.user.clickCount >= 20) {
-            res.status(401).json({ message: "your search limit exceeded! please upgrade your plan" })
+        const paymentID = req.body.paymentId;
+        console.log("payment id in backend : ", paymentID)
+        debugger
+        if (paymentID['199']) {
+            req.user.clickCount = (req.user.clickCount || 0) + 1;
+            if (req.user.clickCount >= 51) {
+                res.status(401).json({ message: "your search limit exceeded! please upgrade your plan" })
+            }
+
         }
+        if (paymentID['499']) {
+            req.user.clickCount = (req.user.clickCount || 0) + 1;
+        }
+        await req.user.save();
         res.status(200).json({ clickCount: req.user.clickCount })
         console.log("req body", req.user)
-    } catch (error) {
+    }
+    catch (error) {
+        debugger
         console.log("Error while counting button click", error)
     }
 })
@@ -219,18 +228,6 @@ FormRoute.route("/createSubscription").post(async (req, res) => {
     } catch (error) {
         console.error('Error creating subscription:', error);
         res.status(500).json({ error: 'Failed to create subscription' });
-    }
-})
-
-// create subscriptio active if user subscribe
-FormRoute.route("/paymentid").post(async (req, res) => {
-    try {
-        const paymentId = req.body.paymentId;
-        console.log("payment id  received ", paymentId)
-        res.status(200).json({ message: "payment id received" })
-        console.log("req body", req.body)
-    } catch (error) {
-        console.log("error", error)
     }
 })
 // get payment id and store in mangodb 
