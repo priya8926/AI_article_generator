@@ -3,7 +3,7 @@ const express = require("express")
 const article = require("../models/FormModel")
 const articleContent = require("../models/ContentModel")
 const User = require("../models/User")
-const UserMiddleware = require("../middleware/UserMiddleware")
+const { UserMiddleware, SubscriptionMiddleware } = require("../middleware/UserMiddleware")
 const FormRoute = express.Router()
 const bcrypt = require("bcryptjs")
 const Razorpay = require("razorpay")
@@ -29,6 +29,20 @@ FormRoute.route("/category").post(async (req, res) => {
         });
     } catch (error) {
         console.log(error)
+    }
+})
+// get the catgory
+FormRoute.route('/getCategory').get(async(req,res) =>{
+    try {
+        const category = await article.find();
+
+        if(!category || category.length === 0){
+            return res.status(404).json({ message: "No category found" })
+        }
+        return res.status(200).json(category)
+        
+    } catch (error) {
+        console.log("error fetching category" , error)
     }
 })
 //  article content saved 
@@ -116,28 +130,31 @@ FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
     try {
         const paymentID = req.body.paymentId;
         console.log("payment id in backend : ", paymentID)
-        debugger
-        if (paymentID['199']) {
-            req.user.clickCount = (req.user.clickCount || 0) + 1;
-            if (req.user.clickCount >= 51) {
-                res.status(401).json({ message: "your search limit exceeded! please upgrade your plan" })
-            }
-
+        if (!req.user) {
+            return res.status(401).json({ message: "User not authenticated." });
         }
-        if (paymentID['499']) {
-            req.user.clickCount = (req.user.clickCount || 0) + 1;
+        const searchLimits = { '199': 50, '499': Infinity }
+        if (paymentID['199'] && req.user.clickCount < searchLimits['199']) {
+            req.user.clickCount = (req.user.clickCount || 0) + 1
+        } else if (paymentID['499']) {
+            req.user.clickCount = (req.user.clickCount || 0) + 1
+        }
+        else {
+            req.user.clickCount = Math.min((req.user.clickCount || 0) + 1, 20)
+        }
+
+        if (req.user.clickCount >= searchLimits['199']) {
+            res.status(401).json({ message: "Your search limit exceeded! Please upgrade your plan." });
+            return; // End the request
         }
         await req.user.save();
-        res.status(200).json({ clickCount: req.user.clickCount })
-        console.log("req body", req.user)
-    }
-    catch (error) {
-        debugger
+        res.status(200).json({ message: "Search successful." });
+    } catch (error) {
         console.log("Error while counting button click", error)
     }
 })
 
-// payment methos
+// payment method
 
 const instance = new Razorpay({
     key_id: process.env.Key_Id,
@@ -159,40 +176,70 @@ FormRoute.route('/verify').post(async (req, res) => {
     }
 })
 // payment verfication logic
-FormRoute.route("/paymentVerification").post(async (req, res) => {
+FormRoute.route("/paymentVerification").post(async (req, res ,next) => {
     try {
+        // if (!req.user || !req.user._id) {
+        //     return res.status(401).json({ success: false, message: "Unauthorized: User not authenticated" });
+        // }
+        // const user = await User.findById(req.user._id)
+        // if (!user) {
+        //     return res.status(404).json({ success: false, message: "User not found" });
+        // }
+        // const { razorpay_payment_id, razorpay_signature, razorpay_order_id } = req.body
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body
-        // Concatenate order_id and razorpay_payment_id for HMAC hashing
-        const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
 
+        // const subscription_Id = user.subscription.id;
+        // console.log("subscription id ", subscription_Id)
+        const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
         const generated_signature = crypto.createHmac('sha256', process.env.Key_Secret).update(dataToHash).digest("hex")
 
         // Compare generated signature with Razorpay signature
         if (generated_signature == razorpay_signature) {
             console.log("Payement verfication successfull")
-            await payment.create({ razorpay_order_id, razorpay_payment_id, razorpay_signature })
 
-            // const isPayment = await payment.findOne({ razorpay_payment_id: razorpay_payment_id })
-            // console.log("is payment", isPayment)
+            //store in database
+            await payment.create({ razorpay_payment_id, razorpay_signature, razorpay_order_id })
+
+            // user.subscription.status = "active"
+            // await user.save()
+
             res.locals.paymentId = razorpay_payment_id;
+
             res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`)
         } else {
             console.log("Signature mismatch, payment verification failed");
+            return res.redirect(`http://localhost:3000/paymentfailed`)
         }
-        // console.log("Received signature:", razorpay_signature)
-        // console.log("Generated signature:", generated_signature)
     } catch (error) {
         console.log("error in payment verification ", error)
         res.status(500).json({ error: "Payment verification failed" });
-    }
+    }   
 })
 
-//subscription plan
-FormRoute.route("/createSubscription").post(async (req, res) => {
+// subscription plan
+FormRoute.route("/createSubscription").post(async (req, res, next) => {
     try {
-        // Extract necessary parameters from the request body
-        const { plan_id, total_count, quantity, customer_notify, start_at, expire_by, addons, offer_id, notes } = req.body;
+        // const user = await User.findById(req.user._id)
+        // if (!user) {
+        //     return res.status(404).json({ success: false, message: "User not found" });
+        // }
+        // // Extract necessary parameters from the request body
+        // const { plan_id, total_count, customer_notify } = req.body;
 
+        // const subscription = await instance.subscriptions.create({
+        //     plan_id: "plan_NgG9DZEKg6JtL2",
+        //     total_count: 12,
+        //     customer_notify: 1,
+        // });
+
+        // user.subscription.id = subscription.id
+        // user.subscription.status = subscription.status
+
+        // await user.save();
+        // res.status(201).json({
+        //     success: true,
+        //     subscriptionId: subscription.id
+        // });
         // Construct options object for the cURL request
         const options = {
             url: 'https://api.razorpay.com/v1/subscriptions',
@@ -202,15 +249,9 @@ FormRoute.route("/createSubscription").post(async (req, res) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                plan_id,
-                total_count,
-                quantity,
-                customer_notify,
-                start_at,
-                expire_by,
-                addons,
-                offer_id,
-                notes
+                plan_id: "plan_NgG9DZEKg6JtL2",
+                total_count: 12,
+            customer_notify: 1,
             })
         };
 
@@ -230,6 +271,70 @@ FormRoute.route("/createSubscription").post(async (req, res) => {
         res.status(500).json({ error: 'Failed to create subscription' });
     }
 })
+FormRoute.route("/subscription").get(UserMiddleware, async (req, res,next) => {
+    try {
+        const user = await User.findById(req.user._id)
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        // const plan_id = process.env.plan_id199 || "plan_NgG9DZEKg6JtL2"
+        const subscription = await instance.subscriptions.create({
+            plan_id: "plan_NgG9DZEKg6JtL2",
+            total_count: 12,
+            customer_notify: 1,
+        });
+        user.subscription.id = subscription.id
+        user.subscription.status = subscription.status
+
+        await user.save();
+        res.status(201).json({
+            success: true,
+            subscriptionId: subscription.id
+        });
+
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        res.status(500).json({ error: 'Failed to create subscription' });
+    }
+})
+FormRoute.route("/razorpaykey").get(async (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        key: process.env.Key_Id
+    })
+})
+
+//cancle subscription 
+FormRoute.route("/subscription/cancel").delete(UserMiddleware, async (req, res, next) => {
+    try {
+
+        const user = await User.findById(req.user._id)
+        const subscriptionId = user.subscription.id;
+
+        await instance.subscriptions.cancel(subscriptionId)
+        const payment = await payment.findOne({
+            razorpay_subscription_id: subscriptionId
+        })
+        await payment.remove();
+        user.subscription.id = undefined;
+        user.subscription.status = undefined
+        await user.save()
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+// create subscriptio active if user subscribe
+FormRoute.route("/paymentid").post(async (req, res) => {
+    try {
+        const paymentId = req.body.paymentId;
+        console.log("payment id  received ", paymentId)
+        res.status(200).json({ message: "payment id received" })
+        console.log("req body", req.body)
+    } catch (error) {
+        console.log("error", error)
+    }
+})
 // get payment id and store in mangodb 
 FormRoute.route("/active").get(async (req, res) => {
     try {
@@ -245,5 +350,6 @@ FormRoute.route("/active").get(async (req, res) => {
     } catch (error) {
         console.log("error", error)
     }
+
 })
 module.exports = FormRoute

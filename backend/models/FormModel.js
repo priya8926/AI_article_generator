@@ -12,7 +12,7 @@ const formSchema = new mongoose.Schema({
     length : {
         type : String,
         require : true
-    }
+    },
     
 })
 const article =  mongoose.model("article" , formSchema);

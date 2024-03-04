@@ -1,39 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { NavLink, useNavigate} from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const { isLoggedIn, user, paymentId, setPaymentId } = useForm()
+    const { isLoggedIn, user, paymentId, setPaymentId , AuthenticationToken } = useForm()
     const Navigate = useNavigate();
     useEffect(() => {
         if (isLoggedIn === false) {
             Navigate('/')
         }
     }, [isLoggedIn])
-    const currentTimestamp = Date.now(); // Get current timestamp in milliseconds
-    const futureTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Set start_at to be 24 hours from now
 
     const [subscriptionData, setSubscriptionData] = useState({
         plan_id: "plan_NgG9DZEKg6JtL2",
-        total_count: 6,
-        quantity: 1,
-        customer_notify: 1,
-        // start_at: futureTimestamp,
-        expire_by: futureTimestamp,
-        addons: [
-            {
-                item: {
-                    name: 'Delivery charges',
-                    amount: 199,
-                    currency: 'INR'
-                }
-            }
-        ],
-        offer_id: 'offer_NgI3ME2M1v5e2D',
-        notes: {
-            notes_key_1: 'Tea, Earl Grey, Hot',
-            notes_key_2: 'Tea, Earl Grey… decaf.'
-        }
+        total_count: 12,
+        customer_notify: 1
+
     });
 
 
@@ -43,7 +25,8 @@ function Subscription() {
             const response = await fetch(`http://localhost:8083/api/verify`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    // Authorization : AuthenticationToken
                 },
                 body: JSON.stringify({ amount })
             })
@@ -56,7 +39,6 @@ function Subscription() {
                 })
                 if (keyResponse.ok) {
                     const key = await keyResponse.json();
-                    console.log("key ", key)
 
                     const options = {
                         key: key.key, // Enter the Key ID generated from the Dashboard
@@ -66,7 +48,7 @@ function Subscription() {
                         description: "Payment Test Transaction",
                         image: "https://avatars.githubusercontent.com/u/135525235?s=400&u=fc8738b279e32358b3e0906b049e635bab1f7373&v=4",
                         order_id: data.id,
-                        callback_url: "http://localhost:8083/api/paymentVerification/",
+                        callback_url: "http://localhost:8083/api/paymentVerification",
                         prefill: {
                             name: user.username,
                             email: user.email,
@@ -84,15 +66,20 @@ function Subscription() {
                     razor.open();
 
                     localStorage.setItem("selectedAmount", amount)
+                    const selectedPlanId = amount === 199 ? "plan_NgG9DZEKg6JtL2" : "plan_Ngb8Io644bPXR6";
+
                     razor.on('payment.success', async function (paymentData) {
                         const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                // Authorization : AuthenticationToken
                             },
                             body: JSON.stringify({
                                 ...subscriptionData,
-                                plan_id: amount === 199 ? "plan_NgG9DZEKg6JtL2" : " plan_Ngb8Io644bPXR6"
+                                plan_id: selectedPlanId
+                                // total_count,
+                                // customer_notify
                             })
                         });
                         if (subResponse.ok) {
@@ -105,7 +92,7 @@ function Subscription() {
             } else {
                 console.error('Failed to create subscription:', response.statusText);
             }
-        
+
         } catch (error) {
             console.log("error in payment", error);
         }

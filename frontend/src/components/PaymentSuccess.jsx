@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { NavLink, useParams, useSearchParams } from 'react-router-dom'
+import { useForm } from '../store/User'
 
 function PaymentSuccess() {
     const params = useParams()
     const searchQuery = useSearchParams()[0]
     const referenceNo = searchQuery.get("reference")
+    // const { AuthenticationToken } = useForm()
 
     const isSubscribe = async (payId) => {
         try {
@@ -20,6 +22,23 @@ function PaymentSuccess() {
             console.log("error")
         }
     }
+    // const verification = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:8083/api/paymentVerification', {
+    //             method: "POST",
+    //             headers: {
+    //                 Authorization: AuthenticationToken
+    //             }
+    //         })
+    //         if(response.ok){
+    //             const data = await response.json();
+    //             console.log("payment verification success " , data)
+    //         }
+    //     } catch (error) {
+    //         console.log("payment verfication error", error)
+    //     }
+    // }
+
     return (
         <>
             <div>
@@ -29,7 +48,6 @@ function PaymentSuccess() {
                     }} />
                     <h5>Payment Successfull</h5>
                     <p>Refrence no: {referenceNo}</p>
-                    {alert("Payment sucessfully!!")}
                     <NavLink to="/home"><button className='btn btn-primary'>Goto Home page</button></NavLink>
                 </div>
             </div>

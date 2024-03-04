@@ -26,11 +26,19 @@ const UserMiddleware = async (req, res, next) =>{
         req.user = userData;
         req.token = jwtToken;
         req.userId = userData._id;
-        
         next()
     } catch (error) {
         console.log("Error in user middleware ", error)
     }
 }   
-
-module.exports = UserMiddleware
+const SubscriptionMiddleware = async(req,res,next) =>{
+    try {
+        if(req.user.subscription.status !== 'active'){
+    return res.status(400).status({message : "Only subscribers can acces"})
+        }
+        next()
+    } catch (error) {
+        console.log("error in subscription middleware")
+    }
+}
+module.exports = {UserMiddleware , SubscriptionMiddleware}

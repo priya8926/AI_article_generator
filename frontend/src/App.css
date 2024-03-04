@@ -141,3 +141,24 @@
     }
   }
 }
+
+/* history css */
+.history_section{
+  width: 70vw;
+}
+.history_table{
+width: 50vw;
+}
+.history_table tr{
+  border : 1px solid grey;
+} 
+.history_table th{
+  padding: 0.7rem;
+}
+.history-tbody tr{
+  padding-left: 5px;
+}
+.history-tbody a{
+  list-style: none;
+  text-decoration: none;
+}

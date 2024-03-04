@@ -3,22 +3,22 @@ import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/ge
 import Loading from './Loading';
 import { saveAs } from 'file-saver';
 import { useForm } from '../store/User';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 
 function MainContent() {
     const [content, setContent] = useState("")
     const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState("")
+    const { isLoggedIn, AuthenticationToken, paymentId } = useForm();
     const [selectedValues, setSelectedValues] = useState({
         category: '',
         language: '',
-        length: ''
+        length: '',
     });
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
-    const { isLoggedIn, AuthenticationToken , paymentId } = useForm();
-    
+
     const AISearch = async () => {
         try {
             setLoading(true)
@@ -67,7 +67,7 @@ function MainContent() {
                     Authorization: AuthenticationToken,
                     "Content-Type": "application/json"
                 },
-                body : JSON.stringify({paymentId})
+                body: JSON.stringify({ paymentId})
             })
             const countData = await countResponse.json()
             if (countResponse.ok) {
@@ -88,7 +88,8 @@ function MainContent() {
             const response = await fetch(`http://localhost:8083/api/category`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    // Authorization: AuthenticationToken,
                 },
                 body: JSON.stringify(selectedValues)
             })
@@ -197,7 +198,11 @@ function MainContent() {
                             Search
                         </button>
                     )}
-                    <p >You search the article for {clickCount} times</p>
+                    <div>
+                        <p >You searched the article for {clickCount} times</p>
+
+                    </div>
+
                 </form>
 
             </section>
@@ -223,14 +228,16 @@ function MainContent() {
                                     <a href="/" className="btn btn-primary" onClick={handleSave}>
                                         save
                                     </a>
+                                    {/* <NavLink to="/history" className="btn btn-primary mx-2"
+                                        History
+                                    </NavLink> */}
+                                    <NavLink to='/history'><button className="btn btn-primary mx-2">History</button></NavLink>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </>
     )
 }

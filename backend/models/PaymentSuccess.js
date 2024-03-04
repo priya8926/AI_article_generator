@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const paymentSchema = new mongoose.Schema({
-    razorpay_order_id: {
+    razorpay_subscription_id: {
         type: String,
         require: true
     },
@@ -12,6 +12,10 @@ const paymentSchema = new mongoose.Schema({
     razorpay_signature: {
         type: String,
         require: true
+    },
+    createdAt : {
+        type : Date,
+        default : Date.now,
     }
 })
 

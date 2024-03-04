@@ -6,11 +6,12 @@ const bcrypt = require("bcryptjs")
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: [true, "Please enter your name"],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Please enter your email"],
+    unique: true,
   },
   phone: {
     type: String,
@@ -18,20 +19,25 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Please enter your password"],
+    minLength: [6, "Password must be at least 6 characters"],
+    select: false,
   },
   clickCount: {
     type: Number,
     default: 0,
   },
   subscription: {
-    type: String,
-    // enum: ['active', 'expired'],
-    default : 'active'
+    id: String,
+    status : String
   },
   isAdmin: {
     type: Boolean,
     default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 // Middleware to hash the password before saving
