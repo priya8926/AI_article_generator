@@ -20,11 +20,10 @@ FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
         }
         const data = req.body
         console.log(data)
-        //    res.status(200).json("data successfully passed")  
-        const { category, language, length, promptInput, title, content } = req.body
-        
+
+        const { category, language, length, promptInput} = req.body
         if (!promptInput) {
-            console.log("promtinput required")
+            console.log("promt input required")
         }
         if (!category || !language || !length || !promptInput) {
             return res.status(400).json("All fields are required")
@@ -35,13 +34,6 @@ FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
             message: "Data received successfully!",
             id: createForm._id.toString()
         });
-        const newArticle = { title, content };
-        const existingCategory = await article.findOne({ userId: req.user._id });
-
-        existingCategory.articles.push(newArticle);
-        await existingCategory.save();
-
-        res.status(200).json({ message: "Article saved successfully in the category." });
     } catch (error) {
         console.log(error)
     }
@@ -52,7 +44,7 @@ FormRoute.route('/getCategory').get(UserMiddleware, async (req, res) => {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
-        const useArticle = await article.find({ user: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1 }).sort({ _id: -1 })
+        const useArticle = await article.find({ userId: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1 }).sort({ _id: -1 })
 
         if (!useArticle || useArticle.length === 0) {
             return res.status(404).json({ message: "No category found for this user." });
@@ -73,16 +65,16 @@ FormRoute.route("/content").post(UserMiddleware, async (req, res) => {
 
         const createContent = new articleContent({ content, title, userId: req.user._id })
         await createContent.save()
+        
+        // const existingArticle = await article.findOne({ userId : req.user._id })
 
-        const existingArticle = await article.findOne({ userId: req.user._id })
-
-        if (!existingArticle) {
-            return res.status(404).json({ message: "Article not found" });
-        }
-        // Update the title and content of the existing article
-        existingArticle.title = title
-        existingArticle.content = content
-        await existingArticle.save()
+        // if (!existingArticle) {
+        //     return res.status(404).json({ message: "Article not found" });  
+        // }
+        // // Update the title and content of the existing article
+        // existingArticle.title = title
+        // existingArticle.content = content
+        // await existingArticle.save()    
 
         res.status(200).json({
             message: "content received successfully", createContent

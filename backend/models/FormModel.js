@@ -17,14 +17,6 @@ const formSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    title: {
-        type: String,
-        require: true
-    },
-    content: {
-        type: String,
-        require: true
-    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
