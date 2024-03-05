@@ -143,11 +143,17 @@
 }
 
 /* history css */
+.history{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .history_section{
   width: 70vw;
 }
 .history_table{
-width: 50vw;
+width: 70vw;
 }
 .history_table tr{
   border : 1px solid grey;
@@ -156,15 +162,32 @@ width: 50vw;
   padding: 0.7rem;
 }
 .history_table thead{
-  text-align: center;
+  text-align: start;
 }
 .history-tbody{
-  text-align: center;
+  text-align: start;
 }
 .history-tbody tr{
-  padding-left: 5px;
+  height: 50  px;
 }
 .history-tbody a{
   list-style: none;
   text-decoration: none;
+}
+.article-table{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.article-table thead{
+  border: 1px solid black;
+  width: 70vw;
+  text-align: center;
+}
+.article-table tbody{
+  border: 1px solid black;
+  border-top: 0;
+  width: 70vw;
+  text-align: center;
 }

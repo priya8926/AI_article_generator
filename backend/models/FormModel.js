@@ -1,23 +1,35 @@
 const mongoose = require("mongoose")
 
 const formSchema = new mongoose.Schema({
-    category : {
-        type : String,
-        require : true,
+    category: {
+        type: String,
+        require: true,
     },
-    language : {
-        type : String,
-        require : true
+    language: {
+        type: String,
+        require: true
     },
-    length : {
-        type : String,
-        require : true
+    length: {
+        type: String,
+        require: true
     },
-    user :{
-        type:mongoose.Schema.Types.ObjectId ,
-        ref : 'User'
+    promptInput: {
+        type: String,
+        require: true
+    },
+    title: {
+        type: String,
+        require: true
+    },
+    content: {
+        type: String,
+        require: true
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
-    
+
 })
-const article =  mongoose.model("article" , formSchema);
+const article = mongoose.model("article", formSchema);
 module.exports = article

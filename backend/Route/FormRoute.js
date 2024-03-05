@@ -13,34 +13,46 @@ const payment = require('../models/PaymentSuccess')
 
 
 // Form category logic
-FormRoute.route("/category").post(UserMiddleware ,async (req, res) => {
+FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
     try {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
         const data = req.body
         console.log(data)
-        //    res.status(200).json("data successfully passed")
-        const { category, language, length } = req.body
-        if (!category || !language || !length) {
+        //    res.status(200).json("data successfully passed")  
+        const { category, language, length, promptInput, title, content } = req.body
+        
+        if (!promptInput) {
+            console.log("promtinput required")
+        }
+        if (!category || !language || !length || !promptInput) {
             return res.status(400).json("All fields are required")
         }
-        const createForm = await article.create({ category, language, length, user:req.user._id })
+        const createForm = await article.create({ category, language, length, promptInput, userId: req.user._id })
+
         res.status(200).json({
             message: "Data received successfully!",
             id: createForm._id.toString()
         });
+        const newArticle = { title, content };
+        const existingCategory = await article.findOne({ userId: req.user._id });
+
+        existingCategory.articles.push(newArticle);
+        await existingCategory.save();
+
+        res.status(200).json({ message: "Article saved successfully in the category." });
     } catch (error) {
         console.log(error)
     }
 })
 // get the catgory
-FormRoute.route('/getCategory').get(UserMiddleware ,async(req,res) =>{
+FormRoute.route('/getCategory').get(UserMiddleware, async (req, res) => {
     try {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
-        const useArticle = await article.find({user:req.user._id} , {category:1 , language:1, length:1}).sort({_id:-1})
+        const useArticle = await article.find({ user: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1 }).sort({ _id: -1 })
 
         if (!useArticle || useArticle.length === 0) {
             return res.status(404).json({ message: "No category found for this user." });
@@ -48,19 +60,30 @@ FormRoute.route('/getCategory').get(UserMiddleware ,async(req,res) =>{
         return res.status(200).json(useArticle)
 
     } catch (error) {
-        console.log("error fetching category" , error)
+        console.log("error fetching category", error)
     }
 })
 //  article content saved 
-FormRoute.route("/content").post(UserMiddleware,async (req, res) => {
+FormRoute.route("/content").post(UserMiddleware, async (req, res) => {
     try {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
         const { content, title } = req.body
 
-        const createContent = new articleContent({ content, title , userId : req.user._id })
+        const createContent = new articleContent({ content, title, userId: req.user._id })
         await createContent.save()
+
+        const existingArticle = await article.findOne({ userId: req.user._id })
+
+        if (!existingArticle) {
+            return res.status(404).json({ message: "Article not found" });
+        }
+        // Update the title and content of the existing article
+        existingArticle.title = title
+        existingArticle.content = content
+        await existingArticle.save()
+
         res.status(200).json({
             message: "content received successfully", createContent
         })
@@ -71,22 +94,23 @@ FormRoute.route("/content").post(UserMiddleware,async (req, res) => {
 
 })
 // show article based on id
-FormRoute.route("/getArticle/:id").get(UserMiddleware,async(req,res) =>{
+FormRoute.route("/getarticle/:id").get(UserMiddleware, async (req, res) => {
+
     try {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
         const contentId = req.params.id
-        const Content = await articleContent.findOne({_id : contentId , userId : req.user._id})
+        const Content = await articleContent.findOne({ _id: contentId, userId: req.user._id })
 
         if (!Content) {
             return res.status(404).json({ message: "Content not found for this user." });
         }
-        res.status(200).json({content : Content.content  })
+        res.status(200).json({ content: Content.content })
     } catch (error) {
-        console.log("error fetching article" , error)
+        console.log("error fetching article", error)
     }
-}) 
+})
 //  user registration logic
 FormRoute.route("/register").post(async (req, res) => {
     try {
@@ -202,7 +226,7 @@ FormRoute.route('/verify').post(async (req, res) => {
     }
 })
 // payment verfication logic
-FormRoute.route("/paymentVerification").post(async (req, res ,next) => {
+FormRoute.route("/paymentVerification").post(async (req, res, next) => {
     try {
         // if (!req.user || !req.user._id) {
         //     return res.status(401).json({ success: false, message: "Unauthorized: User not authenticated" });
@@ -239,7 +263,7 @@ FormRoute.route("/paymentVerification").post(async (req, res ,next) => {
     } catch (error) {
         console.log("error in payment verification ", error)
         res.status(500).json({ error: "Payment verification failed" });
-    }   
+    }
 })
 
 // subscription plan
@@ -277,7 +301,7 @@ FormRoute.route("/createSubscription").post(async (req, res, next) => {
             body: JSON.stringify({
                 plan_id: "plan_NgG9DZEKg6JtL2",
                 total_count: 12,
-            customer_notify: 1,
+                customer_notify: 1,
             })
         };
 
@@ -297,7 +321,7 @@ FormRoute.route("/createSubscription").post(async (req, res, next) => {
         res.status(500).json({ error: 'Failed to create subscription' });
     }
 })
-FormRoute.route("/subscription").get(UserMiddleware, async (req, res,next) => {
+FormRoute.route("/subscription").get(UserMiddleware, async (req, res, next) => {
     try {
         const user = await User.findById(req.user._id)
         if (!user) {

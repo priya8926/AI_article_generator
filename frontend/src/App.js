@@ -9,6 +9,7 @@ import Logout from './components/Logout';
 import Error from './components/Error'
 import PaymentSuccess from './components/PaymentSuccess';
 import History from './components/History';
+import GetArticleHistory from './components/GetArticleHistory';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/home" element={<Main_content />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path='/history' element = {<History/>} />
+          <Route path='/getarticle/:id' element = {<GetArticleHistory/>} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/paymentsuccess' element={<PaymentSuccess />} />
           <Route path='/logout' element={<Logout />} />

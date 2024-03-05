@@ -8,7 +8,12 @@ const contentSchema = new mongoose.Schema({
     content: {
         type: String,
         require: true,
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
+
 })
 const articleContent = mongoose.model("articleContent", contentSchema);
 

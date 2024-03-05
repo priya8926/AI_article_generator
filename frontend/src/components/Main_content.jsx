@@ -19,7 +19,7 @@ function MainContent() {
     const [promptInput, setPromptInput] = useState("")
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
-    const handleInputChange = (event, e) => {
+    const handleInputChange = (event) => {
         const { name, value } = event.target;
         setSelectedValues(prevState => ({
             ...prevState,
@@ -30,7 +30,6 @@ function MainContent() {
         setPromptInput(e.target.value)
     }
     const AISearch = async () => {
-        let text = ''
         try {
             setLoading(true)
             const genAI = new GoogleGenerativeAI('AIzaSyDzbRJcMsatyNv9faMhn47BaWAfuw0bGBk');
@@ -45,11 +44,12 @@ function MainContent() {
                 },
             ];
             const model = genAI.getGenerativeModel({ model: "gemini-pro", safetySettings });
-          
-            const prompt = `Write a article based on ${selectedValues.category} category in ${selectedValues.language} language and include ${selectedValues.length} words also include ${promptInput} content`;
+
+            const prompt = `Write a article based on ${selectedValues.category} category in ${selectedValues.language} language and include ${selectedValues.length} words also contains ${promptInput} content`;
+
             const result = await model.generateContent(prompt)
-            const response =  result.response;
-             text =  response.text();
+            const response = result.response;
+            const text = response.text();
             // console.log("text", text)
             console.log("passed prompt :  ", prompt)
             console.log(" response ", response)
@@ -95,7 +95,12 @@ function MainContent() {
                     "Content-Type": "application/json",
                     Authorization: AuthenticationToken,
                 },
-                body: JSON.stringify(selectedValues)
+                body: JSON.stringify({
+                    category: selectedValues.category,
+                    language: selectedValues.language,
+                    length: selectedValues.length,
+                    promptInput
+                })
             })
             if (response.ok) {
                 const res_data = await response.json()
@@ -123,13 +128,30 @@ function MainContent() {
                 const data = await contentResponse.json();
                 console.log("content from server : ", data)
             }
-            const blob = new Blob([content], { type: "text\plain ; charset= utf-8" })
+           
             if (content.length > 0) {
                 const save = window.confirm("Do you want to save the article?")
                 if (save) {
-                    saveAs(blob, "article.txt")
-                    alert("article saved!!")
+                    const categoryResponse = await fetch(`http://localhost:8083/api/category`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: AuthenticationToken
+                        },
+                        body: JSON.stringify({title,content
+                        })
+                    });
+                    if (categoryResponse.ok) {
+                        const categoryData = await categoryResponse.json();
+                        console.log("Category data from saved article : ", categoryData);
+                        const blob = new Blob([content], { type: "text\plain ; charset= utf-8" })   
+                        alert("Article saved!!");
+                        saveAs(blob, "article.txt")
+                    } else {
+                        alert("Error saving article to category");
+                    }
                 }
+
             }
             else {
                 alert("Please generate article first")
@@ -193,8 +215,8 @@ function MainContent() {
                     </div>
 
                     <div className="mb-4">
-                        <label  className="form-label">Enter Title of your article</label><br />
-                        <input className="form-control mt-2" name = "promptInput" placeholder="title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
+                        <label className="form-label">Enter Title of your article</label><br />
+                        <input className="form-control mt-2" name="promptInput" placeholder="title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
 
                     </div>
                     {!selectedValues.category || !selectedValues.language || !selectedValues.length || !promptInput ? (
