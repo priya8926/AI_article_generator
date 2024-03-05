@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import { useForm } from '../store/User';
+import { Link } from 'react-router-dom';
 
 function History() {
     const [history, setHistory] = useState([])
-
+    const [content, setContent] = useState([])
+    const { AuthenticationToken } = useForm()
     const getArticle = async () => {
         try {
-            const response = await fetch('http://localhost:8083/api/getCategory');
+            const response = await fetch('http://localhost:8083/api/getCategory', {
+                method: "GET",
+                headers: {
+                    Authorization: AuthenticationToken
+                }
+            });
             if (response.ok) {
                 const data = await response.json();
                 setHistory(data); // Update history state with fetched data
@@ -16,15 +24,32 @@ function History() {
             console.log("error fetching article")
         }
     }
+    const showArticle = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/getArticle/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: AuthenticationToken
+                }
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setContent(data)
+
+            }
+        } catch (error) {
+            console.log("error fetching content of the aerticle")
+        }
+    }
     useEffect(() => {
         getArticle()
     }, [])
     return (
         <>
-            <section className='container history_section'>
-                <p className='mt-3'>Today</p>
+            <section className='container history_section mt-5'>
+                <h5>History of your article</h5>
                 <table className='history_table'>
-                    <thead>
+                    <thead >
                         <tr>
                             <th>category </th>
                             <th>language </th>
@@ -33,54 +58,31 @@ function History() {
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody className='history-tbody'>
+                    <tbody className='history-tbody '>
                         {
                             history.map((curData, index) => {
                                 return (
                                     <>
-                                    <tr key={index}>
-                                        <td>{curData.category}</td>
-                                        <td>{curData.language}</td>
-                                        <td>{curData.length} </td>
-                                        <td>
-                                            <a href='#'>Delete article </a>
-                                        </td>
-                                        <td>
-                                            <a href='#'>Show article </a>
-                                        </td>
-                                    </tr>
+                                        <tr key={index}>
+                                            <td>{curData.category}</td>
+                                            <td>{curData.language}</td>
+                                            <td>{curData.length} </td>
+                                            <td>
+                                                <Link to={`/admin/getArticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article </Link>
+
+
+                                            </td>
+                                            <td>
+                                                <a href='#'>Delete article </a>
+                                            </td>
+
+                                        </tr>
                                     </>
                                 )
                             })
                         }
 
                     </tbody>
-                </table>
-                <p className='mt-3'>Yesterday</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                        </tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                    </thead>
-                </table>
-                <p className='mt-3'>Last week</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                        </tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                        <tr>hii</tr>
-                    </thead>
                 </table>
             </section>
         </>

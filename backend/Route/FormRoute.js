@@ -13,8 +13,11 @@ const payment = require('../models/PaymentSuccess')
 
 
 // Form category logic
-FormRoute.route("/category").post(async (req, res) => {
+FormRoute.route("/category").post(UserMiddleware ,async (req, res) => {
     try {
+        if (!req.user) {
+            return res.status(401).json({ message: "User not authenticated." });
+        }
         const data = req.body
         console.log(data)
         //    res.status(200).json("data successfully passed")
@@ -22,7 +25,7 @@ FormRoute.route("/category").post(async (req, res) => {
         if (!category || !language || !length) {
             return res.status(400).json("All fields are required")
         }
-        const createForm = await article.create({ category, language, length })
+        const createForm = await article.create({ category, language, length, user:req.user._id })
         res.status(200).json({
             message: "Data received successfully!",
             id: createForm._id.toString()
@@ -32,25 +35,31 @@ FormRoute.route("/category").post(async (req, res) => {
     }
 })
 // get the catgory
-FormRoute.route('/getCategory').get(async(req,res) =>{
+FormRoute.route('/getCategory').get(UserMiddleware ,async(req,res) =>{
     try {
-        const category = await article.find();
-
-        if(!category || category.length === 0){
-            return res.status(404).json({ message: "No category found" })
+        if (!req.user) {
+            return res.status(401).json({ message: "User not authenticated." });
         }
-        return res.status(200).json(category)
-        
+        const useArticle = await article.find({user:req.user._id} , {category:1 , language:1, length:1}).sort({_id:-1})
+
+        if (!useArticle || useArticle.length === 0) {
+            return res.status(404).json({ message: "No category found for this user." });
+        }
+        return res.status(200).json(useArticle)
+
     } catch (error) {
         console.log("error fetching category" , error)
     }
 })
 //  article content saved 
-FormRoute.route("/content").post(async (req, res) => {
+FormRoute.route("/content").post(UserMiddleware,async (req, res) => {
     try {
+        if (!req.user) {
+            return res.status(401).json({ message: "User not authenticated." });
+        }
         const { content, title } = req.body
 
-        const createContent = new articleContent({ content, title })
+        const createContent = new articleContent({ content, title , userId : req.user._id })
         await createContent.save()
         res.status(200).json({
             message: "content received successfully", createContent
@@ -61,6 +70,23 @@ FormRoute.route("/content").post(async (req, res) => {
     }
 
 })
+// show article based on id
+FormRoute.route("/getArticle/:id").get(UserMiddleware,async(req,res) =>{
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: "User not authenticated." });
+        }
+        const contentId = req.params.id
+        const Content = await articleContent.findOne({_id : contentId , userId : req.user._id})
+
+        if (!Content) {
+            return res.status(404).json({ message: "Content not found for this user." });
+        }
+        res.status(200).json({content : Content.content  })
+    } catch (error) {
+        console.log("error fetching article" , error)
+    }
+}) 
 //  user registration logic
 FormRoute.route("/register").post(async (req, res) => {
     try {

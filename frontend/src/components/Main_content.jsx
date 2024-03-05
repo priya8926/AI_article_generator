@@ -16,10 +16,21 @@ function MainContent() {
         language: '',
         length: '',
     });
+    const [promptInput, setPromptInput] = useState("")
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
-
+    const handleInputChange = (event, e) => {
+        const { name, value } = event.target;
+        setSelectedValues(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+    const handleTextChange = (e) => {
+        setPromptInput(e.target.value)
+    }
     const AISearch = async () => {
+        let text = ''
         try {
             setLoading(true)
             const genAI = new GoogleGenerativeAI('AIzaSyDzbRJcMsatyNv9faMhn47BaWAfuw0bGBk');
@@ -34,11 +45,11 @@ function MainContent() {
                 },
             ];
             const model = genAI.getGenerativeModel({ model: "gemini-pro", safetySettings });
-
-            const prompt = `Write a article based on ${selectedValues.category} category in ${selectedValues.language} language and include ${selectedValues.length} words`;
+          
+            const prompt = `Write a article based on ${selectedValues.category} category in ${selectedValues.language} language and include ${selectedValues.length} words also include ${promptInput} content`;
             const result = await model.generateContent(prompt)
-            const response = await result.response;
-            const text = await response.text();
+            const response =  result.response;
+             text =  response.text();
             // console.log("text", text)
             console.log("passed prompt :  ", prompt)
             console.log(" response ", response)
@@ -46,16 +57,9 @@ function MainContent() {
             setLoading(false)
 
         } catch (error) {
-            console.log("error occur while fetchid the api key", error)
+            console.log("error occur while fetchig the api key", error)
         }
     }
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setSelectedValues(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
 
     const handleClick = async (e) => {
         e.preventDefault()
@@ -67,7 +71,7 @@ function MainContent() {
                     Authorization: AuthenticationToken,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ paymentId})
+                body: JSON.stringify({ paymentId })
             })
             const countData = await countResponse.json()
             if (countResponse.ok) {
@@ -89,7 +93,7 @@ function MainContent() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    // Authorization: AuthenticationToken,
+                    Authorization: AuthenticationToken,
                 },
                 body: JSON.stringify(selectedValues)
             })
@@ -110,7 +114,8 @@ function MainContent() {
             const contentResponse = await fetch(`http://localhost:8083/api/content`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: AuthenticationToken
                 },
                 body: JSON.stringify({ content, title })
             })
@@ -186,7 +191,13 @@ function MainContent() {
                             </select>
                         </div>
                     </div>
-                    {!selectedValues.category || !selectedValues.language || !selectedValues.length ? (
+
+                    <div className="mb-4">
+                        <label  className="form-label">Enter Title of your article</label><br />
+                        <input className="form-control mt-2" name = "promptInput" placeholder="title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
+
+                    </div>
+                    {!selectedValues.category || !selectedValues.language || !selectedValues.length || !promptInput ? (
                         <>
                             <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
                                 Search
@@ -198,10 +209,10 @@ function MainContent() {
                             Search
                         </button>
                     )}
-                    <div>
+                    {/* <div>
                         <p >You searched the article for {clickCount} times</p>
 
-                    </div>
+                    </div> */}
 
                 </form>
 
