@@ -21,15 +21,20 @@ FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
         const data = req.body
         console.log(data)
 
-        const { category, language, length, promptInput} = req.body
-        if (!promptInput) {
-            console.log("promt input required")
-        }
-        if (!category || !language || !length || !promptInput) {
-            return res.status(400).json("All fields are required")
-        }
-        const createForm = await article.create({ category, language, length, promptInput, userId: req.user._id })
+        const { category, language, length, promptInput, title, content } = req.body
 
+        // if (!promptInput) {
+        //     console.log("promt input required")
+        // // }
+        // if (!category || !language || !length) {
+        //     return res.status(400).json("All fields are required")
+        // }
+        const createForm = await article.create({ category, language, length, promptInput, userId: req.user._id, title, content })
+
+        await createForm.save();
+        if(!createForm){
+            res.status(500).json({message : "failed to save data"})
+        }
         res.status(200).json({
             message: "Data received successfully!",
             id: createForm._id.toString()
@@ -38,6 +43,54 @@ FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
         console.log(error)
     }
 })
+FormRoute.route("/category/:id").get(UserMiddleware, async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: "User not authenticated." });
+        }
+        const id = req.params.id;
+        const data = await article.findOne({ _id: id });
+        res.status(200).json(data)
+        // const { title, content } = req.body;
+
+        // article.title = req.body.title;
+        // article.content = req.body.content;
+
+        // // Save the updated article
+        // const updatedArticle = await article.save();
+
+        // const updatedArticle = await article.findByIdAndUpdate(id, { title, content }, { new: true });
+
+        // if (!updatedArticle) {
+        //     return res.status(404).json({ message: "Category not found." });
+        // }
+
+        res.status(200).json({
+            message: "id receive successfully!",
+            data
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+FormRoute.route('/updateArticle/:id').patch(UserMiddleware, async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const { title, content } = req.body
+        const updatedArticle = await article.findByIdAndUpdate(id, { title, content }, { new: true });
+        if (!updatedArticle) {
+            return res.status(404).json({ message: "Article not found." });
+        }
+        res.status(200).json({
+            message : "update successfully",
+            updatedArticle
+        });
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 // get the catgory
 FormRoute.route('/getCategory').get(UserMiddleware, async (req, res) => {
     try {
@@ -65,7 +118,7 @@ FormRoute.route("/content").post(UserMiddleware, async (req, res) => {
 
         const createContent = new articleContent({ content, title, userId: req.user._id })
         await createContent.save()
-        
+
         // const existingArticle = await article.findOne({ userId : req.user._id })
 
         // if (!existingArticle) {
@@ -93,12 +146,12 @@ FormRoute.route("/getarticle/:id").get(UserMiddleware, async (req, res) => {
             return res.status(401).json({ message: "User not authenticated." });
         }
         const contentId = req.params.id
-        const Content = await articleContent.findOne({ _id: contentId, userId: req.user._id })
+        const Content = await article.findOne({ userId: req.user._id }, { title: 1, content: 1 })
 
         if (!Content) {
             return res.status(404).json({ message: "Content not found for this user." });
         }
-        res.status(200).json({ content: Content.content })
+        res.status(200).json(Content)
     } catch (error) {
         console.log("error fetching article", error)
     }

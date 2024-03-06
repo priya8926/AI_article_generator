@@ -35,7 +35,7 @@ function History() {
             if (response.ok) {
                 const data = await response.json()
                 setContent(data)
-
+                console.log("set content ", setContent)
             }
         } catch (error) {
             console.log("error fetching content of the aerticle")
@@ -71,9 +71,10 @@ function History() {
                                                 <td>{curData.length} </td>
                                                 <td>{curData.promptInput} </td>
                                                 <td>
-                                                
-                                                    <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article </Link>
+                                                    <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article</Link>
+
                                                 </td>
+
                                                 <td>
                                                     <a href='#'>Delete article </a>
                                                 </td>
