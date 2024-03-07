@@ -3,67 +3,63 @@ import { useForm } from '../store/User';
 import { Link, NavLink } from 'react-router-dom';
 
 function History() {
-    const [history, setHistory] = useState([])
+    // const [history, setHistory] = useState([])
     // const [article, setArticle] = useState({
     //     title:"",
     //     content : ""
     // })
-    const [title, setTitle] = useState("")
-    const [content, setContent] = useState("")
-    const { AuthenticationToken } = useForm()
+    // const [title, setTitle] = useState()
+    // const [content, setContent] = useState()
+    const { AuthenticationToken, content, history, showArticle, getArticle } = useForm()
 
-    const getArticle = async () => {
-        try {
-            const response = await fetch('http://localhost:8083/api/getCategory', {
-                method: "GET",
-                headers: {
-                    Authorization: AuthenticationToken
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                console.log("history data", data)
-                setHistory(data);
-                // Update history state with fetched data
+    // const getArticle = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:8083/api/getCategory', {
+    //             method: "GET",
+    //             headers: {
+    //                 Authorization: AuthenticationToken
+    //             }
+    //         });
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             // console.log("history data", data)
+    //             setHistory(data);
+    //         } else {
+    //             console.error('Failed to fetch article data');
+    //         }
+    //     } catch (error) {
+    //         console.log("error fetching article")
+    //     }
+    // }
 
+    // const showArticle = async (id) => {
+    //     try {
+    //         const response = await fetch(`http://localhost:8083/api/getarticle/${id}`, {
+    //             method: "GET",
+    //             headers: {
+    //                 Authorization: AuthenticationToken
+    //             }
+    //         })
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             setTitle(data.title);
+    //             setContent(data.content);
+    //             console.log("data", data)
 
-            } else {
-                console.error('Failed to fetch article data');
-            }
-        } catch (error) {
-            console.log("error fetching article")
-        }
-    }
+    //         } else {
+    //             console.error('Failed to fetch article data');
+    //         }
+    //     } catch (error) {
+    //         console.log("error fetching content of the aerticle")
+    //     }
+    // }
 
-    const showArticle = async (id) => {
-        try {
-            const response = await fetch(`http://localhost:8083/api/getarticle/${id}`, {
-                method: "GET",
-                headers: {
-                    Authorization: AuthenticationToken
-                }
-            })
-            if (response.ok) {
-                const data = await response.json()
-                console.log(data,'data')
-                // setArticle(data)
-                setTitle(data.title)
-                console.log("title", data.title)
-                setContent(data.content)
-                console.log("set content ", data)
-            }
-        } catch (error) {
-            console.log("error fetching content of the aerticle")
-        }
-    }
     useEffect(() => {
         getArticle()
-    }, [title])
+        // console.log("Title updated:", title);
+        // console.log("Content updated:", content);
+    }, []);
 
-    // useEffect(() => {
-    //     console.log("Title updated:", title);
-    //     console.log("Content updated:", content);
-    // }, [title ,content]);
     const deleteArticle = async (id) => {
         try {
             const response = await fetch(`http://localhost:8083/api/deletearticle/${id}`, {
@@ -73,8 +69,8 @@ function History() {
                 }
             })
             const data = await response.json()
-            console.log("Deleted article response" , data)
-            if(response.ok){
+            console.log("Deleted article response", data)
+            if (response.ok) {
                 getArticle()
             }
         } catch (error) {
@@ -108,14 +104,9 @@ function History() {
                                                 <td>{curData.length} </td>
                                                 <td>{curData.promptInput} </td>
                                                 <td>
-                                                    <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article</Link>
-
-                                                    {/* <Link to={{ pathname: `/getarticle/${curData._id}`, state: { title: title, content: content } }} onClick={() => {
-                                                    console.log({ title: title, content: content });
-                                                    showArticle(curData._id);
-                                                }}>Show article</Link> */}
-
+                                                        <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article</Link>
                                                 </td>
+
                                                 <td>
                                                     <Link href="#" onClick={() => { deleteArticle(curData._id) }} >Delete article </Link>
                                                 </td>

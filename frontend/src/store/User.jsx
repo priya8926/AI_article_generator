@@ -14,6 +14,10 @@ export const FormProvider = ({ children }) => {
     const searchQuery = useSearchParams()[0]
     const referenceNo = searchQuery.get("reference")
 
+    const [title, setTitle] = useState()
+    const [content, setContent] = useState()
+    const [history, setHistory] = useState([])
+
     useEffect(() => {
         if (referenceNo) {
             const amount = localStorage.getItem("selectedAmount")
@@ -57,7 +61,46 @@ export const FormProvider = ({ children }) => {
             console.log(error, "error fetching user data")
         }
     }
+    const getArticle = async () => {
+        try {
+            const response = await fetch('http://localhost:8083/api/getCategory', {
+                method: "GET",
+                headers: {
+                    Authorization: AuthenticationToken
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                // console.log("history data", data)
+                setHistory(data);
+            } else {
+                console.error('Failed to fetch article data');
+            }
+        } catch (error) {
+            console.log("error fetching article")
+        }
+    }
+    const showArticle = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/getarticle/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: AuthenticationToken
+                }
+            })
+            if (response.ok) {
+                const data = await response.json();
+                setTitle(data.title);
+                setContent(data.content);
+                console.log("data", data)
 
+            } else {
+                console.error('Failed to fetch article data');
+            }
+        } catch (error) {
+            console.log("error fetching content of the aerticle")
+        }
+    }
     useEffect(() => {
         if (isLoggedIn) {
             getUserData();
@@ -69,7 +112,7 @@ export const FormProvider = ({ children }) => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo }}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo ,showArticle , getArticle , title,content,history}}>
         {children}
     </formContext.Provider>
 }
