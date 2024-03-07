@@ -146,7 +146,7 @@ FormRoute.route("/getarticle/:id").get(UserMiddleware, async (req, res) => {
             return res.status(401).json({ message: "User not authenticated." });
         }
         const contentId = req.params.id
-        const Content = await article.findOne({ userId: req.user._id }, { title: 1, content: 1 })
+        const Content = await article.findOne({_id:contentId }, { title: 1, content: 1 })
 
         if (!Content) {
             return res.status(404).json({ message: "Content not found for this user." });
@@ -154,6 +154,16 @@ FormRoute.route("/getarticle/:id").get(UserMiddleware, async (req, res) => {
         res.status(200).json(Content)
     } catch (error) {
         console.log("error fetching article", error)
+    }
+})
+// delete article
+FormRoute.route('/deletearticle/:id').delete(UserMiddleware , async(req,res)=>{
+    try {
+        const id = req.params.id;
+        await article.deleteOne({_id : id})
+        res.status(200).json({message: "article deleted",id})
+    } catch (error) {
+        console.log("error deleting article")
     }
 })
 //  user registration logic

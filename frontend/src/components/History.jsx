@@ -4,8 +4,14 @@ import { Link, NavLink } from 'react-router-dom';
 
 function History() {
     const [history, setHistory] = useState([])
-    const [content, setContent] = useState([])
+    // const [article, setArticle] = useState({
+    //     title:"",
+    //     content : ""
+    // })
+    const [title, setTitle] = useState("")
+    const [content, setContent] = useState("")
     const { AuthenticationToken } = useForm()
+
     const getArticle = async () => {
         try {
             const response = await fetch('http://localhost:8083/api/getCategory', {
@@ -16,7 +22,11 @@ function History() {
             });
             if (response.ok) {
                 const data = await response.json();
-                setHistory(data); // Update history state with fetched data
+                console.log("history data", data)
+                setHistory(data);
+                // Update history state with fetched data
+
+
             } else {
                 console.error('Failed to fetch article data');
             }
@@ -24,6 +34,7 @@ function History() {
             console.log("error fetching article")
         }
     }
+
     const showArticle = async (id) => {
         try {
             const response = await fetch(`http://localhost:8083/api/getarticle/${id}`, {
@@ -34,8 +45,12 @@ function History() {
             })
             if (response.ok) {
                 const data = await response.json()
-                setContent(data)
-                console.log("set content ", setContent)
+                console.log(data,'data')
+                // setArticle(data)
+                setTitle(data.title)
+                console.log("title", data.title)
+                setContent(data.content)
+                console.log("set content ", data)
             }
         } catch (error) {
             console.log("error fetching content of the aerticle")
@@ -43,7 +58,29 @@ function History() {
     }
     useEffect(() => {
         getArticle()
-    }, [])
+    }, [title])
+
+    // useEffect(() => {
+    //     console.log("Title updated:", title);
+    //     console.log("Content updated:", content);
+    // }, [title ,content]);
+    const deleteArticle = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/deletearticle/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: AuthenticationToken
+                }
+            })
+            const data = await response.json()
+            console.log("Deleted article response" , data)
+            if(response.ok){
+                getArticle()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
             <section className='container history_section mt-5'>
@@ -73,10 +110,14 @@ function History() {
                                                 <td>
                                                     <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article</Link>
 
-                                                </td>
+                                                    {/* <Link to={{ pathname: `/getarticle/${curData._id}`, state: { title: title, content: content } }} onClick={() => {
+                                                    console.log({ title: title, content: content });
+                                                    showArticle(curData._id);
+                                                }}>Show article</Link> */}
 
+                                                </td>
                                                 <td>
-                                                    <a href='#'>Delete article </a>
+                                                    <Link href="#" onClick={() => { deleteArticle(curData._id) }} >Delete article </Link>
                                                 </td>
 
                                             </tr>
@@ -84,7 +125,6 @@ function History() {
                                     )
                                 })
                             }
-
                         </tbody>
                     </table>
                     <div>
@@ -96,4 +136,4 @@ function History() {
     )
 }
 
-export default History
+export default History;

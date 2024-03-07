@@ -174,20 +174,4 @@ width: 70vw;
   list-style: none;
   text-decoration: none;
 }
-.article-table{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.article-table thead{
-  border: 1px solid black;
-  width: 70vw;
-  text-align: center;
-}
-.article-table tbody{
-  border: 1px solid black;
-  border-top: 0;
-  width: 70vw;
-  text-align: center;
-}
+

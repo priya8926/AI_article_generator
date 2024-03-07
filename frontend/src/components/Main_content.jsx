@@ -201,8 +201,8 @@ function MainContent() {
                     </div>
 
                     <div className="mb-4">
-                        <label className="form-label">Enter Title of your article</label><br />
-                        <input className="form-control mt-2" name="promptInput" placeholder="title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
+                        <label className="form-label"> Title of your article</label><br />
+                        <input className="form-control mt-2" name="promptInput" placeholder="Enter title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
 
                     </div>
                     {!selectedValues.category || !selectedValues.language || !selectedValues.length || !promptInput ? (
