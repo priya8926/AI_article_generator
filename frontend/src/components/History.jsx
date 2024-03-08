@@ -79,7 +79,7 @@ function History() {
     }
     return (
         <>
-            <section className='container history_section mt-5'>
+            <section className='container history_section mt-5 mb-4'>
                 <h4 className='text-center'>History of your article</h4>
                 <div className="history mt-3">
                     <table className='history_table'>

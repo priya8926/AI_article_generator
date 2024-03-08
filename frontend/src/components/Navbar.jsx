@@ -5,75 +5,47 @@ import { useForm } from '../store/User'
 
 function Navbar() {
     const { isLoggedIn } = useForm()
-    
+
     return (
         <>
-            <section>
+            <div className="container-fluid sticky-top">
                 <div className="container">
-                    <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                        <div className="container-fluid  ms-2">
-                            <NavLink className="navbar-brand" to="#">
-                                AIArticle
-                            </NavLink>
-                            <button
-                                className="navbar-toggler"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent"
-                                aria-expanded="false"
-                                aria-label="Toggle navigation"
-                            >
-                                <span className="navbar-toggler-icon" />
-                            </button>
-                            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                    {isLoggedIn ? (
-                                        <>
-
-
-                                            <li className="nav-item">
-                                                <NavLink className="nav-link active" aria-current="page" to="/home">
-                                                    Home
-                                                </NavLink>
-                                            </li>
-                                            <li className="nav-item">
-                                                <NavLink className="nav-link" to="/about">
-                                                    About
-                                                </NavLink>
-                                            </li>
-                                            <li className="nav-item">
-                                                <NavLink className="nav-link" to="/contact">
-                                                    Contact
-                                                </NavLink>
-                                            </li>
-                                            <li className="nav-item">
-                                                <div className='upgrade d-flex'>
-                                                    <NavLink to="/logout"><button className="btn btn-primary mx-1">Logout</button></NavLink>
-
-                                                    <NavLink to="/subscription"><button className='btn btn-primary mx-1'>Upgrade plan</button></NavLink>
-                                                    <NavLink to="/signup"><button className='btn btn-primary mx-1'>Signup</button></NavLink>
-                                                </div>
-
-                                            </li>
-                                        </>
-                                    ) : (
-
-                                        <li className="nav-item ">
-                                            <div className='signup d-flex'>
-                                                {/* <button className="btn btn-primary mx-1">logout</button> */}
-                                                <NavLink to="/signup"><button className="btn btn-primary mx-1">Signup</button></NavLink>
-
-                                                <NavLink to="/"><button className="btn btn-primary mx-1">Login</button></NavLink>
-                                            </div>
-                                        </li>
-                                    )}
-                                </ul>
-                            </div>
+                    <nav className="navbar navbar-expand-lg navbar-dark p-0">
+                        <NavLink to="#" className="navbar-brand">
+                            <h1 className="text-white">AI<span className="text-dark"></span>Article</h1>
+                        </NavLink>
+                        <button type="button" className="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
+                            data-bs-target="#navbarCollapse">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarCollapse">
+                            {isLoggedIn ? (
+                                <>
+                                    <div className="navbar-nav ms-auto">
+                                        <NavLink to="/home" className="nav-item nav-link active">Home</NavLink>
+                                        <NavLink to="/about" className="nav-item nav-link">About</NavLink>
+                                        <NavLink to="/services" className="nav-item nav-link">Services</NavLink>
+                                        <NavLink to="/contact" className="nav-item nav-link">Contact</NavLink>
+                                        <NavLink to="/subscription" className="nav-item nav-link">Upgrade plan</NavLink>
+                                        <NavLink to="/signup" className="nav-item nav-link">Signup</NavLink>
+                                        <NavLink to="/logout" className="nav-item nav-link">Logout</NavLink>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="navbar-nav ms-auto">
+                                        <NavLink to="/signup" className="nav-item nav-link">Signup</NavLink>
+                                        <NavLink to="/" className="nav-item nav-link">Login</NavLink>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </nav>
                 </div>
-            </section>
+            </div>
+            <div className="container-fluid pt-5 bg-primary hero-header ">
+                <div className="container pt-4"></div>
+            </div>
         </>
     )
 }

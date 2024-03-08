@@ -55,7 +55,7 @@ function Signup() {
     <>
       <section>
         <main>
-          <div className="section_registration">
+          <div className="section_registration mt-5 mb-3">
             <div className='container grid grid-two-cols'>
               {/* registration form */}
               <div className="registration-form">

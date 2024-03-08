@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate} from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const { isLoggedIn, user, paymentId, setPaymentId , AuthenticationToken } = useForm()
+    const { isLoggedIn, user, paymentId, setPaymentId, AuthenticationToken } = useForm()
     const Navigate = useNavigate();
     useEffect(() => {
         if (isLoggedIn === false) {
@@ -100,63 +100,58 @@ function Subscription() {
     return (
         <>
             <section>
-                <div className="container mt-5">
-                    <h2 className='text-center mb-4'>Upgrade your profile </h2>
+                <div className="container-fluid mb-5 bg-light">
+                    <h2 className='text-center mb-4 pt-5'>Upgrade your profile </h2>
                     <div className="container text-center">
                         <div className="row align-items-start">
-                            <div className="col">
-                                <div className=" card card-upgrade" >
-                                    <div className="card-body">
-                                        <h5 className="card-title">₹0/month</h5>
-                                        <p className="card-text mt-4"> </p>
+                            <div className="col-lg-4 col-md-6 col-sm-12 md-10 wow fadeIn" data-wow-delay="0.1s">
+                                <div className="service-item d-flex flex-column justify-content-center text-start rounded">
+                                    <h5 className="card-title text-center ">₹0/month</h5>
+                                    <p>
                                         <ul>
                                             <li>20 Article Generation: Subscribers can generate 20 articles without any restrictions on length or frequency.</li>
                                             <li>Transparent Pricing: Clear pricing model with no hidden fees, ensuring subscribers know exactly what they're getting.</li>
                                             <li>Revolutionize Content Creation: Join a community of satisfied subscribers and revolutionize the content creation process with AI-powered tools.</li>
                                         </ul>
-                                        <div>
-                                            <NavLink>
-                                                <button className="btn btn-primary upgrade-btn disabled" >Your Current plan</button>
-                                            </NavLink>
-                                        </div>
-                                    </div>
+                                    </p>
+                                    <NavLink >
+                                        <button className='btn btn-primary upgrade-btn disabled  mx-5'>Your current plan</button>
+                                    </NavLink>
                                 </div>
-
                             </div>
-                            <div className="col">
-                                <div className="card card-upgrade" >
-                                    <div className="card-body">
-                                        <h5 className="card-title">₹199/month</h5>
-                                        <p className="card-text mt-4"></p>
+
+                            <div className="col-lg-4 col-md-6 col-sm-12 wow fadeIn" data-wow-delay="0.3s">
+                                <div className="service-item d-flex flex-column justify-content-center text-start rounded" >
+                                    <h5 className="card-title text-center">₹199/month</h5>
+                                    <p>
                                         <ul>
                                             <li>50 Article Generation: Subscribers can generate 50 articles without any restrictions on length or frequency.</li>
                                             <li>Customization Options: Access to advanced customization options for specifying parameters such as topic, length, tone, and style for each article.</li>
                                             <li>Enhanced Content Quality: Premium AI models and advanced language processing algorithms ensure articles of exceptional quality and relevance.</li>
                                         </ul>
-                                        <div>
-                                            <NavLink >
-                                                <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
-                                            </NavLink>
-                                        </div>
+                                    </p>
+                                    <div>
+                                        <NavLink >
+                                            <button className="btn btn-primary upgrade-btn  mx-5 " onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                        </NavLink>
                                     </div>
                                 </div>
 
                             </div>
-                            <div className="col">
-                                <div className=" card card-upgrade" >
-                                    <div className="card-body">
-                                        <h5 className="card-title">₹499/month</h5>
-                                        <p className="card-text mt-4"> </p>
+                            <div className="col-lg-4 col-md-6 col-sm-12 wow fadeIn" data-wow-delay="0.5s">
+                                <div className="service-item d-flex flex-column justify-content-center text-start rounded"  >
+                                    <h5 className="card-title text-center">₹499/month</h5>
+                                    <p>
                                         <ul>
                                             <li>Unlimited Article Generation: Subscribers can generate unlimited number of articles without any restrictions on length or frequency.</li>
                                             <li>Exclusive Templates and Formats: Subscribers have access to exclusive article templates and formatting options to streamline the content creation process.</li>
                                             <li>Priority Support: Priority customer support is provided to subscribers, addressing questions, concerns, or technical issues promptly.</li>
                                         </ul>
-                                        <div>
-                                            <NavLink  >
-                                                <button className="btn btn-primary upgrade-btn" onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
-                                            </NavLink>
-                                        </div>
+                                    </p>
+                                    <div>
+                                        <NavLink  >
+                                            <button className="btn btn-primary upgrade-btn mx-5 " onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                        </NavLink>
                                     </div>
                                 </div>
 
@@ -169,5 +164,4 @@ function Subscription() {
         </>
     )
 }
-
 export default Subscription;

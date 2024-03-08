@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User';
+import Hero from './Layout/Hero'
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false)
@@ -48,6 +49,7 @@ function Login() {
     }
     return (
         <>
+        <Hero/>
             <section>
                 <main>
                     <div className="section_registration">
