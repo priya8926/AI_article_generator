@@ -4,6 +4,7 @@ import Loading from './Loading';
 import { saveAs } from 'file-saver';
 import { useForm } from '../store/User';
 import { NavLink, useNavigate } from 'react-router-dom';
+import HeroImg from '../img/feature.png'
 
 
 function MainContent() {
@@ -154,15 +155,47 @@ function MainContent() {
 
     return (
         <>
-
+<div className="container-fluid pt-5 bg-primary hero-header mb-5">
+                    <div className="container pt-5">
+                        <div className="row g-5 pt-5">
+                            <div className="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
+                                <div className="btn btn-sm border rounded-pill text-white px-3 mb-3 animated slideInRight">
+                                    AIArticle
+                                </div>
+                                <h1 className="display-4 text-white mb-4 animated slideInRight">
+                                Welcome to Article Generator
+                                </h1>
+                                <p className="text-white mb-4 animated slideInRight">
+                                AI Article Generator is an automatic online tool developed to help those who want to create fresh content for any purpose, whether you need content for your website, SEO , blog, school or college Article Generator can do that for you in few seconds, without any effort.
+                                </p>
+                               <NavLink
+                                    to="/about"
+                                    className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInRight"
+                                >
+                                    Read More
+                                </NavLink>
+                                <NavLink
+                                    to="/contact"
+                                    className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"
+                                >
+                                    Contact Us
+                                </NavLink>
+                            </div>
+                            <div className="col-lg-6 align-self-end text-center text-lg-end">
+                                <img className="img-fluid" src={HeroImg} alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <section className='container d-flex justify-content-center' >
                 <form >
+            <h1 className='container mt-5 text-center'>Write High-Quality Articles in Minutes <br /> with Our AI Article Writer </h1>
                     <div className="mb-4 ">
-                        <label className="form-label mt-5">
-                            Select category for article
+                        <label className="form-label mt-5 mx-2">
+                            Select category for article :
                         </label>
-                        <div className="dropdown " >
-                            <select className="btn btn-secondary" name="category" value={selectedValues.category} onChange={handleInputChange}>
+                        <span className="dropdown " >
+                            <select className="btn btn-primary selection" name="category" value={selectedValues.category} onChange={handleInputChange}>
                                 <option value="">Select Category</option>
                                 <option value="Technology">Technology</option>
                                 <option value="Science">Science</option>
@@ -170,41 +203,42 @@ function MainContent() {
                                 <option value="Sports">Sports</option>
                                 <option value="Business">Business</option>
                             </select>
-                        </div>
+                        </span>
                     </div>
                     <div className="mb-4">
-                        <label className="form-label">
-                            Select Language for article
+                        <label className="form-label mx-2">
+                            Select Language for article : 
                         </label>
-                        <div className="dropdown">
-                            <select className="btn btn-secondary" name="language" value={selectedValues.language} onChange={handleInputChange} >
+                        <span className="dropdown">
+                            <select className="btn btn-primary selection" name="language" value={selectedValues.language} onChange={handleInputChange} >
                                 <option value="">Select Language</option>
                                 <option value="English">English</option>
                                 <option value="French">French</option>
                                 <option value="Hindi">Hindi</option>
                             </select>
-                        </div>
+                        </span>
                     </div>
                     <div className="mb-4">
-                        <label className="form-label">
-                            Select Length of the article
+                        <label className="form-label mx-2">
+                            Select Length of the article :
                         </label>
-                        <div className="dropdown">
-                            <select className="btn btn-secondary" name="length" value={selectedValues.length} onChange={handleInputChange} >
+                        <span className="dropdown">
+                            <select className="btn btn-primary selection" name="length" value={selectedValues.length} onChange={handleInputChange} >
                                 <option value="">Length of the article</option>
                                 <option value="500">500</option>
                                 <option value="1000">1000</option>
                                 <option value="2000">2000</option>
                                 <option value="more...">More than 2000...</option>
                             </select>
-                        </div>
+                        </span>
                     </div>
 
-                    <div className="mb-4">
-                        <label className="form-label"> Title of your article</label><br />
-                        <input className="form-control mt-2" name="promptInput" placeholder="Enter title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
+                    <div className="mb-4 input-group flex-nowrap">
+                        <span className="form-label mx-2 mt-2"> Title of your article :</span>
+                        <input className="form-control rounded w-50" name="promptInput" placeholder="Enter title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
 
                     </div>
+                    <div className='d-flex justify-content-center '>
                     {!selectedValues.category || !selectedValues.language || !selectedValues.length || !promptInput ? (
                         <>
                             <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
@@ -217,6 +251,7 @@ function MainContent() {
                             Search
                         </button>
                     )}
+                    </div>
                     {/* <div>
                         <p >You searched the article for {clickCount} times</p>
 
@@ -226,7 +261,7 @@ function MainContent() {
 
             </section>
             <div className=" my-5">
-                <div className=' text-center'>
+                <div className='text-center'>
                     <div className="container px-5">
                         <div className="card ">
                             <div className="card-header text-center">
@@ -247,9 +282,6 @@ function MainContent() {
                                     <a href="/" className="btn btn-primary" onClick={handleSave}>
                                         save
                                     </a>
-                                    {/* <NavLink to="/history" className="btn btn-primary mx-2"
-                                        History
-                                    </NavLink> */}
                                     <NavLink to='/history'><button className="btn btn-primary mx-2">History</button></NavLink>
                                 </div>
                             </div>

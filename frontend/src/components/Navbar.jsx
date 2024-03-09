@@ -27,8 +27,9 @@ function Navbar() {
                                         <NavLink to="/services" className="nav-item nav-link">Services</NavLink>
                                         <NavLink to="/contact" className="nav-item nav-link">Contact</NavLink>
                                         <NavLink to="/subscription" className="nav-item nav-link">Upgrade plan</NavLink>
-                                        <NavLink to="/signup" className="nav-item nav-link">Signup</NavLink>
+                                        {/* <NavLink to="/faqs" className="nav-item nav-link">FAQ</NavLink> */}
                                         <NavLink to="/logout" className="nav-item nav-link">Logout</NavLink>
+                                        <NavLink to="/admin" className="nav-item nav-link">Admin</NavLink>
                                     </div>
                                 </>
                             ) : (

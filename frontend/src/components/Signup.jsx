@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import { useForm } from '../store/User'
+import Hero from './Layout/Hero'
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false)
@@ -53,9 +54,10 @@ function Signup() {
   }
   return (
     <>
+    <Hero/>
       <section>
         <main>
-          <div className="section_registration mt-5 mb-3">
+          <div className="section_registration mt-5 h-100">
             <div className='container grid grid-two-cols'>
               {/* registration form */}
               <div className="registration-form">

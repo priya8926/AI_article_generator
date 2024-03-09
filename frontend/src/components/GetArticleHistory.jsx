@@ -8,17 +8,27 @@ function GetArticleHistory() {
     // console.log("state" , state)
     // const title =  state ? state.title : ""
     // const content = state ? state.content : ""
-    const{title , content} = useForm()
+    const { title, content } = useForm()
     return (
         <>
-            <section>
-                <h4 className='text-center mt-4 mb-4'>Your saved article</h4>
-                <div className='container'>
-                    <p>title:{title}</p>
-                    <p>content:{content}</p>
-                    <NavLink to="/history">
-                        <button className='btn btn-primary mt-4 mb-5'>History page</button>
-                    </NavLink>
+            <section className='container'>
+                <div className="card container m-5">
+                    <div className="card-body">
+                        {content ? (
+                            <>
+                                <h5 className="card-title">title:{title}</h5>
+                                <p className="card-text">
+                                    content:{content}
+                                </p>
+                            </>
+                        ) : ("Article not available")}<br />
+                        <div className='text-center'>
+
+                            <NavLink to="/history">
+                                <button className='btn btn-primary mt-3 mb-4'>History page</button>
+                            </NavLink>
+                        </div>
+                    </div>
                 </div>
             </section>
         </>

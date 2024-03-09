@@ -52,7 +52,7 @@ function Login() {
         <Hero/>
             <section>
                 <main>
-                    <div className="section_registration">
+                    <div className="section_registration h-100 d-flex justify-content-center align-items-center">
                         <div className='container grid grid-two-cols'>
                             {/* registration form */}
                             <div className="registration-form">

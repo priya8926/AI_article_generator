@@ -13,49 +13,35 @@ function ServiceLayout() {
           <div className="btn btn-sm border rounded-pill text-primary px-3 mb-3">
             Our Services
           </div>
-          <h1 className="mb-4">Our Excellent AI Solutions for Your Business</h1>
+          <h1 className="mb-4">Our Excellent AI Services for Your Business</h1>
           <p className="mb-4">
-            Tempor erat elitr rebum at clita. Diam dolor diam ipsum et tempor
-            sit. Aliqu diam amet diam et eos labore. Clita erat ipsum et lorem
-            et sit, sed stet no labore lorem sit. Sanctus clita duo justo et
-            tempor eirmod magna dolore erat amet
+          Our article generator service provides you with high-quality, customized articles tailored to your needs.Whether you need articles for your blog, website, or publication, our service ensures efficiency and effectiveness. Our articles are meticulously crafted to meet your specifications, saving you time and effort while maintaining excellent quality.
           </p>
-          <NavLink className="btn btn-primary rounded-pill px-4" to="">
-            Read More
-          </NavLink>
         </div>
         <div className="col-lg-7">
           <div className="row g-4">
             <div className="col-md-6">
-              <div className="row g-4">
+              <div className="row g-4 mb-3">
                 <div className="col-12 wow fadeIn" data-wow-delay="0.1s">
                   <div className="service-item d-flex flex-column justify-content-center text-center rounded">
                     <div className="service-icon btn-square">
-                      <i className="fa fa-home fa-2x" />
+                      <i class="fa-solid fa-robot fa-2x"></i>
                     </div>
-                    <h5 className="mb-3">Robotic Automation</h5>
+                    <h5 className="mb-2">Robotic Automation</h5>
                     <p>
-                      Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                      lorem sed diam stet diam sed stet lorem.
+                    Utilize our advanced AI algorithms to effortlessly generate high-quality articles, blog posts, product descriptions, and more on any topic
                     </p>
-                    <NavLink className="btn px-3 mt-auto mx-auto" to="">
-                      Read More
-                    </NavLink>
                   </div>
                 </div>
                 <div className="col-12 wow fadeIn" data-wow-delay="0.5s">
                   <div className="service-item d-flex flex-column justify-content-center text-center rounded">
                     <div className="service-icon btn-square">
-                      <i className="fa fa-home fa-2x" />
+                    <i class="fa-solid fa-download fa-2x"></i>
                     </div>
-                    <h5 className="mb-3">Machine learning</h5>
+                    <h5 >Download Articles</h5>
                     <p>
-                      Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                      lorem sed diam stet diam sed stet lorem.
+                    You can also download articles once you add your keyword. just scroll down to the bottom of the page and you will see a button called save just click it and download articles.
                     </p>
-                    <NavLink className="btn px-3 mt-auto mx-auto" to="">
-                      Read More
-                    </NavLink>
                   </div>
                 </div>
               </div>
@@ -65,31 +51,23 @@ function ServiceLayout() {
                 <div className="col-12 wow fadeIn" data-wow-delay="0.3s">
                   <div className="service-item d-flex flex-column justify-content-center text-center rounded">
                     <div className="service-icon btn-square">
-                      <i className="fa fa-home fa-2x" />
+                    <i class="fa-solid fa-globe fa-2x"></i>
                     </div>
-                    <h5 className="mb-3">Education &amp; Science</h5>
+                    <h5 className="mb-3">Multiple Language support</h5>
                     <p>
-                      Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                      lorem sed diam stet diam sed stet lorem.
+                    You can generate articles in many other languages you can see by changing language from english to an other.
                     </p>
-                    <NavLink className="btn px-3 mt-auto mx-auto" to="">
-                      Read More
-                    </NavLink>
                   </div>
                 </div>
                 <div className="col-12 wow fadeIn" data-wow-delay="0.7s">
                   <div className="service-item d-flex flex-column justify-content-center text-center rounded">
                     <div className="service-icon btn-square">
-                      <i className="fa fa-home fa-2x" />
+                    <i class="fa-solid fa-list fa-2x"></i>
                     </div>
-                    <h5 className="mb-3">Predictive Analysis</h5>
+                    <h5 className="mb-3">Multiple Category</h5>
                     <p>
-                      Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                      lorem sed diam stet diam sed stet lorem.
+                      You have multiple Category options for article creation.you can choose any category based on your article.Also you can search your article by title or words.
                     </p>
-                    <NavLink className="btn px-3 mt-auto mx-auto" to="">
-                      Read More
-                    </NavLink>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import HeroImg from "../../img/hero-img.png"
+import { NavLink } from 'react-router-dom'
 
 function Hero() {
     return (
@@ -10,28 +11,15 @@ function Hero() {
                         <div className="row g-5 pt-5">
                             <div className="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
                                 <div className="btn btn-sm border rounded-pill text-white px-3 mb-3 animated slideInRight">
-                                    AI.Tech
+                                    AIArticle
                                 </div>
                                 <h1 className="display-4 text-white mb-4 animated slideInRight">
-                                    Artificial Intelligence for Your Business
+                                The Ultimate AI Article Generator 
                                 </h1>
                                 <p className="text-white mb-4 animated slideInRight">
-                                    Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum stet
-                                    dolor sed justo kasd. Ut dolor sed magna dolor sea diam. Sit diam
-                                    sit
+                                Take your articles from good to the best. And do it easy & fast.
                                 </p>
-                                <a
-                                    href=""
-                                    className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInRight"
-                                >
-                                    Read More
-                                </a>
-                                <a
-                                    href=""
-                                    className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"
-                                >
-                                    Contact Us
-                                </a>
+                               
                             </div>
                             <div className="col-lg-6 align-self-end text-center text-lg-end">
                                 <img className="img-fluid" src={HeroImg} alt="" />

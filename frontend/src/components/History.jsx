@@ -82,7 +82,7 @@ function History() {
             <section className='container history_section mt-5 mb-4'>
                 <h4 className='text-center'>History of your article</h4>
                 <div className="history mt-3">
-                    <table className='history_table'>
+                    <table className='history_table table table-hover'>
                         <thead >
                             <tr>
                                 <th>category </th>
@@ -105,6 +105,7 @@ function History() {
                                                 <td>{curData.promptInput} </td>
                                                 <td>
                                                         <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article</Link>
+                                               
                                                 </td>
 
                                                 <td>

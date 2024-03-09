@@ -105,7 +105,7 @@ function Subscription() {
                     <div className="container text-center">
                         <div className="row align-items-start">
                             <div className="col-lg-4 col-md-6 col-sm-12 md-10 wow fadeIn" data-wow-delay="0.1s">
-                                <div className="service-item d-flex flex-column justify-content-center text-start rounded">
+                                <div className="service-item d-flex flex-column justify-content-center text-start rounded h-100">
                                     <h5 className="card-title text-center ">₹0/month</h5>
                                     <p>
                                         <ul>
@@ -121,7 +121,7 @@ function Subscription() {
                             </div>
 
                             <div className="col-lg-4 col-md-6 col-sm-12 wow fadeIn" data-wow-delay="0.3s">
-                                <div className="service-item d-flex flex-column justify-content-center text-start rounded" >
+                                <div className="service-item d-flex flex-column justify-content-center text-start rounded h-100" >
                                     <h5 className="card-title text-center">₹199/month</h5>
                                     <p>
                                         <ul>
@@ -139,7 +139,7 @@ function Subscription() {
 
                             </div>
                             <div className="col-lg-4 col-md-6 col-sm-12 wow fadeIn" data-wow-delay="0.5s">
-                                <div className="service-item d-flex flex-column justify-content-center text-start rounded"  >
+                                <div className="service-item d-flex flex-column justify-content-center text-start rounded "  >
                                     <h5 className="card-title text-center">₹499/month</h5>
                                     <p>
                                         <ul>
