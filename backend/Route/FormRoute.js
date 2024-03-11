@@ -420,7 +420,7 @@ FormRoute.route("/subscription/cancel").delete(UserMiddleware, async (req, res, 
         const payment = await payment.findOne({
             razorpay_subscription_id: subscriptionId
         })
-        await payment.remove();
+        await paymentNaNpxove();
         user.subscription.id = undefined;
         user.subscription.status = undefined
         await user.save()

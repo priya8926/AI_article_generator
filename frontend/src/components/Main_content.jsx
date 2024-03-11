@@ -163,7 +163,7 @@ function MainContent() {
                                     AIArticle
                                 </div>
                                 <h1 className="display-4 text-white mb-4 animated slideInRight">
-                                Welcome to Article Generator
+                                Welcome to AI Article Generator
                                 </h1>
                                 <p className="text-white mb-4 animated slideInRight">
                                 AI Article Generator is an automatic online tool developed to help those who want to create fresh content for any purpose, whether you need content for your website, SEO , blog, school or college Article Generator can do that for you in few seconds, without any effort.

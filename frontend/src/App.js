@@ -21,7 +21,6 @@ import AdminUser from './components/AdminUser';
 // import Faq from './components/Faq';
 
 function App() {
-
   return (
     <>
 
@@ -42,11 +41,9 @@ function App() {
         <Route path='/logout' element={<Logout />} />
         <Route path='*' element={<PageNotFound />} />
 
-        {/* <Route path='/admin' element={<Dashboard />}>
+        <Route path='/admin' element={<Dashboard />}>
           <Route path='users' element={<AdminUser />} />
-        </Route> */}
-        <Route path='/admin' element={<Dashboard />} />
-        <Route path='/admin/users' element={<AdminUser />} />
+        </Route>
       </Routes>
       <Footer />
     </>
