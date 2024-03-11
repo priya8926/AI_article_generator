@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { useForm } from '../store/User'
+import { useForm } from '../../store/User'
+import { Link, } from 'react-router-dom'
 
 function AdminUser() {
     const [users, setUsers] = useState([])
@@ -25,10 +26,28 @@ function AdminUser() {
             console.log("Error: " + error);
         }
     }
+
+    const deleteUser = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/users/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: AuthenticationToken
+                }
+            })
+            const data = await response.json()
+            console.log(`uesrs after delete ${data}`)
+            alert("user deleted")
+            if (response.ok) {
+                getAllUserData()
+            }
+        } catch (error) {
+            console.log(error, "user not deleted")
+        }
+    }
     useEffect(() => {
         getAllUserData()
     }, [])
-
     return (
         <>
             <section className='container mt-5 w-100'>
@@ -57,9 +76,12 @@ function AdminUser() {
                                             <td>{curData.clickCount}</td>
                                             <td>{curData.createdAt}</td>
                                             <td>{curData.subscription ? curData.subscription.status : 'N/A'}</td>
-
-                                            <td>Edit</td>
-                                            <td>Delete</td>
+                                            <td>
+                                                <Link to={`/admin/users/${curData._id}`} >Edit</Link>
+                                            </td>
+                                            <td>
+                                                <Link onClick={() => { deleteUser(curData._id) }} >Delete</Link>
+                                            </td>
                                         </tr>
                                     </>
                                 )

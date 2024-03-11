@@ -17,7 +17,8 @@ import About from './components/About'
 import Contact from './components/Contact'
 import Service from './components/Service'
 import Dashboard from './components/AdminLayout/Dashboard';
-import AdminUser from './components/AdminUser';
+import AdminUser from './components/AdminLayout/AdminUser';
+import AdminUpdate from './components/AdminLayout/AdminUpdate';
 // import Faq from './components/Faq';
 
 function App() {
@@ -42,7 +43,8 @@ function App() {
         <Route path='*' element={<PageNotFound />} />
 
         <Route path='/admin' element={<Dashboard />}>
-          <Route path='users' element={<AdminUser />} />
+          <Route path='users' element={<AdminUser/>} />
+          <Route path='users/:id' element={<AdminUpdate/>} />
         </Route>
       </Routes>
       <Footer />

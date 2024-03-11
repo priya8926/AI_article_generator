@@ -5,4 +5,10 @@ const { UserMiddleware } = require("../middleware/UserMiddleware")
 
 router.route("/users").get(UserMiddleware ,adminController.getAllUser)
 
+router.route("/users/:id").get(UserMiddleware , adminController.getUserById)
+
+router.route("/users/update/:id").patch(UserMiddleware , adminController.updateUserById)
+
+router.route("/users/delete/:id").delete(UserMiddleware , adminController.deleteUserById)
+
 module.exports = router
