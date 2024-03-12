@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const payment = require("../models/PaymentSuccess")
+const article = require("../models/FormModel")
 
 // get all login user
 const getAllUser = async (req, res) => {
@@ -49,7 +50,7 @@ const deleteUserById = async (req, res) => {
 }
 const getPaymentHistory = async (req, res) => {
     try {
-        const pay = await payment.find({},{razorpay_signature:0})
+        const pay = await payment.find({}, { razorpay_signature: 0 })
         // const user = await User.findOne({ email: email })
         if (!pay || pay.length === 0) {
             res.status(401).json('No payment Found')
@@ -60,4 +61,30 @@ const getPaymentHistory = async (req, res) => {
         return res.status(500).json({ error: "Error fetching payment", message: error.message });
     }
 }
-module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory }
+const getCategory = async (req, res) => {
+    try {
+        const categoryData = await article.find({}, { title: 0, content: 0, promptInput: 0, userId: 0, _id: 0 })
+
+        if (!categoryData) {
+            res.status(401).json('no category found')
+        }
+        res.status(200).json(categoryData)
+    } catch (error) {
+        console.log("error fetching category")
+    }
+}
+let categories = [];
+const UpdateCategory = async (req, res) => {
+    try {
+        const { category } = req.body
+        if (categories.includes(category)) {
+            return res.status(400).json({ error: 'Category already exists' });
+        }
+        // Add the new category to the list
+        categories.push(category);
+        res.status(201).json({ message: 'Category added successfully', category });
+    } catch (error) {
+        console.log("error adding category")
+    }
+}
+module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, UpdateCategory }

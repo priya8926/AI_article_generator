@@ -42,7 +42,7 @@ function Subscription() {
 
                     const options = {
                         key: key.key, // Enter the Key ID generated from the Dashboard
-                        amount: data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        amount: data.amount,
                         currency: "INR",
                         name: user.username,
                         description: "Payment Test Transaction",

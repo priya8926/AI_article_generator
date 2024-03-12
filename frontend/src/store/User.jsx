@@ -19,6 +19,13 @@ export const FormProvider = ({ children }) => {
     const [content, setContent] = useState()
     const [history, setHistory] = useState([])
 
+    const [categories, setCategories] = useState([])
+    const [value, setValue] = useState({
+        category:"",
+        language:"",
+        length:""
+    })
+
     useEffect(() => {
         if (referenceNo) {
             const amount = localStorage.getItem("selectedAmount")
@@ -103,46 +110,55 @@ export const FormProvider = ({ children }) => {
             console.log("error fetching content of the aerticle")
         }
     }
-    const storeEmailInPaymentModel = async () => {
-        try {
-            const response = await fetch('http://localhost:8083/api/paymentVerification', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: AuthenticationToken
-                },
-                body: JSON.stringify({user })
-            });
-            // const res = await response.json()
-            // console.log("res" , res)
-            if (response.ok) {
-                console.log("Email stored successfully in the payment model");
-            } else {
-                console.error("Failed to store email in the payment model");
-            }
-        } catch (error) {
-            console.error("Error storing email in the payment model", error);
-        }
-    };
-
-    // Call storeEmailInPaymentModel when referenceNo changes
-    useEffect(() => {
-        if (referenceNo && user) {
-            storeEmailInPaymentModel();
-        }
-    }, [referenceNo, user]);
 
     useEffect(() => {
         if (isLoggedIn) {
             getUserData();
         }
     }, [isLoggedIn])
+    const getCategory = async () => {
+        const response = await fetch(`http://localhost:8083/api/admin/category`, {
+            method: 'GET',
+            headers: {
+                Authorization: AuthenticationToken
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            setCategories(data)
+        }
+    }
+    useEffect(() => {
+        getCategory()
+    }, [])
+
+    const addCategory = async () => {
+        try {
+            const respnse = await fetch(`http://localhost:8083/api/admin/category/addcategory`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: AuthenticationToken
+                },
+                body: JSON.stringify({ category: value })
+            })
+            if(respnse.ok){
+                getCategory()
+                setValue('')
+            }
+            else{
+                console.log("failed to add")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
     // logout functionality
     const logoutUser = () => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history }}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history, categories, value,addCategory , setValue }}>
         {children}
     </formContext.Provider>
 }

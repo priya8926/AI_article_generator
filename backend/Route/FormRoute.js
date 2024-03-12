@@ -222,7 +222,9 @@ FormRoute.route("/login").post(async (req, res) => {
 FormRoute.route("/user").get(UserMiddleware, async (req, res) => {
     try {
         const userData = req.user;
+
         console.log("user data ", userData)
+
         res.status(200).json({ userData })
         // res.status(200).json({msg : "hii user"})
     } catch (error) {
@@ -281,28 +283,18 @@ FormRoute.route('/verify').post(async (req, res) => {
     }
 })
 // payment verfication logic
-FormRoute.route("/paymentVerification").post(async (req, res, next) => {
+FormRoute.route("/paymentVerification").post(async (req, res) => {
     try {
-        const emailId = req.body
-        console.log("email in backend" ,  emailId)
 
-        console.log("reqested body" , req.body)
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-        // const { email } = req.body.user;
-        // const subscription_Id = user.subscription.id;
-        // console.log("subscription id ", subscription_Id)
+
         const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
         const generated_signature = crypto.createHmac('sha256', process.env.Key_Secret).update(dataToHash).digest("hex")
 
         console.log("Generated Signature:", generated_signature);
         console.log("Received Signature:", razorpay_signature);
-        // Compare generated signature with Razorpay signature
         if (generated_signature == razorpay_signature) {
-            
-            // const user = await User.findById(req.user._id);
-            // const userEmail = user ? user.email : null;
-            //store in database
-            await payment.create({razorpay_payment_id, razorpay_signature, razorpay_order_id });
+            // await payment.create({ razorpay_payment_id, razorpay_signature, razorpay_order_id });
             console.log("Payement verfication successfull")
 
             // user.subscription.status = "active"
@@ -320,8 +312,6 @@ FormRoute.route("/paymentVerification").post(async (req, res, next) => {
         res.status(500).json({ error: "Payment verification failed" });
     }
 })
-
-
 // subscription plan
 FormRoute.route("/createSubscription").post(async (req, res, next) => {
     try {

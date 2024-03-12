@@ -20,6 +20,7 @@ function MainContent() {
     const [promptInput, setPromptInput] = useState("")
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setSelectedValues(prevState => ({
@@ -30,6 +31,7 @@ function MainContent() {
     const handleTextChange = (e) => {
         setPromptInput(e.target.value)
     }
+   
     const AISearch = async () => {
         try {
             setLoading(true)

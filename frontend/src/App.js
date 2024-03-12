@@ -20,6 +20,9 @@ import Dashboard from './components/AdminLayout/Dashboard';
 import AdminUser from './components/AdminLayout/AdminUser';
 import AdminUpdate from './components/AdminLayout/AdminUpdate';
 import PaymentHistory from './components/AdminLayout/PaymentHistory';
+import CategoryLayout from './components/AdminLayout/CategoryLayout';
+import LanguageLayout from './components/AdminLayout/LanguageLayout';
+import LengthLayout from './components/AdminLayout/LengthLayout';
 // import Faq from './components/Faq';
 
 function App() {
@@ -47,6 +50,9 @@ function App() {
           <Route path='users' element={<AdminUser/>} />
           <Route path='users/:id' element={<AdminUpdate/>} />
           <Route path='payments' element={<PaymentHistory/>} />
+          <Route path='category' element={<CategoryLayout/>} />
+          <Route path='language' element={<LanguageLayout/>} />
+          <Route path='length' element={<LengthLayout/>} />
         </Route>
       </Routes>
       <Footer />

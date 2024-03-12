@@ -13,4 +13,8 @@ router.route("/users/delete/:id").delete(UserMiddleware , adminController.delete
 
 router.route("/payments").get(UserMiddleware,adminController.getPaymentHistory)
 
+router.route("/category").get(UserMiddleware , adminController.getCategory)
+
+router.route("/category/addcategory").post(UserMiddleware , adminController.UpdateCategory)
+
 module.exports = router

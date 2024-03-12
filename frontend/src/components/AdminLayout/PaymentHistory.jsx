@@ -33,7 +33,7 @@ function PaymentHistory() {
                 <table className="table table-light table-hover border-1 " style={{ border: "1px solid grey" }}>
                     <thead className='text-center' >
                         <tr>
-                            {/* <th scope="col">Email id</th> */}
+                            <th scope="col">Email id</th>
                             <th scope="col">Payment id</th>
                             <th scope="col">Create at</th>
                         </tr>
@@ -44,7 +44,7 @@ function PaymentHistory() {
                                 return (
                                     <>
                                         <tr key={index}>
-                                            {/* <td>{curData.email}</td> */}
+                                            <td>{curData.emailId}</td>
                                             <td>{curData.razorpay_payment_id}</td>
                                             <td>{curData.createdAt}</td>
                                         </tr>
