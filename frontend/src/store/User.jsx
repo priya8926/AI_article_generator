@@ -7,7 +7,7 @@ export const formContext = createContext();
 export const FormProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [user, setUser] = useState()
-    
+
     const [paymentId, setPaymentId] = useState({
         '199': localStorage.getItem("paymentId199"),
         '499': localStorage.getItem("paymentId499")
@@ -57,6 +57,7 @@ export const FormProvider = ({ children }) => {
                 const data = await response.json();
                 console.log("logged in user data", data.userData)
                 setUser(data.userData)
+                console.log("email", data.userData.email)
             }
         } catch (error) {
             console.log(error, "error fetching user data")
@@ -102,18 +103,46 @@ export const FormProvider = ({ children }) => {
             console.log("error fetching content of the aerticle")
         }
     }
+    const storeEmailInPaymentModel = async () => {
+        try {
+            const response = await fetch('http://localhost:8083/api/paymentVerification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: AuthenticationToken
+                },
+                body: JSON.stringify({user })
+            });
+            // const res = await response.json()
+            // console.log("res" , res)
+            if (response.ok) {
+                console.log("Email stored successfully in the payment model");
+            } else {
+                console.error("Failed to store email in the payment model");
+            }
+        } catch (error) {
+            console.error("Error storing email in the payment model", error);
+        }
+    };
+
+    // Call storeEmailInPaymentModel when referenceNo changes
+    useEffect(() => {
+        if (referenceNo && user) {
+            storeEmailInPaymentModel();
+        }
+    }, [referenceNo, user]);
+
     useEffect(() => {
         if (isLoggedIn) {
             getUserData();
         }
     }, [isLoggedIn])
-
     // logout functionality
     const logoutUser = () => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo ,showArticle , getArticle , title,content,history}}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history }}>
         {children}
     </formContext.Provider>
 }

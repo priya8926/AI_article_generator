@@ -19,6 +19,7 @@ import Service from './components/Service'
 import Dashboard from './components/AdminLayout/Dashboard';
 import AdminUser from './components/AdminLayout/AdminUser';
 import AdminUpdate from './components/AdminLayout/AdminUpdate';
+import PaymentHistory from './components/AdminLayout/PaymentHistory';
 // import Faq from './components/Faq';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         <Route path='/admin' element={<Dashboard />}>
           <Route path='users' element={<AdminUser/>} />
           <Route path='users/:id' element={<AdminUpdate/>} />
+          <Route path='payments' element={<PaymentHistory/>} />
         </Route>
       </Routes>
       <Footer />

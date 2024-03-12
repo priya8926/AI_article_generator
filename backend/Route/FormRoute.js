@@ -32,8 +32,8 @@ FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
         const createForm = await article.create({ category, language, length, promptInput, userId: req.user._id, title, content })
 
         await createForm.save();
-        if(!createForm){
-            res.status(500).json({message : "failed to save data"})
+        if (!createForm) {
+            res.status(500).json({ message: "failed to save data" })
         }
         res.status(200).json({
             message: "Data received successfully!",
@@ -74,7 +74,7 @@ FormRoute.route("/category/:id").get(UserMiddleware, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
-FormRoute.route('/updateArticle/:id').patch(UserMiddleware, async(req,res)=>{
+FormRoute.route('/updateArticle/:id').patch(UserMiddleware, async (req, res) => {
     try {
         const id = req.params.id;
         const { title, content } = req.body
@@ -83,7 +83,7 @@ FormRoute.route('/updateArticle/:id').patch(UserMiddleware, async(req,res)=>{
             return res.status(404).json({ message: "Article not found." });
         }
         res.status(200).json({
-            message : "update successfully",
+            message: "update successfully",
             updatedArticle
         });
     } catch (error) {
@@ -146,7 +146,7 @@ FormRoute.route("/getarticle/:id").get(UserMiddleware, async (req, res) => {
             return res.status(401).json({ message: "User not authenticated." });
         }
         const contentId = req.params.id
-        const Content = await article.findOne({_id:contentId }, { title: 1, content: 1 })
+        const Content = await article.findOne({ _id: contentId }, { title: 1, content: 1 })
 
         if (!Content) {
             return res.status(404).json({ message: "Content not found for this user." });
@@ -157,11 +157,11 @@ FormRoute.route("/getarticle/:id").get(UserMiddleware, async (req, res) => {
     }
 })
 // delete article
-FormRoute.route('/deletearticle/:id').delete(UserMiddleware , async(req,res)=>{
+FormRoute.route('/deletearticle/:id').delete(UserMiddleware, async (req, res) => {
     try {
         const id = req.params.id;
-        await article.deleteOne({_id : id})
-        res.status(200).json({message: "article deleted",id})
+        await article.deleteOne({ _id: id })
+        res.status(200).json({ message: "article deleted", id })
     } catch (error) {
         console.log("error deleting article")
     }
@@ -283,27 +283,27 @@ FormRoute.route('/verify').post(async (req, res) => {
 // payment verfication logic
 FormRoute.route("/paymentVerification").post(async (req, res, next) => {
     try {
-        // if (!req.user || !req.user._id) {
-        //     return res.status(401).json({ success: false, message: "Unauthorized: User not authenticated" });
-        // }
-        // const user = await User.findById(req.user._id)
-        // if (!user) {
-        //     return res.status(404).json({ success: false, message: "User not found" });
-        // }
-        // const { razorpay_payment_id, razorpay_signature, razorpay_order_id } = req.body
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body
+        const emailId = req.body
+        console.log("email in backend" ,  emailId)
 
+        console.log("reqested body" , req.body)
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        // const { email } = req.body.user;
         // const subscription_Id = user.subscription.id;
         // console.log("subscription id ", subscription_Id)
         const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
         const generated_signature = crypto.createHmac('sha256', process.env.Key_Secret).update(dataToHash).digest("hex")
 
+        console.log("Generated Signature:", generated_signature);
+        console.log("Received Signature:", razorpay_signature);
         // Compare generated signature with Razorpay signature
         if (generated_signature == razorpay_signature) {
-            console.log("Payement verfication successfull")
-
+            
+            // const user = await User.findById(req.user._id);
+            // const userEmail = user ? user.email : null;
             //store in database
-            await payment.create({ razorpay_payment_id, razorpay_signature, razorpay_order_id })
+            await payment.create({razorpay_payment_id, razorpay_signature, razorpay_order_id });
+            console.log("Payement verfication successfull")
 
             // user.subscription.status = "active"
             // await user.save()
@@ -320,6 +320,7 @@ FormRoute.route("/paymentVerification").post(async (req, res, next) => {
         res.status(500).json({ error: "Payment verification failed" });
     }
 })
+
 
 // subscription plan
 FormRoute.route("/createSubscription").post(async (req, res, next) => {

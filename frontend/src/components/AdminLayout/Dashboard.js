@@ -13,27 +13,27 @@ function Dashboard() {
                             <ul className="nav flex-column mt-3">
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="/admin/users">
-                                        <i class="fa-solid fa-user fa-lg mx-2 "></i>Users</NavLink>
+                                        <i className="fa-solid fa-user fa-lg mx-2 "></i>Users</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/admin/payments">
+                                        <i className="fa-solid fa-money-check fa-lg mx-2"></i>Payments</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="">
-                                        <i class="fa-solid fa-money-check fa-lg mx-2"></i>Payments</NavLink>
+                                        <i className="fa-regular fa-id-card fa-lg mx-2"></i>Contact</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="">
-                                        <i class="fa-regular fa-id-card fa-lg mx-2"></i>Contact</NavLink>
+                                        <i className="fa-solid fa-hand-pointer fa-lg mx-2"></i>Subscription</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="">
-                                        <i class="fa-solid fa-hand-pointer fa-lg mx-2"></i>Subscription</NavLink>
+                                        <i className="fa-solid fa-list fa-lg mx-2"></i>Category</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="">
-                                        <i class="fa-solid fa-list fa-lg mx-2"></i>Category</NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="">
-                                        <i class="fa-solid fa-star fa-lg mx-2"></i>Rate</NavLink>
+                                        <i className="fa-solid fa-star fa-lg mx-2"></i>Rate</NavLink>
                                 </li>
                             </ul>
                         </nav>

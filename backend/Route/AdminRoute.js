@@ -11,4 +11,6 @@ router.route("/users/update/:id").patch(UserMiddleware , adminController.updateU
 
 router.route("/users/delete/:id").delete(UserMiddleware , adminController.deleteUserById)
 
+router.route("/payments").get(UserMiddleware,adminController.getPaymentHistory)
+
 module.exports = router
