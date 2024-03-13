@@ -80,7 +80,7 @@ function AdminUser() {
                                                 <Link to={`/admin/users/${curData._id}`} >Edit</Link>
                                             </td>
                                             <td>
-                                                <Link onClick={() => { deleteUser(curData._id) }} >Delete</Link>
+                                                <Link onClick={() => { deleteUser(curData._id) }}>Delete</Link>
                                             </td>
                                         </tr>
                                     </>

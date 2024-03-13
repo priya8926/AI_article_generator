@@ -28,16 +28,16 @@ function Dashboard() {
                                         <i className="fa-solid fa-hand-pointer fa-lg mx-2"></i>Subscription</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/admin/category">
+                                    <NavLink className="nav-link" to="/admin/category/addcategory">
                                         <i className="fa-solid fa-list fa-lg mx-2"></i>Category</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/admin/language">
-                                    <i class="fa-solid fa-globe fa-lg mx-2"></i>Language</NavLink>
+                                    <NavLink className="nav-link" to="/admin/language/addLanguage">
+                                    <i className="fa-solid fa-globe fa-lg mx-2"></i>Language</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="/admin/length">
-                                    <i class="fa-solid fa-arrows-up-down fa-lg mx-2"></i>Length</NavLink>
+                                    <i className="fa-solid fa-arrows-up-down fa-lg mx-2"></i>Length</NavLink>
                                 </li>
                                 
                             </ul>

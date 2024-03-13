@@ -1,15 +1,73 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from '../../store/User'
+import { Link } from 'react-router-dom';
 
 function CategoryLayout() {
-    const { categories, value, addCategory, setValue } = useForm()
+    const [category, setCategory] = useState([])
+    const [newCategory, setNewCategory] = useState('');
+    const { AuthenticationToken } = useForm()
 
-    const handleNewCategoryChange = (event) => {
-        setValue({
-            ...value,
-            [event.target.name]: event.target.value
-        });
+    const handleChange = (event) => {
+        setNewCategory(event.target.value)
     };
+    // Get all categories when the component mounts for the first time
+    const getCategory = async () => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/category`, {
+                method: "GET",
+                headers: {
+                    Authorization: AuthenticationToken
+                },
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setCategory(data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        getCategory()
+    }, [])
+    const handleClick = async () => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/category/addcategory`, {
+                method: "POST",
+                headers: {
+                    'Content-type': 'Application/json',
+                    Authorization: AuthenticationToken
+                },
+                body: JSON.stringify({ category: newCategory })
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setCategory([...category, data])
+                setNewCategory('')
+                console.log('category', data)
+                alert("category added")
+            }
+        } catch (error) {
+            console.log("error adding category", error)
+        }
+    }
+    const deleteCatgory = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/category/deletecategory/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: AuthenticationToken
+                },
+            })
+            const data = await response.json()
+            alert("Category deleted")
+            if (response.ok) {
+                getCategory()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
             <section>
@@ -22,10 +80,10 @@ function CategoryLayout() {
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter category"
-                                value={value.category}
-                                onChange={handleNewCategoryChange}
+                                value={newCategory}
+                                onChange={handleChange}
                             />
-                            <button className="btn btn-primary" type="button" onClick={addCategory}>Add</button>
+                            <button className="btn btn-primary" type="button" onClick={handleClick} >Add</button>
                         </div>
                     </div>
                     <div className='container'>
@@ -33,10 +91,24 @@ function CategoryLayout() {
                             <thead className='text-center'>
                                 <tr>
                                     <th scope="col">Categories</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody className="text-center" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-
+                                {
+                                    category.map((curData, index) => {
+                                        return (
+                                            <>
+                                                <tr key={index}>
+                                                    <td>{curData.category}</td>
+                                                    <td>
+                                                        <Link onClick={() => deleteCatgory(curData._id)}><i className="fa-solid fa-trash"></i></Link>
+                                                    </td>
+                                                </tr>
+                                            </>
+                                        )
+                                    })
+                                }
                             </tbody>
                         </table>
                     </div>

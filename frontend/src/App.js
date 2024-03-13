@@ -50,8 +50,8 @@ function App() {
           <Route path='users' element={<AdminUser/>} />
           <Route path='users/:id' element={<AdminUpdate/>} />
           <Route path='payments' element={<PaymentHistory/>} />
-          <Route path='category' element={<CategoryLayout/>} />
-          <Route path='language' element={<LanguageLayout/>} />
+          <Route path='category/addcategory' element={<CategoryLayout/>} />
+          <Route path='language/addLanguage' element={<LanguageLayout/>} />
           <Route path='length' element={<LengthLayout/>} />
         </Route>
       </Routes>

@@ -15,6 +15,14 @@ router.route("/payments").get(UserMiddleware,adminController.getPaymentHistory)
 
 router.route("/category").get(UserMiddleware , adminController.getCategory)
 
-router.route("/category/addcategory").post(UserMiddleware , adminController.UpdateCategory)
+router.route("/category/addcategory").post(UserMiddleware , adminController.addCategory)
+
+router.route("/category/deletecategory/:id").delete(UserMiddleware , adminController.deleteCategory)
+
+router.route("/language").get(UserMiddleware , adminController.getLanguage)
+
+router.route("/language/addLanguage").post(UserMiddleware , adminController.addLanguage)
+
+router.route("/language/deleteLanguage/:id").delete(UserMiddleware , adminController.deleteLanguage)
 
 module.exports = router
