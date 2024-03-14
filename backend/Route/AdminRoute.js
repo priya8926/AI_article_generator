@@ -19,10 +19,18 @@ router.route("/category/addcategory").post(UserMiddleware , adminController.addC
 
 router.route("/category/deletecategory/:id").delete(UserMiddleware , adminController.deleteCategory)
 
+router.route("/category/updatecategory/:id").patch(UserMiddleware , adminController.editCategory)
+
 router.route("/language").get(UserMiddleware , adminController.getLanguage)
 
 router.route("/language/addLanguage").post(UserMiddleware , adminController.addLanguage)
 
 router.route("/language/deleteLanguage/:id").delete(UserMiddleware , adminController.deleteLanguage)
+
+router.route("/length").get(UserMiddleware , adminController.getLength)
+
+router.route("/length/addLength").post(UserMiddleware , adminController.addLength)
+
+router.route("/length/deleteLength/:id").delete(UserMiddleware ,  adminController.deleteLength)
 
 module.exports = router

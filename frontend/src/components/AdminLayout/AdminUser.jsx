@@ -77,10 +77,14 @@ function AdminUser() {
                                             <td>{curData.createdAt}</td>
                                             <td>{curData.subscription ? curData.subscription.status : 'N/A'}</td>
                                             <td>
-                                                <Link to={`/admin/users/${curData._id}`} >Edit</Link>
+                                                <Link to={`/admin/users/${curData._id}`} >
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                </Link>
                                             </td>
                                             <td>
-                                                <Link onClick={() => { deleteUser(curData._id) }}>Delete</Link>
+                                                <Link onClick={() => { deleteUser(curData._id) }}>
+                                                <i className="fa-solid fa-trash"></i>
+                                                </Link>
                                             </td>
                                         </tr>
                                     </>

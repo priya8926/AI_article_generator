@@ -68,12 +68,31 @@ function CategoryLayout() {
             console.log(error)
         }
     }
+    const editCateory = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/category/updatecategory/${id}`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: AuthenticationToken
+                },
+                body: JSON.stringify({ updateCat })
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setUpdateCat(data)
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
-            <section>
-                <div className='container mt-5'>
+            <section className='w-75'>
+                <div className=' mt-5 d-flex px-5'>
                     <div className="mb-4 mx-3">
-                        <label className="form-label mt-5 mx-2">Add Category</label>
+                        <h6><label className="form-label mt-5 mx-2">Add Category :</label></h6>
                         <div className="input-group">
                             <input
                                 name='category'
@@ -92,6 +111,7 @@ function CategoryLayout() {
                                 <tr>
                                     <th scope="col">Categories</th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody className="text-center" style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -102,7 +122,12 @@ function CategoryLayout() {
                                                 <tr key={index}>
                                                     <td>{curData.category}</td>
                                                     <td>
-                                                        <Link onClick={() => deleteCatgory(curData._id)}><i className="fa-solid fa-trash"></i></Link>
+                                                        <Link onClick={() => deleteCatgory(curData._id)}>
+                                                            <i className="fa-solid fa-trash"></i></Link>
+                                                    </td>
+                                                    <td>
+                                                        <Link onClick={() => editCateory(curData._id)}>
+                                                            <i className="fa-solid fa-pen-to-square"></i></Link>
                                                     </td>
                                                 </tr>
                                             </>

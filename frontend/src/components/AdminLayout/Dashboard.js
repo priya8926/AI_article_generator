@@ -36,7 +36,7 @@ function Dashboard() {
                                     <i className="fa-solid fa-globe fa-lg mx-2"></i>Language</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/admin/length">
+                                    <NavLink className="nav-link" to="/admin/length/addLength">
                                     <i className="fa-solid fa-arrows-up-down fa-lg mx-2"></i>Length</NavLink>
                                 </li>
                                 

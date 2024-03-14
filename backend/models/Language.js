@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const languageSchema = new mongoose.Schema({
-    Language: {
+    language: {
         type: String,
         required: true,
         unique: true

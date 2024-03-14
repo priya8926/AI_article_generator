@@ -2,6 +2,7 @@ const User = require("../models/User");
 const payment = require("../models/PaymentSuccess")
 const Category = require('../models/Category')
 const Language = require('../models/Language')
+const Length = require("../models/Length")
 
 // get all login user
 const getAllUser = async (req, res) => {
@@ -75,21 +76,18 @@ const getCategory = async (req, res) => {
     }
 }
 const addCategory = async (req, res) => {
+    const { id } = req.params;
+    const { category } = req.body;
+
     try {
-        const { category } = req.body
-        if (!category) {
-            return res.status(400).json({ error: "Category is required" });
+        const updatedCategory = await Category.findByIdAndUpdate(id, { category }, { new: true });
+        if (!updatedCategory) {
+            return res.status(404).json({ message: 'Category not found' });
         }
-        const existingCatogory = await Category.findOne({ category })
-        if (existingCatogory) {
-            return res.status(400).json({ error: 'Category already exists' });
-        }
-        // Add the new category to the list
-        // categories.push(category);
-        await Category.create({ category });
-        res.status(201).json({ message: 'Category added successfully', category });
+        res.json(updatedCategory);
     } catch (error) {
-        console.log("error adding category")
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 }
 const deleteCategory = async (req, res) => {
@@ -98,6 +96,18 @@ const deleteCategory = async (req, res) => {
         await Category.deleteOne({ _id: id })
         res.status(200).json({ message: "category deletd" })
 
+    } catch (error) {
+        console.log(error)
+    }
+}
+const editCategory = async (req, res) => {
+    try {
+        const id = req.params.id
+        const updateField = await Category.updateOne({ _id: id }, { $set: { ...req.body } })
+        if (!updateField) {
+            return res.status(404).json({ message: "No such category found" })
+        }
+        res.status(200).json({ message: "category updated" })
     } catch (error) {
         console.log(error)
     }
@@ -124,7 +134,7 @@ const addLanguage = async (req, res) => {
         if (existingLanguage) {
             return res.status(400).json({ error: 'Language already exists' });
         }
-        await Language.create({ Language: language  })
+        await Language.create({ Language: language })
         res.status(200).json({ message: "Language Added Successfully", language })
     } catch (error) {
         console.log(error)
@@ -134,10 +144,48 @@ const deleteLanguage = async (req, res) => {
     try {
         const id = req.params.id;
         await Language.deleteOne({ _id: id })
-        res.status(200).json({message: 'Deleted successfully'});
+        res.status(200).json({ message: 'Deleted successfully' });
     } catch (error) {
         console.log(error)
     }
 }
-
-module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, getLanguage, addLanguage, deleteLanguage }
+const getLength = async (req, res) => {
+    try {
+        const data = await Length.find({})
+        if (!data) {
+            res.status(401).json({ message: "No length record found" })
+        }
+        res.status(200).json(data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+const addLength = async (req, res) => {
+    try {
+        const { length } = req.body
+        if (!length) {
+            res.status(400).json({ message: "Length is required" })
+        }
+        const existingLength = await Length.findOne({ Length: length })
+        if (existingLength) {
+            res.status(401).json({ message: "Length already exists" })
+        }
+        await Length.create({ Length: length })
+        res.status(200).json({ message: "Length added", length })
+    } catch (error) {
+        console.log(error)
+    }
+}
+const deleteLength = async (req, res) => {
+    try {
+        const id = req.params.id
+        const data = await Length.deleteOne({ _id: id })
+        if (!data) {
+            return res.status(404).json("No length with this id was found.")
+        }
+        res.status(200).json({ message: "Length deleted" })
+    } catch (error) {
+        console.log(error)
+    }
+}
+module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength }

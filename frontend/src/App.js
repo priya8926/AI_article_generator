@@ -52,7 +52,7 @@ function App() {
           <Route path='payments' element={<PaymentHistory/>} />
           <Route path='category/addcategory' element={<CategoryLayout/>} />
           <Route path='language/addLanguage' element={<LanguageLayout/>} />
-          <Route path='length' element={<LengthLayout/>} />
+          <Route path='length/addLength' element={<LengthLayout/>} />
         </Route>
       </Routes>
       <Footer />

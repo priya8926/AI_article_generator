@@ -17,6 +17,9 @@ function MainContent() {
         language: '',
         length: '',
     });
+    const [categories, setCategories] = useState([]);
+    const [language, setLanguage] = useState([]);
+    const [length, setLength] = useState([]);
     const [promptInput, setPromptInput] = useState("")
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
@@ -31,7 +34,7 @@ function MainContent() {
     const handleTextChange = (e) => {
         setPromptInput(e.target.value)
     }
-   
+
     const AISearch = async () => {
         try {
             setLoading(true)
@@ -63,7 +66,58 @@ function MainContent() {
             console.log("error occur while fetchig the api key", error)
         }
     }
-
+    useEffect(() => {
+        const getCategory = async () => {
+            try {
+                const response = await fetch(`http://localhost:8083/api/admin/category`, {
+                    headers: {
+                        Authorization: AuthenticationToken
+                    }
+                })
+                if (response.ok) {
+                    const data = await response.json()
+                    setCategories(data)
+                } else {
+                    console.error('Failed to fetch categories:', response.statusText);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        const getLanguage = async () => {
+            try {
+                const response = await fetch('http://localhost:8083/api/admin/language',{
+                    headers: {
+                        Authorization: AuthenticationToken
+                    }
+                })
+                if (response.ok) {
+                    const data = await response.json()
+                    setLanguage(data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        const getLength = async()=>{
+            try {
+                const response = await fetch(`http://localhost:8083/api/admin/length`,{
+                    headers: {
+                        Authorization: AuthenticationToken
+                    }
+                })
+                if(response.ok){
+                    const data = await response.json()
+                    setLength(data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getCategory()
+        getLanguage()
+        getLength()
+    }, [])
     const handleClick = async (e) => {
         e.preventDefault()
         setTitle(selectedValues.category)
@@ -123,16 +177,18 @@ function MainContent() {
             if (content.length > 0) {
                 const save = window.confirm("Do you want to save the article?")
                 if (save) {
-                    const contentResponse = await fetch(`http://localhost:8083/api/category`, {
+                    const contentResponse = await fetch(`http://localhost:8083/api/category`,{
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: AuthenticationToken
                         },
-                        body: JSON.stringify({  category: selectedValues.category,
+                        body: JSON.stringify({
+                            category: selectedValues.category,
                             language: selectedValues.language,
                             length: selectedValues.length,
-                            promptInput,title, content })
+                            promptInput, title, content
+                        })
                     })
                     if (contentResponse.ok) {
                         const data = await contentResponse.json();
@@ -157,41 +213,41 @@ function MainContent() {
 
     return (
         <>
-<div className="container-fluid pt-5 bg-primary hero-header mb-5">
-                    <div className="container pt-5">
-                        <div className="row g-5 pt-5">
-                            <div className="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
-                                <div className="btn btn-sm border rounded-pill text-white px-3 mb-3 animated slideInRight">
-                                    AIArticle
-                                </div>
-                                <h1 className="display-4 text-white mb-4 animated slideInRight">
+            <div className="container-fluid pt-5 bg-primary hero-header mb-5">
+                <div className="container pt-5">
+                    <div className="row g-5 pt-5">
+                        <div className="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
+                            <div className="btn btn-sm border rounded-pill text-white px-3 mb-3 animated slideInRight">
+                                AIArticle
+                            </div>
+                            <h1 className="display-4 text-white mb-4 animated slideInRight">
                                 Welcome to AI Article Generator
-                                </h1>
-                                <p className="text-white mb-4 animated slideInRight">
+                            </h1>
+                            <p className="text-white mb-4 animated slideInRight">
                                 AI Article Generator is an automatic online tool developed to help those who want to create fresh content for any purpose, whether you need content for your website, SEO , blog, school or college Article Generator can do that for you in few seconds, without any effort.
-                                </p>
-                               <NavLink
-                                    to="/about"
-                                    className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInRight"
-                                >
-                                    Read More
-                                </NavLink>
-                                <NavLink
-                                    to="/contact"
-                                    className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"
-                                >
-                                    Contact Us
-                                </NavLink>
-                            </div>
-                            <div className="col-lg-6 align-self-end text-center text-lg-end">
-                                <img className="img-fluid" src={HeroImg} alt="" />
-                            </div>
+                            </p>
+                            <NavLink
+                                to="/about"
+                                className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInRight"
+                            >
+                                Read More
+                            </NavLink>
+                            <NavLink
+                                to="/contact"
+                                className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"
+                            >
+                                Contact Us
+                            </NavLink>
+                        </div>
+                        <div className="col-lg-6 align-self-end text-center text-lg-end">
+                            <img className="img-fluid" src={HeroImg} alt="" />
                         </div>
                     </div>
                 </div>
+            </div>
             <section className='container d-flex justify-content-center' >
                 <form >
-            <h1 className='container mt-5 text-center'>Write High-Quality Articles in Minutes <br /> with Our AI Article Writer </h1>
+                    <h1 className='container mt-5 text-center'>Write High-Quality Articles in Minutes <br /> with Our AI Article Writer </h1>
                     <div className="mb-4 ">
                         <label className="form-label mt-5 mx-2">
                             Select category for article :
@@ -199,24 +255,26 @@ function MainContent() {
                         <span className="dropdown " >
                             <select className="btn btn-primary selection" name="category" value={selectedValues.category} onChange={handleInputChange}>
                                 <option value="">Select Category</option>
-                                <option value="Technology">Technology</option>
-                                <option value="Science">Science</option>
-                                <option value="Health">Health</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Business">Business</option>
+                                {
+                                    categories.map(category => (
+                                        <option key={category} value={category.category}>{category.category}</option>
+                                    ))
+                                }
                             </select>
                         </span>
                     </div>
                     <div className="mb-4">
                         <label className="form-label mx-2">
-                            Select Language for article : 
+                            Select Language for article :
                         </label>
                         <span className="dropdown">
                             <select className="btn btn-primary selection" name="language" value={selectedValues.language} onChange={handleInputChange} >
-                                <option value="">Select Language</option>
-                                <option value="English">English</option>
-                                <option value="French">French</option>
-                                <option value="Hindi">Hindi</option>
+                            <option value="">Select Language</option>
+                                {
+                                    language.map(curData => (
+                                        <option key={curData._id} value={curData.Language}>{curData.Language}</option>
+                                    ))
+                                }
                             </select>
                         </span>
                     </div>
@@ -226,11 +284,12 @@ function MainContent() {
                         </label>
                         <span className="dropdown">
                             <select className="btn btn-primary selection" name="length" value={selectedValues.length} onChange={handleInputChange} >
-                                <option value="">Length of the article</option>
-                                <option value="500">500</option>
-                                <option value="1000">1000</option>
-                                <option value="2000">2000</option>
-                                <option value="more...">More than 2000...</option>
+                                <option value="">Select Length of the article</option>
+                                {
+                                    length.map(curData =>(
+                                        <option key={curData._id} value={curData.Length}>{curData.Length}</option>
+                                    ))
+                                }
                             </select>
                         </span>
                     </div>
@@ -241,18 +300,18 @@ function MainContent() {
 
                     </div>
                     <div className='d-flex justify-content-center '>
-                    {!selectedValues.category || !selectedValues.language || !selectedValues.length || !promptInput ? (
-                        <>
-                            <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
+                        {!selectedValues.category || !selectedValues.language || !selectedValues.length || !promptInput ? (
+                            <>
+                                <button type="submit" className="btn btn-primary" onClick={handleClick} disabled>
+                                    Search
+                                </button>
+
+                            </>
+                        ) : (
+                            <button type="submit" className="btn btn-primary" onClick={handleClick}>
                                 Search
                             </button>
-
-                        </>
-                    ) : (
-                        <button type="submit" className="btn btn-primary" onClick={handleClick}>
-                            Search
-                        </button>
-                    )}
+                        )}
                     </div>
                     {/* <div>
                         <p >You searched the article for {clickCount} times</p>

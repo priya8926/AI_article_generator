@@ -44,7 +44,7 @@ function LanguageLayout() {
             })
             const data = await response.json()
             if (response.ok) {
-                setLanguage([...language, data]);
+                setLanguage([...language, data.language]);
                 setNewLanguage('')
                 alert("Language added")
             } else if (response.status === 400) {
@@ -73,10 +73,10 @@ function LanguageLayout() {
     }
     return (
         <>
-            <section>
-                <div className='container mt-5'>
-                    <div className="mb-4 mx-3">
-                        <label className="form-label mt-5 mx-2">Add Language</label>
+            <section className='w-75'>
+                <div className='container mt-5 d-flex'>
+                    <div className="mb-4 ">
+                        <h6><label className="form-label mt-5 mx-2">Add Language :</label></h6>
                         <div className="input-group">
                             <input
                                 name='category'
@@ -90,7 +90,7 @@ function LanguageLayout() {
                         </div>
                     </div>
                     <div className='container'>
-                        <table className="table table-light table-hover border-1" style={{ border: "1px solid grey" }}>
+                        <table className="table table-light table-hover border-1 mx-5" style={{ border: "1px solid grey" }}>
                             <thead className='text-center'>
                                 <tr>
                                     <th scope="col">Languages</th>
@@ -101,12 +101,14 @@ function LanguageLayout() {
                                 {
                                     language.map((curData) => {
                                         return (
+                                            <>
                                             <tr key={curData._id}>
                                                 <td>{curData.Language}</td>
                                                 <td>
                                                     <Link onClick={() => deleteLanguage(curData._id)}><i className="fa-solid fa-trash"></i></Link>
                                                 </td>
                                             </tr>
+                                            </>
                                         )
                                     })
                                 }
