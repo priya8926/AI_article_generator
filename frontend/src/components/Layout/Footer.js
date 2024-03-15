@@ -4,7 +4,13 @@ import { NavLink } from 'react-router-dom'
 function Footer() {
   return (
     <>
-      <div className="container-fluid bg-dark text-white-50 footer pt-5 ">
+      <div className="container-fluid bg-dark text-white-50 footer pt-5 " style={{
+        // position: "fixed",
+        left: 0,
+        bottom: 0,
+        width: "100%",
+
+      }}>
         <div className="container py-4 ">
           <div className="row g-5">
             <div className="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
@@ -14,7 +20,7 @@ function Footer() {
                 </h2>
               </NavLink>
               <p className="mb-0">
-              Create unlimited unique essays, articles or content for your website or blog the fastest and simpliest way, no more wasting hours writing articles.Create articles automatically on any subject by adding keyword and use the generated articles with any of your favorite SEO software.
+                Create unlimited unique essays, articles or content for your website or blog the fastest and simpliest way, no more wasting hours writing articles.Create articles automatically on any subject by adding keyword and use the generated articles with any of your favorite SEO software.
               </p>
             </div>
             <div className="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
@@ -115,7 +121,7 @@ function Footer() {
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
     </>
   )

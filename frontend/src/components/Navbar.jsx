@@ -4,8 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Navbar() {
-    const { isLoggedIn } = useForm()
-
+    const { user, isLoggedIn } = useForm()
     return (
         <>
             <div className="container-fluid sticky-top">
@@ -29,7 +28,8 @@ function Navbar() {
                                         <NavLink to="/subscription" className="nav-item nav-link">Upgrade plan</NavLink>
                                         {/* <NavLink to="/faqs" className="nav-item nav-link">FAQ</NavLink> */}
                                         <NavLink to="/logout" className="nav-item nav-link">Logout</NavLink>
-                                        <NavLink to="/admin/users" className="nav-item nav-link">Admin</NavLink>
+                                        {user && user.isAdmin && <NavLink to="/admin/users" className="nav-item nav-link">Admin</NavLink>}
+
                                     </div>
                                 </>
                             ) : (

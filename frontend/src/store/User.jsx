@@ -7,7 +7,7 @@ export const formContext = createContext();
 export const FormProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [user, setUser] = useState()
-
+    const [isLoading, setIsLoading] = useState(true)
     const [paymentId, setPaymentId] = useState({
         '199': localStorage.getItem("paymentId199"),
         '499': localStorage.getItem("paymentId499")
@@ -19,7 +19,6 @@ export const FormProvider = ({ children }) => {
     const [content, setContent] = useState()
     const [history, setHistory] = useState([])
 
-    const [categories, setCategories] = useState([])
     const [value, setValue] = useState({
         category:"",
         language:"",
@@ -54,6 +53,7 @@ export const FormProvider = ({ children }) => {
     // to get current logged in user data 
     const getUserData = async () => {
         try {
+            setIsLoading(true)
             const response = await fetch(`http://localhost:8083/api/user`, {
                 method: "GET",
                 headers: {
@@ -68,6 +68,7 @@ export const FormProvider = ({ children }) => {
             }
         } catch (error) {
             console.log(error, "error fetching user data")
+            setIsLoading(false)
         }
     }
     const getArticle = async () => {
@@ -116,49 +117,12 @@ export const FormProvider = ({ children }) => {
             getUserData();
         }
     }, [isLoggedIn])
-    const getCategory = async () => {
-        const response = await fetch(`http://localhost:8083/api/admin/category`, {
-            method: 'GET',
-            headers: {
-                Authorization: AuthenticationToken
-            }
-        })
-        if (response.ok) {
-            const data = await response.json()
-            setCategories(data)
-        }
-    }
-    useEffect(() => {
-        getCategory()
-    }, [])
-
-    const addCategory = async () => {
-        try {
-            const respnse = await fetch(`http://localhost:8083/api/admin/category/addcategory`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: AuthenticationToken
-                },
-                body: JSON.stringify({ category: value })
-            })
-            if(respnse.ok){
-                getCategory()
-                setValue('')
-            }
-            else{
-                console.log("failed to add")
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    };
     // logout functionality
     const logoutUser = () => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history, categories, value,addCategory , setValue }}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history, value , setValue }}>
         {children}
     </formContext.Provider>
 }

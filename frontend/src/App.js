@@ -23,6 +23,8 @@ import PaymentHistory from './components/AdminLayout/PaymentHistory';
 import CategoryLayout from './components/AdminLayout/CategoryLayout';
 import LanguageLayout from './components/AdminLayout/LanguageLayout';
 import LengthLayout from './components/AdminLayout/LengthLayout';
+import AdminContact from './components/AdminLayout/AdminContact';
+import AdminSubscription from './components/AdminLayout/AdminSubscription';
 // import Faq from './components/Faq';
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
           <Route path='category/addcategory' element={<CategoryLayout/>} />
           <Route path='language/addLanguage' element={<LanguageLayout/>} />
           <Route path='length/addLength' element={<LengthLayout/>} />
+          <Route path='contact' element={<AdminContact/>} />
+          <Route path='subscription' element={<AdminSubscription/>} />
         </Route>
       </Routes>
       <Footer />

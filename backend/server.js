@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors")
 const FormRoute = require("./Route/FormRoute");
 const adminRoute = require("./Route/AdminRoute")
+const contactRoute = require("./Route/ContactRoute")
 
 const corsOptions = {
     origin: "http://localhost:3000",
@@ -20,6 +21,7 @@ const connectdb = require("./Database/Db");
 
 app.use("/api", FormRoute)
 app.use("/api/admin",adminRoute)
+app.use("/api/form" , contactRoute)
 
 app.get("/api/getkey", (req, res) =>
     res.status(200).json({ key: process.env.Key_Id }))

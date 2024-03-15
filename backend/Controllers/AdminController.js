@@ -2,7 +2,8 @@ const User = require("../models/User");
 const payment = require("../models/PaymentSuccess")
 const Category = require('../models/Category')
 const Language = require('../models/Language')
-const Length = require("../models/Length")
+const Length = require("../models/Length");
+const Contact = require("../models/ContactModel");
 
 // get all login user
 const getAllUser = async (req, res) => {
@@ -76,18 +77,19 @@ const getCategory = async (req, res) => {
     }
 }
 const addCategory = async (req, res) => {
-    const { id } = req.params;
-    const { category } = req.body;
-
     try {
-        const updatedCategory = await Category.findByIdAndUpdate(id, { category }, { new: true });
-        if (!updatedCategory) {
-            return res.status(404).json({ message: 'Category not found' });
+        const { category } = req.body
+        if (!category) {
+            return res.status(400).json({ error: "Category is required" });
         }
-        res.json(updatedCategory);
+        const existingCatogory = await Category.findOne({ category })
+        if (existingCatogory) {
+            return res.status(400).json({ error: 'Category already exists' });
+        }
+        await Category.create({ category });
+        res.status(201).json({ message: 'Category added successfully', category });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.log("error adding category")
     }
 }
 const deleteCategory = async (req, res) => {
@@ -103,8 +105,8 @@ const deleteCategory = async (req, res) => {
 const editCategory = async (req, res) => {
     try {
         const id = req.params.id
-        const updateField = await Category.updateOne({ _id: id }, { $set: { ...req.body } })
-        if (!updateField) {
+        const updatedCategory = await Category.findByIdAndUpdate(id, req.body, { new: true });
+        if (!updatedCategory) {
             return res.status(404).json({ message: "No such category found" })
         }
         res.status(200).json({ message: "category updated" })
@@ -130,11 +132,11 @@ const addLanguage = async (req, res) => {
         if (!language) {
             res.status(400).json("language required")
         }
-        const existingLanguage = await Language.findOne({ Language: language })
+        const existingLanguage = await Language.findOne({ language })
         if (existingLanguage) {
             return res.status(400).json({ error: 'Language already exists' });
         }
-        await Language.create({ Language: language })
+        await Language.create({ language })
         res.status(200).json({ message: "Language Added Successfully", language })
     } catch (error) {
         console.log(error)
@@ -145,6 +147,22 @@ const deleteLanguage = async (req, res) => {
         const id = req.params.id;
         await Language.deleteOne({ _id: id })
         res.status(200).json({ message: 'Deleted successfully' });
+    } catch (error) {
+        console.log(error)
+    }
+}
+const editLanguage = async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log("language req.body", req.body)
+        // const updateLanguage = await Language.findByIdAndUpdate(id, req.body, { new: true })
+        const { language } = req.body;
+        const updateLanguage = await Language.updateOne({ _id: id }, { $set: { language } });
+
+        if (!updateLanguage) {
+            return res.status(404).json({ message: "No such Language found" })
+        }
+        res.status(200).json({ message: "Language updated" })
     } catch (error) {
         console.log(error)
     }
@@ -166,11 +184,11 @@ const addLength = async (req, res) => {
         if (!length) {
             res.status(400).json({ message: "Length is required" })
         }
-        const existingLength = await Length.findOne({ Length: length })
+        const existingLength = await Length.findOne({ length })
         if (existingLength) {
             res.status(401).json({ message: "Length already exists" })
         }
-        await Length.create({ Length: length })
+        await Length.create({ length })
         res.status(200).json({ message: "Length added", length })
     } catch (error) {
         console.log(error)
@@ -188,4 +206,36 @@ const deleteLength = async (req, res) => {
         console.log(error)
     }
 }
-module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength }
+const editLength = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const {length} = req.body
+        const  data = await Length.findByIdAndUpdate(id,{length},{new:true})
+        if(!data){
+            return res.status(404).json('The length you are trying to update does not exist')
+        }
+        res.status(200).json({message:"Length updated successfully.",data});
+    
+    } catch (error) {
+        console.log(error)
+    }
+}
+const getContact = async (req,res) =>{
+    try {
+        const data = await Contact.find({})
+        if (!data || data.length === 0) {
+            res.status(401).json('No data Found')
+        }
+        res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+    }
+}
+const Allsubscription = async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log("error in subscription" , error)
+    }
+}
+module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength, editLanguage , editLength ,getContact,Allsubscription}

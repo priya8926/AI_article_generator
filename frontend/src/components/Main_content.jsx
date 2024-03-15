@@ -272,7 +272,7 @@ function MainContent() {
                             <option value="">Select Language</option>
                                 {
                                     language.map(curData => (
-                                        <option key={curData._id} value={curData.Language}>{curData.Language}</option>
+                                        <option key={curData._id} value={curData.language}>{curData.language}</option>
                                     ))
                                 }
                             </select>
@@ -287,7 +287,7 @@ function MainContent() {
                                 <option value="">Select Length of the article</option>
                                 {
                                     length.map(curData =>(
-                                        <option key={curData._id} value={curData.Length}>{curData.Length}</option>
+                                        <option key={curData._id} value={curData.length}>{curData.length}</option>
                                     ))
                                 }
                             </select>
