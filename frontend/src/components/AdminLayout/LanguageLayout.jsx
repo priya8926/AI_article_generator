@@ -172,7 +172,7 @@ function LanguageLayout() {
                             <button className="btn btn-primary" type="button" onClick={handleClick}>Add</button>
                         </div>
                     </div>
-                    <div className='container'>
+                    <div className='container h-75' style={{ overflowY: 'scroll' }}>
                         <table className="table table-light table-hover border-1 " style={{ border: "1px solid grey" }}>
                             <thead className='text-center'>
                                 <tr>
@@ -181,7 +181,7 @@ function LanguageLayout() {
                                     <th>Delete</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-center" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                            <tbody className="text-center" style={{overflowY: 'auto' }}>
                                 {
                                     language.map((curData, index) => {
                                         return (

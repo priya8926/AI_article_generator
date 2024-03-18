@@ -28,7 +28,7 @@ function CategoryLayout() {
             })
             if (response.ok) {
                 const data = await response.json()
-                console.log("category" , data)
+                console.log("category", data)
                 setCategory(data)
             }
         } catch (error) {
@@ -155,7 +155,7 @@ function CategoryLayout() {
                     </div>
                 </div>
             </div>
-            <section className='d-flex justify-content-center w-75' style={{height:"auto"}}>
+            <section className='d-flex justify-content-center w-75' style={{ height: "auto" }}>
                 <div className='m-3 w-50'>
                     <div className="mb-4 mx-3">
                         <h6><label className="form-label mt-3">Add Category :</label></h6>
@@ -171,8 +171,8 @@ function CategoryLayout() {
                             <button className="btn btn-primary" type="button" onClick={handleClick} >Add</button>
                         </span>
                     </div>
-                    <div className='container'>
-                        <table className="table table-light table-hover border-1" style={{ border: "1px solid grey" ,}}>
+                    <div className='container h-75' style={{ overflowY: 'scroll' }}>
+                        <table className="table table-light table-hover border-1" style={{ border: "1px solid grey" }}>
                             <thead className='text-center'>
                                 <tr>
                                     <th scope="col">Categories</th>
@@ -180,7 +180,7 @@ function CategoryLayout() {
                                     <th>Delete</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-center" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                            <tbody data-bs-spy="scroll" className="text-center">
                                 {
                                     category.map((curData, index) => {
                                         return (

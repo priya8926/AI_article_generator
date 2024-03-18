@@ -25,9 +25,11 @@ import LanguageLayout from './components/AdminLayout/LanguageLayout';
 import LengthLayout from './components/AdminLayout/LengthLayout';
 import AdminContact from './components/AdminLayout/AdminContact';
 import AdminSubscription from './components/AdminLayout/AdminSubscription';
+import { useForm } from './store/User';
 // import Faq from './components/Faq';
 
 function App() {
+  const { isLoggedIn } = useForm()
   return (
     <>
 
@@ -49,17 +51,17 @@ function App() {
         <Route path='*' element={<PageNotFound />} />
 
         <Route path='/admin' element={<Dashboard />}>
-          <Route path='users' element={<AdminUser/>} />
-          <Route path='users/:id' element={<AdminUpdate/>} />
-          <Route path='payments' element={<PaymentHistory/>} />
-          <Route path='category/addcategory' element={<CategoryLayout/>} />
-          <Route path='language/addLanguage' element={<LanguageLayout/>} />
-          <Route path='length/addLength' element={<LengthLayout/>} />
-          <Route path='contact' element={<AdminContact/>} />
-          <Route path='subscription' element={<AdminSubscription/>} />
+          <Route path='users' element={<AdminUser />} />
+          <Route path='users/:id' element={<AdminUpdate />} />
+          <Route path='payments' element={<PaymentHistory />} />
+          <Route path='category/addcategory' element={<CategoryLayout />} />
+          <Route path='language/addLanguage' element={<LanguageLayout />} />
+          <Route path='length/addLength' element={<LengthLayout />} />
+          <Route path='contact' element={<AdminContact />} />
+          <Route path='subscription' element={<AdminSubscription />} />
         </Route>
       </Routes>
-      <Footer />
+      {isLoggedIn && <Footer />}
     </>
   );
 }

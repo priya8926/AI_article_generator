@@ -1,27 +1,43 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function PaymentSuccess() {
-    const params = useParams()
     const searchQuery = useSearchParams()[0]
     const referenceNo = searchQuery.get("reference")
+    const { AuthenticationToken } = useForm()
+    const params = useParams();
 
-    const isSubscribe = async (payId) => {
+    const subscription = async () => {
         try {
-            const response = await fetch(`http://localhost:8083/api/active/${params.payId}`, {
-                method: 'GET',
+            const response = await fetch(`http://localhost:8083/api/subscription`, {
+                method: "POST",
+                headers: {
+                    Authorization: AuthenticationToken
+                }
             })
             if (response.ok) {
                 const data = await response.json();
-                console.log("subscription status ", data)
-
+                console.log("Subscription created:", data);
+                const res = await fetch(`http://localhost:8083/api/paymentid/${referenceNo}`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: AuthenticationToken,
+                    }
+                })
+                if (res.ok) {
+                    const result = await res.json()
+                    console.log("resultttt : ", result);
+                }
             }
         } catch (error) {
-            console.log("error")
+            console.log(error)
         }
     }
 
+    useEffect(() => {
+        subscription();
+    }, [])
     return (
         <>
             <div>

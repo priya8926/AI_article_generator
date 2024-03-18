@@ -28,13 +28,14 @@ function PaymentHistory() {
     }, [])
     return (
         <>
-            <section className='container mt-5 w-75'>
+            <section className='container h-75 mt-5 w-75' style={{ overflowY: 'scroll' }}>
             {data.length > 0 ? (
                 <table className="table table-light table-hover border-1 " style={{ border: "1px solid grey" }}>
                     <thead className='text-center' >
                         <tr>
                             <th scope="col">Email id</th>
                             <th scope="col">Payment id</th>
+                            <th scope="col">Plan id</th>
                             <th scope="col">Create at</th>
                         </tr>
                     </thead>
@@ -45,8 +46,10 @@ function PaymentHistory() {
                                     <>
                                         <tr key={index}>
                                             <td>{curData.emailId}</td>
-                                            <td>{curData.razorpay_payment_id}</td>
+                                            <td>{curData.paymentId}</td>
+                                            <td>{curData.planId}</td>
                                             <td>{curData.createdAt}</td>
+
                                         </tr>
                                     </>
                                 )
@@ -55,7 +58,7 @@ function PaymentHistory() {
                     </tbody>
                 </table>
             ):(
-                <p>No payment history available</p>
+                <p>No payment available</p>
             )}
             </section>
         </>

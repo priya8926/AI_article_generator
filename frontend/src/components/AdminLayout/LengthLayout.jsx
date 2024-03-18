@@ -160,7 +160,7 @@ function LengthLayout() {
                             <button className="btn btn-primary" type="button" onClick={addLength}>Add</button>
                         </div>
                     </div>
-                    <div className='container'>
+                    <div className='container h-50' style={{overflowY: 'scroll' }}>
                         <table className="table table-light table-hover border-1" style={{ border: "1px solid grey" }}>
                             <thead className='text-center'>
                                 <tr>

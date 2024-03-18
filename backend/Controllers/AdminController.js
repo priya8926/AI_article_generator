@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const payment = require("../models/PaymentSuccess")
+const Payment = require("../models/PaymentSuccess")
 const Category = require('../models/Category')
 const Language = require('../models/Language')
 const Length = require("../models/Length");
@@ -53,7 +53,7 @@ const deleteUserById = async (req, res) => {
 }
 const getPaymentHistory = async (req, res) => {
     try {
-        const pay = await payment.find({}, { razorpay_signature: 0 })
+        const pay = await Payment.find({})
         // const user = await User.findOne({ email: email })
         if (!pay || pay.length === 0) {
             res.status(401).json('No payment Found')

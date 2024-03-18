@@ -17,8 +17,6 @@ function Subscription() {
         customer_notify: 1
 
     });
-
-
     const handleBtnClick = async (amount, e) => {
 
         try {
@@ -26,7 +24,6 @@ function Subscription() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    // Authorization : AuthenticationToken
                 },
                 body: JSON.stringify({ amount })
             })

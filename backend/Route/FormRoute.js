@@ -9,7 +9,7 @@ const bcrypt = require("bcryptjs")
 const Razorpay = require("razorpay")
 // const { hmac_sha256 } = require('crypto-js');
 const crypto = require('crypto');
-const payment = require('../models/PaymentSuccess')
+const Payment = require('../models/PaymentSuccess')
 
 
 // Form category logic
@@ -291,15 +291,8 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
         const dataToHash = `${razorpay_order_id}|${razorpay_payment_id}`;
         const generated_signature = crypto.createHmac('sha256', process.env.Key_Secret).update(dataToHash).digest("hex")
 
-        console.log("Generated Signature:", generated_signature);
-        console.log("Received Signature:", razorpay_signature);
         if (generated_signature == razorpay_signature) {
-            // await payment.create({ razorpay_payment_id, razorpay_signature, razorpay_order_id });
             console.log("Payement verfication successfull")
-
-            // user.subscription.status = "active"
-            // await user.save()
-
             res.locals.paymentId = razorpay_payment_id;
 
             res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`)
@@ -315,28 +308,6 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
 // subscription plan
 FormRoute.route("/createSubscription").post(async (req, res, next) => {
     try {
-        // const user = await User.findById(req.user._id)
-        // if (!user) {
-        //     return res.status(404).json({ success: false, message: "User not found" });
-        // }
-        // // Extract necessary parameters from the request body
-        // const { plan_id, total_count, customer_notify } = req.body;
-
-        // const subscription = await instance.subscriptions.create({
-        //     plan_id: "plan_NgG9DZEKg6JtL2",
-        //     total_count: 12,
-        //     customer_notify: 1,
-        // });
-
-        // user.subscription.id = subscription.id
-        // user.subscription.status = subscription.status
-
-        // await user.save();
-        // res.status(201).json({
-        //     success: true,
-        //     subscriptionId: subscription.id
-        // });
-        // Construct options object for the cURL request
         const options = {
             url: 'https://api.razorpay.com/v1/subscriptions',
             method: 'POST',
@@ -367,25 +338,32 @@ FormRoute.route("/createSubscription").post(async (req, res, next) => {
         res.status(500).json({ error: 'Failed to create subscription' });
     }
 })
-FormRoute.route("/subscription").get(UserMiddleware, async (req, res, next) => {
+FormRoute.route("/subscription").post(UserMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user._id)
+        const emailId = req.user.email
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-        // const plan_id = process.env.plan_id199 || "plan_NgG9DZEKg6JtL2"
+        const plan_id = process.env.plan_id199 || "plan_NgG9DZEKg6JtL2"
         const subscription = await instance.subscriptions.create({
-            plan_id: "plan_NgG9DZEKg6JtL2",
+            plan_id,
             total_count: 12,
             customer_notify: 1,
         });
+
         user.subscription.id = subscription.id
         user.subscription.status = subscription.status
-
         await user.save();
+
+        const data = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id })
+        if (!data) {
+            res.status(400).json("Data Not Found")
+        }
         res.status(201).json({
             success: true,
-            subscriptionId: subscription.id
+            subscriptionId: subscription.id,
+            data
         });
 
     } catch (error) {
@@ -393,59 +371,24 @@ FormRoute.route("/subscription").get(UserMiddleware, async (req, res, next) => {
         res.status(500).json({ error: 'Failed to create subscription' });
     }
 })
-FormRoute.route("/razorpaykey").get(async (req, res, next) => {
+FormRoute.route("/razorpaykey").get(async (req, res) => {
     res.status(200).json({
         success: true,
         key: process.env.Key_Id
     })
 })
-
-//cancle subscription 
-FormRoute.route("/subscription/cancel").delete(UserMiddleware, async (req, res, next) => {
+FormRoute.route("/paymentid/:id").post(UserMiddleware, async (req, res) => {
     try {
+        const email = req.user.email
+        const id = req.params.id
+        res.status(200).json({ message: "payment id received", id })
 
-        const user = await User.findById(req.user._id)
-        const subscriptionId = user.subscription.id;
+        const payment = await Payment.findOne({ emailId: email })
+        payment.paymentId = id
+        await payment.save()
 
-        await instance.subscriptions.cancel(subscriptionId)
-        const payment = await payment.findOne({
-            razorpay_subscription_id: subscriptionId
-        })
-        await paymentNaNpxove();
-        user.subscription.id = undefined;
-        user.subscription.status = undefined
-        await user.save()
-    } catch (error) {
-        console.log(error)
-    }
-
-})
-// create subscriptio active if user subscribe
-FormRoute.route("/paymentid").post(async (req, res) => {
-    try {
-        const paymentId = req.body.paymentId;
-        console.log("payment id  received ", paymentId)
-        res.status(200).json({ message: "payment id received" })
-        console.log("req body", req.body)
     } catch (error) {
         console.log("error", error)
     }
-})
-// get payment id and store in mangodb 
-FormRoute.route("/active").get(async (req, res) => {
-    try {
-        const payId = req.params.pay_id
-        if (!payId) {
-            return res.status(400).json({ message: 'Payment ID is required' });
-        }
-        const user = await User.findOne({ paymentId: payId })
-        const plan = req.body.plan_id
-        user.subscription = 'active';
-        await user.save()
-        res.status(200).json({ message: 'Subscription activated successfully' });
-    } catch (error) {
-        console.log("error", error)
-    }
-
 })
 module.exports = FormRoute
