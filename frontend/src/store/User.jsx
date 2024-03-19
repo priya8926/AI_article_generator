@@ -20,9 +20,9 @@ export const FormProvider = ({ children }) => {
     const [history, setHistory] = useState([])
 
     const [value, setValue] = useState({
-        category:"",
-        language:"",
-        length:""
+        category: "",
+        language: "",
+        length: ""
     })
 
     useEffect(() => {
@@ -37,7 +37,6 @@ export const FormProvider = ({ children }) => {
             }
         }
     }, [referenceNo])
-
 
     let isLoggedIn = !!token // true if token exixts
     console.log("token : ", token)
@@ -122,7 +121,7 @@ export const FormProvider = ({ children }) => {
         setToken("")
         return localStorage.removeItem("token")
     }
-    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history, value , setValue }}>
+    return <formContext.Provider value={{ setTokenLocalStorage, logoutUser, isLoggedIn, AuthenticationToken, user, paymentId, setPaymentId, referenceNo, showArticle, getArticle, title, content, history, value, setValue }}>
         {children}
     </formContext.Provider>
 }

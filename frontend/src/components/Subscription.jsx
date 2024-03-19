@@ -3,21 +3,14 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const { isLoggedIn, user, paymentId, setPaymentId, AuthenticationToken } = useForm()
+    const { isLoggedIn, user, paymentId,setPaymentId,AuthenticationToken  } = useForm()
     const Navigate = useNavigate();
     useEffect(() => {
         if (isLoggedIn === false) {
             Navigate('/')
         }
     }, [isLoggedIn])
-
-    const [subscriptionData, setSubscriptionData] = useState({
-        plan_id: "plan_NgG9DZEKg6JtL2",
-        total_count: 12,
-        customer_notify: 1
-
-    });
-    const handleBtnClick = async (amount, e) => {
+    const handleBtnClick = async (amount) => {
 
         try {
             const response = await fetch(`http://localhost:8083/api/verify`, {
@@ -62,27 +55,25 @@ function Subscription() {
                     const razor = new window.Razorpay(options);
                     razor.open();
 
-                    localStorage.setItem("selectedAmount", amount)
-                    const selectedPlanId = amount === 199 ? "plan_NgG9DZEKg6JtL2" : "plan_Ngb8Io644bPXR6";
+                    localStorage.getItem("selectedAmount", amount)
+                    const planId = amount === 199 ? 'plan_NgG9DZEKg6JtL2' : 'plan_Nnj0ceCKrBcnZI';
 
                     razor.on('payment.success', async function (paymentData) {
                         const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                // Authorization : AuthenticationToken
+                                Authorization : AuthenticationToken
                             },
-                            body: JSON.stringify({
-                                ...subscriptionData,
-                                plan_id: selectedPlanId
-                                // total_count,
-                                // customer_notify
-                            })
+                           
                         });
+                        console.log('Plan ID:', planId);
                         if (subResponse.ok) {
+                            console.log("plannn id", planId)
                             const subData = await subResponse.json();
                             console.log('Subscription created:', subData);
                             setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
+
                         }
                     })
                 }

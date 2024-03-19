@@ -5,18 +5,17 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    paymentId: {
-        type: String,
-        require: true,
-        unique: true
-    },
     emailId: {
         type: String,
         require: true
     },
     planId: {
         type: String,
-        required: true
+        require : true
+    },
+    paymentId: {
+       type: String,
+        require : true
     },
     createdAt: {
         type: Date,

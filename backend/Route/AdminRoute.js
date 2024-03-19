@@ -14,7 +14,9 @@ router.route("/users/delete/:id").delete(UserMiddleware, adminMiddleware, adminC
 
 router.route("/payments").get(UserMiddleware, adminMiddleware, adminController.getPaymentHistory)
 
-router.route("/category").get(UserMiddleware, adminMiddleware, adminController.getCategory)
+router.route("/payment/deletePayment/:id").delete( UserMiddleware ,adminMiddleware, adminController.deletePayment)
+
+router.route("/category").get(UserMiddleware,adminController.getCategory)
 
 router.route("/category/addcategory").post(UserMiddleware, adminMiddleware, adminController.addCategory)
 
@@ -22,7 +24,7 @@ router.route("/category/deletecategory/:id").delete(UserMiddleware, adminMiddlew
 
 router.route("/category/updatecategory/:id").patch(UserMiddleware, adminMiddleware, adminController.editCategory)
 
-router.route("/language").get(UserMiddleware, adminMiddleware, adminController.getLanguage)
+router.route("/language").get(UserMiddleware, adminController.getLanguage)
 
 router.route("/language/addLanguage").post(UserMiddleware, adminMiddleware, adminController.addLanguage)
 
@@ -30,7 +32,7 @@ router.route("/language/deleteLanguage/:id").delete(UserMiddleware, adminMiddlew
 
 router.route("/language/updateLanguage/:id").patch(UserMiddleware, adminMiddleware, adminController.editLanguage)
 
-router.route("/length").get(UserMiddleware, adminMiddleware, adminController.getLength)
+router.route("/length").get(UserMiddleware, adminController.getLength)
 
 router.route("/length/addLength").post(UserMiddleware, adminMiddleware, adminController.addLength)
 

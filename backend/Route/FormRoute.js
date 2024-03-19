@@ -3,14 +3,14 @@ const express = require("express")
 const article = require("../models/FormModel")
 const articleContent = require("../models/ContentModel")
 const User = require("../models/User")
-const { UserMiddleware, SubscriptionMiddleware } = require("../middleware/UserMiddleware")
+const { UserMiddleware } = require("../middleware/UserMiddleware")
 const FormRoute = express.Router()
 const bcrypt = require("bcryptjs")
 const Razorpay = require("razorpay")
 // const { hmac_sha256 } = require('crypto-js');
 const crypto = require('crypto');
 const Payment = require('../models/PaymentSuccess')
-
+const { ObjectId } = require('mongodb');
 
 // Form category logic
 FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
@@ -200,11 +200,12 @@ FormRoute.route("/login").post(async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const userExists = await User.findOne({ email: email });
+        const userExists = await User.findOne({ email: email }).select('+password');;
         if (!userExists) {
             res.status(400).json({ message: "invalid credential" })
+            return;
         }
-        const isValidPassword = userExists.comparePassword(password)
+        const isValidPassword = await userExists.comparePassword(password)
         if (isValidPassword) {
             res.status(200).json({
                 message: "login successfully",
@@ -306,8 +307,11 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
     }
 })
 // subscription plan
-FormRoute.route("/createSubscription").post(async (req, res, next) => {
+FormRoute.route("/createSubscription").post(UserMiddleware, async (req, res) => {
     try {
+        const { amount } = req.body
+        const planId = amount === 199 ? 'plan_NgG9DZEKg6JtL2' : 'plan_Nnj0ceCKrBcnZI';
+
         const options = {
             url: 'https://api.razorpay.com/v1/subscriptions',
             method: 'POST',
@@ -316,7 +320,7 @@ FormRoute.route("/createSubscription").post(async (req, res, next) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                plan_id: "plan_NgG9DZEKg6JtL2",
+                plan_id: planId,
                 total_count: 12,
                 customer_notify: 1,
             })
@@ -340,23 +344,24 @@ FormRoute.route("/createSubscription").post(async (req, res, next) => {
 })
 FormRoute.route("/subscription").post(UserMiddleware, async (req, res) => {
     try {
+        const { amount, referenceNo } = req.body
+        const planId = amount === 199 ? 'plan_NgG9DZEKg6JtL2' : 'plan_Nnj0ceCKrBcnZI';
         const user = await User.findById(req.user._id)
         const emailId = req.user.email
+        console.log("vvvvvvvvv", req.body)
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-        const plan_id = process.env.plan_id199 || "plan_NgG9DZEKg6JtL2"
         const subscription = await instance.subscriptions.create({
-            plan_id,
+            plan_id: planId,
             total_count: 12,
             customer_notify: 1,
         });
-
         user.subscription.id = subscription.id
         user.subscription.status = subscription.status
         await user.save();
 
-        const data = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id })
+        const data = await Payment.create({ emailId, subscriptionId: subscription.id, planId, paymentId: referenceNo })
         if (!data) {
             res.status(400).json("Data Not Found")
         }
@@ -367,8 +372,8 @@ FormRoute.route("/subscription").post(UserMiddleware, async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error creating subscription:', error);
-        res.status(500).json({ error: 'Failed to create subscription' });
+        console.error("error in subscription : ", error);
+        res.status(500).json({ message: "error", error });
     }
 })
 FormRoute.route("/razorpaykey").get(async (req, res) => {
@@ -377,14 +382,15 @@ FormRoute.route("/razorpaykey").get(async (req, res) => {
         key: process.env.Key_Id
     })
 })
-FormRoute.route("/paymentid/:id").post(UserMiddleware, async (req, res) => {
+FormRoute.route("/paymentid").post(UserMiddleware, async (req, res) => {
     try {
         const email = req.user.email
-        const id = req.params.id
-        res.status(200).json({ message: "payment id received", id })
+        const { referenceNo } = req.body
+        console.log("Reference number", referenceNo)
+        res.status(200).json({ message: "payment id received", referenceNo })
 
         const payment = await Payment.findOne({ emailId: email })
-        payment.paymentId = id
+        payment.paymentId = referenceNo
         await payment.save()
 
     } catch (error) {

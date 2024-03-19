@@ -36,7 +36,7 @@ function AdminUser() {
                 }
             })
             const data = await response.json()
-            console.log(`uesrs after delete ${data}`)
+            console.log(`users after delete ${data}`)
             alert("user deleted")
             if (response.ok) {
                 getAllUserData()
@@ -78,7 +78,7 @@ function AdminUser() {
                                             <td>{curData.subscription ? curData.subscription.status : 'N/A'}</td>
                                             <td>
                                                 <Link to={`/admin/users/${curData._id}`} >
-                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <i className="fa-solid fa-pen-to-square"></i>
                                                 </Link>
                                             </td>
                                             <td>

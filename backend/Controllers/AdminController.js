@@ -64,6 +64,15 @@ const getPaymentHistory = async (req, res) => {
         return res.status(500).json({ error: "Error fetching payment", message: error.message });
     }
 }
+const deletePayment = async (req, res) => {
+    try {
+        const id = req.params.id
+        await Payment.deleteOne({ _id: id })
+        res.status(200).json({ message: "Payment deleted" })
+    } catch (error) {
+        console.log(error)
+    }
+}
 const getCategory = async (req, res) => {
     try {
         const categoryData = await Category.find({})
@@ -206,21 +215,21 @@ const deleteLength = async (req, res) => {
         console.log(error)
     }
 }
-const editLength = async(req,res)=>{
+const editLength = async (req, res) => {
     try {
         const id = req.params.id;
-        const {length} = req.body
-        const  data = await Length.findByIdAndUpdate(id,{length},{new:true})
-        if(!data){
+        const { length } = req.body
+        const data = await Length.findByIdAndUpdate(id, { length }, { new: true })
+        if (!data) {
             return res.status(404).json('The length you are trying to update does not exist')
         }
-        res.status(200).json({message:"Length updated successfully.",data});
-    
+        res.status(200).json({ message: "Length updated successfully.", data });
+
     } catch (error) {
         console.log(error)
     }
 }
-const getContact = async (req,res) =>{
+const getContact = async (req, res) => {
     try {
         const data = await Contact.find({})
         if (!data || data.length === 0) {
@@ -231,11 +240,11 @@ const getContact = async (req,res) =>{
         console.log(error)
     }
 }
-const Allsubscription = async(req,res)=>{
+const Allsubscription = async (req, res) => {
     try {
-        
+
     } catch (error) {
-        console.log("error in subscription" , error)
+        console.log("error in subscription", error)
     }
 }
-module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength, editLanguage , editLength ,getContact,Allsubscription}
+module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength, editLanguage, editLength, getContact, Allsubscription, deletePayment }
