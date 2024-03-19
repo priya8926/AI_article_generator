@@ -42,6 +42,9 @@ router.route("/length/updateLength/:id").patch(UserMiddleware, adminMiddleware, 
 
 router.route("/contact").get(UserMiddleware, adminMiddleware , adminController.getContact)
 
-router.route("/subscription").post(UserMiddleware , adminMiddleware , adminController.Allsubscription)
+router.route("/subscription").get(UserMiddleware , adminMiddleware , adminController.Allsubscription)
+
+router.route("/subscription/deleteSubscription/:id").delete(UserMiddleware , adminMiddleware , adminController.deleteSubscription)
+
 
 module.exports = router

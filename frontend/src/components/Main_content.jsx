@@ -4,7 +4,7 @@ import Loading from './Loading';
 import { saveAs } from 'file-saver';
 import { useForm } from '../store/User';
 import { NavLink, useNavigate } from 'react-router-dom';
-import HeroImg from '../img/feature.png'
+import HeroImg from '../img/Home.png'
 
 
 function MainContent() {
@@ -296,7 +296,7 @@ function MainContent() {
 
                     <div className="mb-4 input-group flex-nowrap">
                         <span className="form-label mx-2 mt-2"> Title of your article :</span>
-                        <input className="form-control rounded w-50" name="promptInput" placeholder="Enter title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
+                        <input className="form-control rounded" name="promptInput" placeholder="Enter title of your article" aria-label="default input example" value={promptInput} onChange={handleTextChange} />
 
                     </div>
                     <div className='d-flex justify-content-center '>

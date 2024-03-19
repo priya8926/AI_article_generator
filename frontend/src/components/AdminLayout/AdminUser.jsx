@@ -20,7 +20,7 @@ function AdminUser() {
                 const data = await response.json();
                 console.log(data)
                 setUsers(data);
-                data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
             }
         } catch (error) {
             console.log("Error: " + error);
@@ -50,7 +50,7 @@ function AdminUser() {
     }, [])
     return (
         <>
-            <section className='container mt-5 w-100'>
+            <section className='container mt-5 mb-5 w-100' style={{ overflowY: 'scroll' }}>
                 <table className="table table-light table-hover border-1 " style={{ border: "1px solid grey" }}>
                     <thead className='text-center' >
                         <tr>

@@ -75,20 +75,17 @@ function Footer() {
             </div>
             <div className="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
               <h5 className="text-white mb-4">Our Services</h5>
-              <NavLink className="btn btn-link" to="">
+              <NavLink className="btn btn-link" to="/services">
                 Robotic Automation
               </NavLink>
-              <NavLink className="btn btn-link" to="">
-                Machine learning
+              <NavLink className="btn btn-link" to="/services">
+                Multiple Language support
               </NavLink>
-              <NavLink className="btn btn-link" to="">
-                Predictive Analysis
+              <NavLink className="btn btn-link" to="/services">
+                Download Articles
               </NavLink>
-              <NavLink className="btn btn-link" to="">
-                Data Science
-              </NavLink>
-              <NavLink className="btn btn-link" to="">
-                Robot Technology
+              <NavLink className="btn btn-link" to="/services">
+                Multiple Category
               </NavLink>
             </div>
           </div>

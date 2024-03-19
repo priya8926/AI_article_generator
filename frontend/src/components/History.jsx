@@ -79,9 +79,12 @@ function History() {
     }
     return (
         <>
-            <section className='container history_section mt-5 mb-4'>
+            <section className='container history_section mt-5 mb-4 h-100'>
                 <h4 className='text-center'>History of your article</h4>
                 <div className="history mt-3">
+                {history ? (
+
+               
                     <table className='history_table table table-hover'>
                         <thead >
                             <tr>
@@ -89,8 +92,8 @@ function History() {
                                 <th>language </th>
                                 <th>length </th>
                                 <th>Searched text</th>
-                                <th></th>
-                                <th></th>
+                                <th>Show</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody className='history-tbody '>
@@ -103,13 +106,12 @@ function History() {
                                                 <td>{curData.language}</td>
                                                 <td>{curData.length} </td>
                                                 <td>{curData.promptInput} </td>
-                                                <td>
-                                                        <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>Show article</Link>
+                                                <td >
+                                                        <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}><i className="fa-solid fa-eye"></i></Link>
                                                
                                                 </td>
-
-                                                <td>
-                                                    <Link href="#" onClick={() => { deleteArticle(curData._id) }} >Delete article </Link>
+                                                <td >
+                                                    <Link href="#" onClick={() => { deleteArticle(curData._id) }} ><i className="fa-solid fa-trash"></i> </Link>
                                                 </td>
 
                                             </tr>
@@ -119,6 +121,7 @@ function History() {
                             }
                         </tbody>
                     </table>
+                    ) : "No data found"}
                     <div>
                         <NavLink to="/home"><button className='btn btn-primary mt-4'>Goto Home Page</button></NavLink>
                     </div>

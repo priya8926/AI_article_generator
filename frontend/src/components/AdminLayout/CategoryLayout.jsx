@@ -155,7 +155,7 @@ function CategoryLayout() {
                     </div>
                 </div>
             </div>
-            <section className='d-flex justify-content-center w-75' style={{ height: "auto" }}>
+            <section className='d-flex justify-content-center w-75 ' style={{ height: "auto" }}>
                 <div className='m-3 w-50'>
                     <div className="mb-4 mx-3">
                         <h6><label className="form-label mt-3">Add Category :</label></h6>

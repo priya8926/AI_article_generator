@@ -7,9 +7,10 @@ function PaymentSuccess() {
     const referenceNo = searchQuery.get("reference")
     const { AuthenticationToken } = useForm()
 
-    const subscription = async (amount) => {
-        localStorage.getItem("selectedAmount", amount)
-        console.log(" selected amount", amount)
+    const selectedAmount = localStorage.getItem("selectedAmount");
+    console.log("Selected Amount:", selectedAmount);
+
+    const subscription = async () => {
         try {
             const response = await fetch(`http://localhost:8083/api/subscription`, {
                 method: "POST",
@@ -17,7 +18,7 @@ function PaymentSuccess() {
                     Authorization: AuthenticationToken,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ amount, referenceNo })
+                body: JSON.stringify({ selectedAmount, referenceNo })
             })
             if (response.ok) {
                 const data = await response.json();
@@ -28,38 +29,19 @@ function PaymentSuccess() {
             console.log(error)
         }
     }
-    // const paymentId = async () => {
-    //     try {
-    //         const res = await fetch(`http://localhost:8083/api/paymentid`, {
-    //             method: "POST",
-    //             headers: {
-    //                 Authorization: AuthenticationToken,
-    //             },
-    //             body: JSON.stringify(referenceNo)
-    //         })
-    //         if (res.ok) {
-    //             const result = await res.json()
-    //             console.log("resultttt : ", result);
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-    const createSubscription = async (amount) => {
+    const createSubscription = async () => {
         try {
-            localStorage.getItem("selectedAmount", amount)
             const response = await fetch('http://localhost:8083/api/createSubscription', {
                 method: 'POST',
                 headers: {
                     Authorization: AuthenticationToken,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ amount })
+                body: JSON.stringify({ selectedAmount })
             });
             if (response.ok) {
                 const data = await response.json()
-                console.log("subscription created", data)
-
+                console.log("subscription created 111111111111111111", data)
             }
         } catch (error) {
             console.log(error)

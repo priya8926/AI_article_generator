@@ -53,10 +53,9 @@ function Subscription() {
                     };
 
                     const razor = new window.Razorpay(options);
-                    razor.open();
+                    razor.open();   
 
-                    localStorage.getItem("selectedAmount", amount)
-                    const planId = amount === 199 ? 'plan_NgG9DZEKg6JtL2' : 'plan_Nnj0ceCKrBcnZI';
+                    localStorage.setItem("selectedAmount", amount)
 
                     razor.on('payment.success', async function (paymentData) {
                         const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
@@ -67,13 +66,8 @@ function Subscription() {
                             },
                            
                         });
-                        console.log('Plan ID:', planId);
                         if (subResponse.ok) {
-                            console.log("plannn id", planId)
-                            const subData = await subResponse.json();
-                            console.log('Subscription created:', subData);
                             setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
-
                         }
                     })
                 }

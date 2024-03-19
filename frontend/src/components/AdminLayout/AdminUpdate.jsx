@@ -62,7 +62,7 @@ function AdminUpdate() {
     }
     return (
         <>
-            <section>
+            <section className='m-5'>
                 <div>
                     <h2>Update user data</h2>
                 </div>

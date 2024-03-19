@@ -36,9 +36,19 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+    type: String,
+    default: () => new Date().toLocaleDateString('en-IN', {
+        weekday: 'short',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+        timeZone: 'Asia/Kolkata',
+    }),
+}
 });
 // Middleware to hash the password before saving
 userSchema.pre("save", async function (next) {

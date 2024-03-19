@@ -4,6 +4,7 @@ const Category = require('../models/Category')
 const Language = require('../models/Language')
 const Length = require("../models/Length");
 const Contact = require("../models/ContactModel");
+const Subscription = require("../models/Subscription");
 
 // get all login user
 const getAllUser = async (req, res) => {
@@ -242,9 +243,25 @@ const getContact = async (req, res) => {
 }
 const Allsubscription = async (req, res) => {
     try {
-
+        const data = await Subscription.find({})
+        if (!data || data.length === 0) {
+            res.status(401).json('No data Found')
+        }
+        res.status(200).json(data);
     } catch (error) {
         console.log("error in subscription", error)
     }
 }
-module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength, editLanguage, editLength, getContact, Allsubscription, deletePayment }
+const deleteSubscription = async(req,res)=>{
+    try {
+        const id= req.params.id
+        const data = await  Subscription.deleteOne({_id : id})
+        if(!data){
+            return  res.status(400).send("No Data found")
+        }
+        res.status(200).json({message: "subscription deleted" })
+    } catch (error) {
+        console.log(error)
+    }
+}
+module.exports = { getAllUser, getUserById, updateUserById, deleteUserById, getPaymentHistory, getCategory, addCategory, deleteCategory, editCategory, getLanguage, addLanguage, deleteLanguage, addLength, getLength, deleteLength, editLanguage, editLength, getContact, Allsubscription, deletePayment ,deleteSubscription}

@@ -1,5 +1,6 @@
 import React from 'react'
 import AboutImg from '../../img/about-img.jpg'
+import featureImg from '../../img/feature.png'
 import { NavLink } from 'react-router-dom'
 
 function AboutLayout() {
@@ -120,7 +121,7 @@ function AboutLayout() {
                 className="col-lg-6 align-self-end text-center text-md-end wow fadeIn"
                 data-wow-delay="0.5s"
               >
-                <img className="img-fluid" src="img/feature.png" alt="" />
+                <img className="img-fluid" src={featureImg} alt="" />
               </div>
             </div>
           </div>

@@ -3,15 +3,10 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useForm } from '../store/User';
 
 function GetArticleHistory() {
-    // const location = useLocation()
-    // const {state} = location || {};
-    // console.log("state" , state)
-    // const title =  state ? state.title : ""
-    // const content = state ? state.content : ""
     const { title, content } = useForm()
     return (
         <>
-            <section className='container'>
+            <section className='container '>
                 <div className="card container m-5">
                     <div className="card-body">
                         {content ? (

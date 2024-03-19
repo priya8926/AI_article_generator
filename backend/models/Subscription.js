@@ -1,23 +1,23 @@
 const mongoose = require("mongoose")
 
-const paymentSchema = new mongoose.Schema({
+const SubscriptionSchema = new mongoose.Schema({
+    emailId: {
+        type: String,
+        require: true
+    },
     subscriptionId: {
         type: String,
         require: true,
         unique: true
     },
-    emailId: {
-        type: String,
-        require: true
-    },
     planId: {
         type: String,
-        require: true
     },
-    paymentId: {
+    amount199: {
         type: String,
-        require: true,
-        unique: true
+    },
+    amount499: {
+        type: String,
     },
     createdAt: {
         type: String,
@@ -35,5 +35,5 @@ const paymentSchema = new mongoose.Schema({
     }
 })
 
-const Payment = mongoose.model("Payment ", paymentSchema)
-module.exports = Payment;
+const Subscription = mongoose.model("Subscription ", SubscriptionSchema)
+module.exports = Subscription;

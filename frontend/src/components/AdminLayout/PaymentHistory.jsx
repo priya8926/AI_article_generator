@@ -45,7 +45,7 @@ function PaymentHistory() {
     }, [])
     return (
         <>
-            <section className='container h-75 mt-5 w-75' style={{ overflowY: 'scroll' }}>
+            <section className='container h-75 m-4 w-75' style={{ overflowY: 'scroll' }}>
                 {data.length > 0 ? (
                     <table className="table table-light table-hover border-1 " style={{ border: "1px solid grey" }}>
                         <thead className='text-center' >
@@ -53,6 +53,7 @@ function PaymentHistory() {
                                 <th scope="col">Email id</th>
                                 <th scope="col">Payment id</th>
                                 <th scope="col">Plan id</th>
+                                {/* <th scope="col">Subscription Id </th> */}
                                 <th scope="col">Create at</th>
                                 <th scope="col">Delete</th>
                             </tr>
