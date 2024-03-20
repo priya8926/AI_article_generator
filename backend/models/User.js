@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  planId:{
+    type :String,
+  },
   subscription: {
     id: String,
     status : String

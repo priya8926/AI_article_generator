@@ -23,7 +23,7 @@ function MainContent() {
     const [promptInput, setPromptInput] = useState("")
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
-
+    
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setSelectedValues(prevState => ({
@@ -209,7 +209,7 @@ function MainContent() {
         if (isLoggedIn === false) {
             navigate("/")
         }
-    })
+    },[])
 
     return (
         <>
@@ -312,6 +312,7 @@ function MainContent() {
                                 Search
                             </button>
                         )}
+                    <NavLink to='/history'><button className="btn btn-primary mx-3">History</button></NavLink>
                     </div>
                     {/* <div>
                         <p >You searched the article for {clickCount} times</p>
@@ -343,13 +344,13 @@ function MainContent() {
                                     <a href="/" className="btn btn-primary" onClick={handleSave}>
                                         save
                                     </a>
-                                    <NavLink to='/history'><button className="btn btn-primary mx-2">History</button></NavLink>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+                                   
         </>
     )
 }

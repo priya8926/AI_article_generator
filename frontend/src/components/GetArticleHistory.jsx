@@ -6,8 +6,8 @@ function GetArticleHistory() {
     const { title, content } = useForm()
     return (
         <>
-            <section className='container '>
-                <div className="card container m-5">
+            <section className='container'>
+                <div className="card container m-5 ">
                     <div className="card-body">
                         {content ? (
                             <>
@@ -16,7 +16,12 @@ function GetArticleHistory() {
                                     content:{content}
                                 </p>
                             </>
-                        ) : ("Article not available")}<br />
+                        ) :
+                            <>
+                                    <div className='d-flex justify-content-center align-items-center mt-5 mb-5'>
+                                        <h6>Article not available!!</h6>
+                                    </div>
+                            </>}<br />
                         <div className='text-center'>
 
                             <NavLink to="/history">

@@ -7,7 +7,6 @@ const { UserMiddleware } = require("../middleware/UserMiddleware")
 const FormRoute = express.Router()
 const bcrypt = require("bcryptjs")
 const Razorpay = require("razorpay")
-// const { hmac_sha256 } = require('crypto-js');
 const crypto = require('crypto');
 const Payment = require('../models/PaymentSuccess')
 const Subscription = require('../models/Subscription')
@@ -97,7 +96,7 @@ FormRoute.route("/content").post(UserMiddleware, async (req, res) => {
         const { content, title } = req.body
 
         const createContent = new articleContent({ content, title, userId: req.user._id })
-        await createContent.save() 
+        await createContent.save()
 
         res.status(200).json({
             message: "content received successfully", createContent
@@ -206,31 +205,38 @@ FormRoute.route("/user").get(UserMiddleware, async (req, res) => {
 //count button click event
 FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
     try {
+        const user = await User.findById(req.user._id);
+        const userPlanId = user.planId;
         const paymentID = req.body.paymentId;
-        console.log("payment id in backend : ", paymentID)
-        if (!req.user) {
-            return res.status(401).json({ message: "User not authenticated." });
-        }
-        const searchLimits = { '199': 50, '499': Infinity }
-        if (paymentID['199'] && req.user.clickCount < searchLimits['199']) {
-            req.user.clickCount = (req.user.clickCount || 0) + 1
-        } else if (paymentID['499']) {
-            req.user.clickCount = (req.user.clickCount || 0) + 1
-        }
-        else {
-            req.user.clickCount = Math.min((req.user.clickCount || 0) + 1, 20)
+
+        const searchLimits = { '199': 50, '499': Infinity };
+        let searchLimit = 20; 
+
+        if (userPlanId === process.env.plan_id199) {
+            searchLimit = searchLimits['199']; 
+        } else if (userPlanId === process.env.plan_id499) {
+            searchLimit = searchLimits['499'];
         }
 
-        if (req.user.clickCount >= searchLimits['199']) {
+        if (paymentID === '199' && req.user.clickCount < searchLimit) {
+            req.user.clickCount = (req.user.clickCount || 0) + 1;
+        } else if (paymentID === '499' && req.user.clickCount < searchLimit) {
+            req.user.clickCount = (req.user.clickCount || 0) + 1;
+        } else {
+            req.user.clickCount = Math.min((req.user.clickCount || 0) + 1, searchLimit);
+        }
+
+        if (req.user.clickCount >= searchLimit) {
             res.status(401).json({ message: "Your search limit exceeded! Please upgrade your plan." });
             return; // End the request
         }
         await req.user.save();
         res.status(200).json({ message: "Search successful." });
     } catch (error) {
-        console.log("Error while counting button click", error)
+        console.log("Error while counting button click", error);
+        res.status(500).json({ message: "Internal server error." });
     }
-})
+});
 
 // payment method
 
@@ -281,13 +287,10 @@ FormRoute.route("/buySubscription").post(UserMiddleware, async (req, res) => {
         const user = await User.findById(req.user._id)
         const emailId = req.user.email
         const { selectedAmount, referenceNo } = req.body
+        
         const planId = selectedAmount === '199' ? process.env.plan_id199 : process.env.plan_id499
-        console.log("**********", req.body)
+        console.log("buySubscription...", req.body)
 
-        if (user.subscription.id) {
-            console.log('You are already subscribed')
-            return res.status(201).json({ message: 'Already Subscribed' })
-        }
         const subscription = await instance.subscriptions.create({
             plan_id: planId,
             total_count: 12,
@@ -295,12 +298,13 @@ FormRoute.route("/buySubscription").post(UserMiddleware, async (req, res) => {
         })
         user.subscription.id = subscription.id
         user.subscription.status = subscription.status
+        user.planId = planId
         await user.save();
 
         const Paymentdata = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
 
         const subData = await Subscription.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
- 
+
         console.log("subscription", subscription);
         res.status(200).json({ success: true, subscription, Paymentdata: Paymentdata, subData: subData })
     } catch (error) {

@@ -79,12 +79,9 @@ function History() {
     }
     return (
         <>
-            <section className='container history_section mt-5 mb-4 h-100'>
+            <section className='container history_section mt-5 mb-4'>
                 <h4 className='text-center'>History of your article</h4>
                 <div className="history mt-3">
-                {history ? (
-
-               
                     <table className='history_table table table-hover'>
                         <thead >
                             <tr>
@@ -121,7 +118,6 @@ function History() {
                             }
                         </tbody>
                     </table>
-                    ) : "No data found"}
                     <div>
                         <NavLink to="/home"><button className='btn btn-primary mt-4'>Goto Home Page</button></NavLink>
                     </div>

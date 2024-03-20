@@ -11,7 +11,6 @@ function Subscription() {
         }
     }, [isLoggedIn])
     const handleBtnClick = async (amount) => {
-
         try {
             const response = await fetch(`http://localhost:8083/api/verify`, {
                 method: "POST",
