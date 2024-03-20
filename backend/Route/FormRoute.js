@@ -23,12 +23,6 @@ FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
 
         const { category, language, length, promptInput, title, content } = req.body
 
-        // if (!promptInput) {
-        //     console.log("promt input required")
-        // // }
-        // if (!category || !language || !length) {
-        //     return res.status(400).json("All fields are required")
-        // }
         const createForm = await article.create({ category, language, length, promptInput, userId: req.user._id, title, content })
 
         await createForm.save();
@@ -51,20 +45,6 @@ FormRoute.route("/category/:id").get(UserMiddleware, async (req, res) => {
         const id = req.params.id;
         const data = await article.findOne({ _id: id });
         res.status(200).json(data)
-        // const { title, content } = req.body;
-
-        // article.title = req.body.title;
-        // article.content = req.body.content;
-
-        // // Save the updated article
-        // const updatedArticle = await article.save();
-
-        // const updatedArticle = await article.findByIdAndUpdate(id, { title, content }, { new: true });
-
-        // if (!updatedArticle) {
-        //     return res.status(404).json({ message: "Category not found." });
-        // }
-
         res.status(200).json({
             message: "id receive successfully!",
             data
@@ -117,17 +97,7 @@ FormRoute.route("/content").post(UserMiddleware, async (req, res) => {
         const { content, title } = req.body
 
         const createContent = new articleContent({ content, title, userId: req.user._id })
-        await createContent.save()
-
-        // const existingArticle = await article.findOne({ userId : req.user._id })
-
-        // if (!existingArticle) {
-        //     return res.status(404).json({ message: "Article not found" });  
-        // }
-        // // Update the title and content of the existing article
-        // existingArticle.title = title
-        // existingArticle.content = content
-        // await existingArticle.save()    
+        await createContent.save() 
 
         res.status(200).json({
             message: "content received successfully", createContent
@@ -306,91 +276,38 @@ FormRoute.route("/paymentVerification").post(async (req, res) => {
         res.status(500).json({ error: "Payment verification failed" });
     }
 })
-// subscription plan
-FormRoute.route("/createSubscription").post(UserMiddleware, async (req, res) => {
+FormRoute.route("/buySubscription").post(UserMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user._id)
         const emailId = req.user.email
+        const { selectedAmount, referenceNo } = req.body
+        const planId = selectedAmount === '199' ? process.env.plan_id199 : process.env.plan_id499
+        console.log("**********", req.body)
 
-        // const { selectedAmount, referenceNo } = req.body
-        // const planId = selectedAmount === '199' ? process.env.plan_id199 : process.env.plan_id499
-        const planId = process.env.plan_id199
-        console.log("req.bodyyy", req.body)
-        console.log("plan idddd", planId)
-
+        if (user.subscription.id) {
+            console.log('You are already subscribed')
+            return res.status(201).json({ message: 'Already Subscribed' })
+        }
         const subscription = await instance.subscriptions.create({
             plan_id: planId,
-            customer_notify: 1,
             total_count: 12,
+            customer_notify: 1
         })
         user.subscription.id = subscription.id
         user.subscription.status = subscription.status
         await user.save();
-        console.log("qqqqq", subscription)
 
-        const Paymentdata = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: "hsgfyu" })
+        const Paymentdata = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
 
-        // if (referenceNo && referenceNo.trim() !== "") {
-        //     const existingPayment = await Payment.findOne({ paymentId: referenceNo });
-
-        //     if (existingPayment) {
-        //         return res.status(200).json({ success: true, message: "Payment ID already exists" });
-        //     }
-        //     const Paymentdata = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
-        //     if (!Paymentdata) {
-        //         return res.status(400).json("Data Not Found")
-        //     }
-
-        //     const subData = await Subscription.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
-
-        //     return res.status(201).json({
-        //         success: true,
-        //         subscriptionId: subscription.id,
-        //         Paymentdata: Paymentdata,
-        //         subData: subData
-        //     });
-        // } else {
-        //     res.status(500).json({ error: 'Failed' });
-        // }
-        return res.status(201).json({
-            success: true,
-            subscriptionId: subscription.id,
-            Paymentdata: Paymentdata
-        });
+        const subData = await Subscription.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
+ 
+        console.log("subscription", subscription);
+        res.status(200).json({ success: true, subscription, Paymentdata: Paymentdata, subData: subData })
     } catch (error) {
-        console.error('Error creating subscription:', error);
-        res.status(500).json({ error: 'Failed to create subscription' });
+        console.log(error)
     }
 })
-FormRoute.route("/subscription").post(UserMiddleware, async (req, res) => {
-    try {
-        const { amount, referenceNo } = req.body
-        const planId = amount === 199 ? 'plan_NgG9DZEKg6JtL2' : 'plan_Nnj0ceCKrBcnZI';
-        const user = await User.findById(req.user._id)
-        const emailId = req.user.email
-        console.log("vvvvvvvvv", req.body)
-        if (!user) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
-        const subscription = await instance.subscriptions.create({
-            plan_id: planId,
-            total_count: 12,
-            customer_notify: 1,
-        });
-        user.subscription.id = subscription.id
-        user.subscription.status = subscription.status
-        await user.save();
 
-        const data = await Payment.create({ emailId, subscriptionId: subscription.id, planId, paymentId: referenceNo })
-        if (!data) {
-            res.status(400).json("Data Not Found")
-        }
-
-    } catch (error) {
-        console.error("error in subscription : ", error);
-        res.status(500).json({ message: "error", error });
-    }
-})
 FormRoute.route("/razorpaykey").get(async (req, res) => {
     res.status(200).json({
         success: true,

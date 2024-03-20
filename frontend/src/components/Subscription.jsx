@@ -57,20 +57,13 @@ function Subscription() {
 
                     localStorage.setItem("selectedAmount", amount)
 
-                    // razor.on('payment.success', async function (paymentData) {
-                    //     const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
-                    //         method: 'GET',
-                    //         headers: {
-                    //             Authorization : AuthenticationToken
-                    //         },
-                    //     });
-                    //     if (subResponse.ok) {
-                    //         setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
-                    //     }
-                    // })
+                    razor.on('payment.success', async function (paymentData) {
+                        setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
+
+                    })
                 }
             } else {
-                console.error('Failed to create subscription:', error);
+                console.error('Failed to create subscription:', response.statusText);
             }
 
         } catch (error) {

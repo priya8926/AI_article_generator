@@ -9,26 +9,25 @@ function PaymentSuccess() {
 
     const selectedAmount = localStorage.getItem("selectedAmount");
     console.log("Selected Amount:", selectedAmount);
+    const planId = selectedAmount === '199' ? "plan_NgG9DZEKg6JtL2" : "plan_Nnj0ceCKrBcnZI"
 
-    const subscription = async () => {
+    const buySubscription = async () => {
         try {
-            const response = await fetch('http://localhost:8083/api/subscription', {
-                method: "POST",
+            const response = await fetch('http://localhost:8083/api/buySubscription', {
+                method: 'POST',
                 headers: {
-                    Authorization : AuthenticationToken,
-                    'Content-type' : 'application/json'
+                    Authorization: AuthenticationToken,
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ selectedAmount, referenceNo })
+                body: JSON.stringify({ selectedAmount, referenceNo, planId })
             });
-            if(response.ok){
-                console.log(await response.json(),"zzzzzzzz");
-            }
+            console.log("selected value", { selectedAmount, referenceNo, planId })
         } catch (error) {
             console.log(error)
         }
     }
     useEffect(() => {
-        subscription()
+        buySubscription()
     }, [])
     return (
         <>
