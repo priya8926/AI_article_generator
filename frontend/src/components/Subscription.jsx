@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const { isLoggedIn, user, paymentId,setPaymentId,AuthenticationToken  } = useForm()
+    const { isLoggedIn, user, paymentId, setPaymentId, AuthenticationToken } = useForm()
     const Navigate = useNavigate();
     useEffect(() => {
         if (isLoggedIn === false) {
@@ -53,26 +53,24 @@ function Subscription() {
                     };
 
                     const razor = new window.Razorpay(options);
-                    razor.open();   
+                    razor.open();
 
                     localStorage.setItem("selectedAmount", amount)
 
-                    razor.on('payment.success', async function (paymentData) {
-                        const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                Authorization : AuthenticationToken
-                            },
-                           
-                        });
-                        if (subResponse.ok) {
-                            setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
-                        }
-                    })
+                    // razor.on('payment.success', async function (paymentData) {
+                    //     const subResponse = await fetch('http://localhost:8083/api/createSubscription', {
+                    //         method: 'GET',
+                    //         headers: {
+                    //             Authorization : AuthenticationToken
+                    //         },
+                    //     });
+                    //     if (subResponse.ok) {
+                    //         setPaymentId(prev => ({ ...prev, [amount]: paymentData.paymentId }))
+                    //     }
+                    // })
                 }
             } else {
-                console.error('Failed to create subscription:', response.statusText);
+                console.error('Failed to create subscription:', error);
             }
 
         } catch (error) {

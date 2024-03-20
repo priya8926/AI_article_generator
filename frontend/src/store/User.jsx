@@ -59,8 +59,8 @@ export const FormProvider = ({ children }) => {
                     Authorization: AuthenticationToken,
                 }
             })
+            const data = await response.json();
             if (response.ok) {
-                const data = await response.json();
                 console.log("logged in user data", data.userData)
                 setUser(data.userData)
                 console.log("email", data.userData.email)

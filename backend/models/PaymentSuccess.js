@@ -19,6 +19,18 @@ const paymentSchema = new mongoose.Schema({
         require: true,
         unique: true
     },
+    razorpay_order_id: {
+        type: String,
+        require: true
+    },
+    razorpay_payment_id: {
+        type: String,
+        require: true
+    },
+    razorpay_signature: {
+        type: String,
+        require: true
+    },
     createdAt: {
         type: String,
         default: () => new Date().toLocaleDateString('en-IN', {

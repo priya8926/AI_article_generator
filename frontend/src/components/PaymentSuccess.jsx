@@ -12,44 +12,23 @@ function PaymentSuccess() {
 
     const subscription = async () => {
         try {
-            const response = await fetch(`http://localhost:8083/api/subscription`, {
+            const response = await fetch('http://localhost:8083/api/subscription', {
                 method: "POST",
                 headers: {
-                    Authorization: AuthenticationToken,
-                    'Content-Type': 'application/json'
+                    Authorization : AuthenticationToken,
+                    'Content-type' : 'application/json'
                 },
                 body: JSON.stringify({ selectedAmount, referenceNo })
-            })
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Subscription saved:", data);
-
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const createSubscription = async () => {
-        try {
-            const response = await fetch('http://localhost:8083/api/createSubscription', {
-                method: 'POST',
-                headers: {
-                    Authorization: AuthenticationToken,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ selectedAmount })
             });
-            if (response.ok) {
-                const data = await response.json()
-                console.log("subscription created 111111111111111111", data)
+            if(response.ok){
+                console.log(await response.json(),"zzzzzzzz");
             }
         } catch (error) {
             console.log(error)
         }
     }
     useEffect(() => {
-        createSubscription()
-        subscription();
+        subscription()
     }, [])
     return (
         <>
