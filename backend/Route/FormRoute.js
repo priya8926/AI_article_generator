@@ -76,7 +76,7 @@ FormRoute.route('/getCategory').get(UserMiddleware, async (req, res) => {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
-        const useArticle = await article.find({ userId: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1 }).sort({ _id: -1 })
+        const useArticle = await article.find({ userId: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1 , title:1 , content:1 }).sort({ _id: -1 } )
 
         if (!useArticle || useArticle.length === 0) {
             return res.status(404).json({ message: "No category found for this user." });

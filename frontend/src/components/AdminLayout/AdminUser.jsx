@@ -20,7 +20,7 @@ function AdminUser() {
                 const data = await response.json();
                 console.log(data)
                 setUsers(data);
-                data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             }
         } catch (error) {
             console.log("Error: " + error);

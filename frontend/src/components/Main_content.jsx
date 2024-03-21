@@ -23,7 +23,7 @@ function MainContent() {
     const [promptInput, setPromptInput] = useState("")
     const [clickCount, setClickCount] = useState(0)
     const navigate = useNavigate()
-    
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setSelectedValues(prevState => ({
@@ -56,10 +56,17 @@ function MainContent() {
             const result = await model.generateContent(prompt)
             const response = result.response;
             const text = response.text();
-            // console.log("text", text)
+
+            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const formattedWithPointer = formattedText.replace(/^\*/gm, '•');
+
+            const lines = text.trim().split('\n');
+            const title = lines[0].replace(/^\*\*/, '').replace(/\*\*$/, '');
+
             console.log("passed prompt :  ", prompt)
-            console.log(" response ", response)
-            setContent(text)
+            console.log(" response ", formattedText)
+            setTitle(title)
+            setContent(formattedWithPointer)
             setLoading(false)
 
         } catch (error) {
@@ -86,7 +93,7 @@ function MainContent() {
         }
         const getLanguage = async () => {
             try {
-                const response = await fetch('http://localhost:8083/api/admin/language',{
+                const response = await fetch('http://localhost:8083/api/admin/language', {
                     headers: {
                         Authorization: AuthenticationToken
                     }
@@ -99,14 +106,14 @@ function MainContent() {
                 console.log(error)
             }
         }
-        const getLength = async()=>{
+        const getLength = async () => {
             try {
-                const response = await fetch(`http://localhost:8083/api/admin/length`,{
+                const response = await fetch(`http://localhost:8083/api/admin/length`, {
                     headers: {
                         Authorization: AuthenticationToken
                     }
                 })
-                if(response.ok){
+                if (response.ok) {
                     const data = await response.json()
                     setLength(data)
                 }
@@ -177,7 +184,7 @@ function MainContent() {
             if (content.length > 0) {
                 const save = window.confirm("Do you want to save the article?")
                 if (save) {
-                    const contentResponse = await fetch(`http://localhost:8083/api/category`,{
+                    const contentResponse = await fetch(`http://localhost:8083/api/category`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -209,7 +216,7 @@ function MainContent() {
         if (isLoggedIn === false) {
             navigate("/")
         }
-    },[])
+    }, [])
 
     return (
         <>
@@ -269,7 +276,7 @@ function MainContent() {
                         </label>
                         <span className="dropdown">
                             <select className="btn btn-primary selection" name="language" value={selectedValues.language} onChange={handleInputChange} >
-                            <option value="">Select Language</option>
+                                <option value="">Select Language</option>
                                 {
                                     language.map(curData => (
                                         <option key={curData._id} value={curData.language}>{curData.language}</option>
@@ -286,7 +293,7 @@ function MainContent() {
                             <select className="btn btn-primary selection" name="length" value={selectedValues.length} onChange={handleInputChange} >
                                 <option value="">Select Length of the article</option>
                                 {
-                                    length.map(curData =>(
+                                    length.map(curData => (
                                         <option key={curData._id} value={curData.length}>{curData.length}</option>
                                     ))
                                 }
@@ -312,7 +319,7 @@ function MainContent() {
                                 Search
                             </button>
                         )}
-                    <NavLink to='/history'><button className="btn btn-primary mx-3">History</button></NavLink>
+                        <NavLink to='/history'><button className="btn btn-primary mx-3">History</button></NavLink>
                     </div>
                     {/* <div>
                         <p >You searched the article for {clickCount} times</p>
@@ -322,12 +329,12 @@ function MainContent() {
                 </form>
 
             </section>
-            <div className=" my-5">
+            <div className=" my-5" >
                 <div className='text-center'>
                     <div className="container px-5">
                         <div className="card ">
                             <div className="card-header text-center">
-                                {`title of your article ${title}`}
+                                {!title ? `Title of your article` : title}
                             </div>
                             <div className="card-body">
                                 {/* <h5 className="card-title">Special title treatment</h5> */}
@@ -336,7 +343,8 @@ function MainContent() {
                                         <div></div>
                                     ) : (
                                         <div className="content">
-                                            {loading ? <Loading /> : content}
+                                            {loading ? <Loading /> :
+                                                <div style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: content }} />}
                                         </div>
                                     )}
                                 </div>
@@ -350,7 +358,7 @@ function MainContent() {
                     </div>
                 </div>
             </div>
-                                   
+
         </>
     )
 }

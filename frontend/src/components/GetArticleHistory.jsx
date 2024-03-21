@@ -13,14 +13,14 @@ function GetArticleHistory() {
                             <>
                                 <h5 className="card-title">title:{title}</h5>
                                 <p className="card-text">
-                                    content:{content}
+                                    <h5>content:</h5> <div style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: content }} />
                                 </p>
                             </>
                         ) :
                             <>
-                                    <div className='d-flex justify-content-center align-items-center mt-5 mb-5'>
-                                        <h6>Article not available!!</h6>
-                                    </div>
+                                <div className='d-flex justify-content-center align-items-center mt-5 mb-5'>
+                                    <h6>Article not available!!</h6>
+                                </div>
                             </>}<br />
                         <div className='text-center'>
 

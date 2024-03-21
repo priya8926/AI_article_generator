@@ -89,8 +89,8 @@ function History() {
                                 <th>language </th>
                                 <th>length </th>
                                 <th>Searched text</th>
-                                <th>Show</th>
-                                <th>Delete</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody className='history-tbody '>
@@ -99,16 +99,16 @@ function History() {
                                     return (
                                         <>
                                             <tr key={index}>
-                                                <td>{curData.category}</td>
+                                                <td className='w-25'>{curData.category}</td>
                                                 <td>{curData.language}</td>
                                                 <td>{curData.length} </td>
-                                                <td>{curData.promptInput} </td>
+                                                <td className='w-25'>{curData.promptInput} </td>
                                                 <td >
-                                                        <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}><i className="fa-solid fa-eye"></i></Link>
-                                               
+                                                    {curData.content ? <Link to={`/getarticle/${curData._id}`} onClick={() => showArticle(curData._id)}>show</Link>
+                                                        : "N/A"}
                                                 </td>
                                                 <td >
-                                                    <Link href="#" onClick={() => { deleteArticle(curData._id) }} ><i className="fa-solid fa-trash"></i> </Link>
+                                                    <Link href="#" onClick={() => { deleteArticle(curData._id) }} >delete</Link>
                                                 </td>
 
                                             </tr>
