@@ -58,13 +58,16 @@ function MainContent() {
             const text = response.text();
 
             const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const formattedWithPointer = formattedText.replace(/^\*/gm, '•');
+            const textlines = formattedText.split('\n');
+            const modifiedText = textlines.slice(1).join('\n');
+
+            const formattedWithPointer = modifiedText.replace(/^\*/gm, '•');
 
             const lines = text.trim().split('\n');
             const title = lines[0].replace(/^\*\*/, '').replace(/\*\*$/, '');
 
             console.log("passed prompt :  ", prompt)
-            console.log(" response ", formattedText)
+            console.log(" response ", modifiedText)
             setTitle(title)
             setContent(formattedWithPointer)
             setLoading(false)

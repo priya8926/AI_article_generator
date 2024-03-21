@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react';
 // import Loading from './Loading';
 import { NavLink } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Navbar() {
     const { user, isLoggedIn } = useForm()
+    const [expanded, setExpanded] = useState(false);
+
+    const handleToggle = () => {
+        setExpanded(!expanded);
+    };
     return (
         <>
             <div className="container-fluid sticky-top">
@@ -13,11 +18,15 @@ function Navbar() {
                         <NavLink to="#" className="navbar-brand">
                             <h1 className="text-white">AI<span className="text-dark"></span>Article</h1>
                         </NavLink>
-                        <button type="button" className="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
-                            data-bs-target="#navbarCollapse">
+                        <button
+                            type="button"
+                            className="navbar-toggler ms-auto me-0"
+                            onClick={handleToggle}
+                        >
                             <span className="navbar-toggler-icon"></span>
                         </button>
-                        <div className="collapse navbar-collapse" id="navbarCollapse">
+
+                        <div className={`collapse navbar-collapse ${expanded ? 'show' : ''}`} id="navbarCollapse">
                             {isLoggedIn ? (
                                 <>
                                     <div className="navbar-nav ms-auto">

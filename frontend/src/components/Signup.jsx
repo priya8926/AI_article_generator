@@ -42,6 +42,8 @@ function Signup() {
         })
         alert("Registration successful")
         navigate("/home")
+      }else{
+        alert("invalid credential")
       }
       console.log(response)
     } catch (error) {
