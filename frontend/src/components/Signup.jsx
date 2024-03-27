@@ -41,8 +41,14 @@ function Signup() {
           password: ""
         })
         alert("Registration successful")
+        const selectedAmount = localStorage.getItem('selectedAmount');
+        if (selectedAmount === '199') {
+          localStorage.removeItem('paymentId199');
+        } else if (selectedAmount === '499') {
+          localStorage.removeItem('paymentId499');
+        }
         navigate("/home")
-      }else{
+      } else {
         alert("invalid credential")
       }
       console.log(response)
@@ -56,7 +62,7 @@ function Signup() {
   }
   return (
     <>
-    <Hero/>
+      <Hero />
       <section>
         <main>
           <div className="section_registration mt-5 h-100">

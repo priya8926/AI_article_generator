@@ -76,7 +76,7 @@ FormRoute.route('/getCategory').get(UserMiddleware, async (req, res) => {
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
         }
-        const useArticle = await article.find({ userId: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1 , title:1 , content:1 }).sort({ _id: -1 } )
+        const useArticle = await article.find({ userId: req.user._id }, { category: 1, language: 1, length: 1, promptInput: 1, title: 1, content: 1 }).sort({ _id: -1 })
 
         if (!useArticle || useArticle.length === 0) {
             return res.status(404).json({ message: "No category found for this user." });
@@ -210,10 +210,10 @@ FormRoute.route("/search").post(UserMiddleware, async (req, res) => {
         const paymentID = req.body.paymentId;
 
         const searchLimits = { '199': 50, '499': Infinity };
-        let searchLimit = 20; 
+        let searchLimit = 20;
 
         if (userPlanId === process.env.plan_id199) {
-            searchLimit = searchLimits['199']; 
+            searchLimit = searchLimits['199'];
         } else if (userPlanId === process.env.plan_id499) {
             searchLimit = searchLimits['499'];
         }
@@ -287,7 +287,7 @@ FormRoute.route("/buySubscription").post(UserMiddleware, async (req, res) => {
         const user = await User.findById(req.user._id)
         const emailId = req.user.email
         const { selectedAmount, referenceNo } = req.body
-        
+
         const planId = selectedAmount === '199' ? process.env.plan_id199 : process.env.plan_id499
         console.log("buySubscription...", req.body)
 
@@ -296,14 +296,17 @@ FormRoute.route("/buySubscription").post(UserMiddleware, async (req, res) => {
             total_count: 12,
             customer_notify: 1
         })
-        user.subscription.id = subscription.id
-        user.subscription.status = subscription.status
-        user.planId = planId
-        await user.save();
-
         const Paymentdata = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
-
         const subData = await Subscription.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
+        
+        if (!Paymentdata.subscriptionId || !subData.subscriptionId) {
+            await User.remove({ subscription  });
+        } else {
+            user.subscription.id = subscription.id
+            user.subscription.status = subscription.status
+            user.planId = planId
+            await user.save();
+        }
 
         console.log("subscription", subscription);
         res.status(200).json({ success: true, subscription, Paymentdata: Paymentdata, subData: subData })

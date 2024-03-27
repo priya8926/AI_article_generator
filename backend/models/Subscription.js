@@ -8,7 +8,6 @@ const SubscriptionSchema = new mongoose.Schema({
     subscriptionId: {
         type: String,
         require: true,
-        unique: true
     },
     planId: {
         type: String,

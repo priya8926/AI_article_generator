@@ -76,58 +76,53 @@ function MainContent() {
             console.log("error occur while fetchig the api key", error)
         }
     }
-    useEffect(() => {
-        const getCategory = async () => {
-            try {
-                const response = await fetch(`http://localhost:8083/api/admin/category`, {
-                    headers: {
-                        Authorization: AuthenticationToken
-                    }
-                })
-                if (response.ok) {
-                    const data = await response.json()
-                    setCategories(data)
-                } else {
-                    console.error('Failed to fetch categories:', response.statusText);
+    const getCategory = async () => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/category`, {
+                headers: {
+                    Authorization: AuthenticationToken
                 }
-            } catch (error) {
-                console.log(error)
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setCategories(data)
+            } else {
+                console.error('Failed to fetch categories:', response.statusText);
             }
+        } catch (error) {
+            console.log(error)
         }
-        const getLanguage = async () => {
-            try {
-                const response = await fetch('http://localhost:8083/api/admin/language', {
-                    headers: {
-                        Authorization: AuthenticationToken
-                    }
-                })
-                if (response.ok) {
-                    const data = await response.json()
-                    setLanguage(data)
+    }
+    const getLanguage = async () => {
+        try {
+            const response = await fetch('http://localhost:8083/api/admin/language', {
+                headers: {
+                    Authorization: AuthenticationToken
                 }
-            } catch (error) {
-                console.log(error)
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setLanguage(data)
             }
+        } catch (error) {
+            console.log(error)
         }
-        const getLength = async () => {
-            try {
-                const response = await fetch(`http://localhost:8083/api/admin/length`, {
-                    headers: {
-                        Authorization: AuthenticationToken
-                    }
-                })
-                if (response.ok) {
-                    const data = await response.json()
-                    setLength(data)
+    }
+    const getLength = async () => {
+        try {
+            const response = await fetch(`http://localhost:8083/api/admin/length`, {
+                headers: {
+                    Authorization: AuthenticationToken
                 }
-            } catch (error) {
-                console.log(error)
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setLength(data)
             }
+        } catch (error) {
+            console.log(error)
         }
-        getCategory()
-        getLanguage()
-        getLength()
-    }, [])
+    }
     const handleClick = async (e) => {
         e.preventDefault()
         setTitle(selectedValues.category)
@@ -177,7 +172,6 @@ function MainContent() {
         catch (error) {
             console.log(error)
         }
-
     }
     const handleSave = async (event) => {
         event.preventDefault()
@@ -218,6 +212,11 @@ function MainContent() {
     useEffect(() => {
         if (isLoggedIn === false) {
             navigate("/")
+        }
+        if (isLoggedIn) {
+            getCategory();
+            getLanguage();
+            getLength();
         }
     }, [])
 
@@ -337,7 +336,7 @@ function MainContent() {
                     <div className="container px-5">
                         <div className="card ">
                             <div className="card-header text-center">
-                                {!title ? `Title of your article` : title}
+                                <h6>{!title ? 'Title of your article' : title}</h6>
                             </div>
                             <div className="card-body">
                                 {/* <h5 className="card-title">Special title treatment</h5> */}

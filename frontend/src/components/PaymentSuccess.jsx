@@ -10,12 +10,12 @@ function PaymentSuccess() {
     const selectedAmount = localStorage.getItem("selectedAmount");
     console.log("Selected Amount:", selectedAmount);
     const planId = selectedAmount === '199' ? "plan_NgG9DZEKg6JtL2" : "plan_Nnj0ceCKrBcnZI"
-  
+
     const removePaymentId = () => {
         if (referenceNo === localStorage.getItem('paymentId199')) {
             localStorage.removeItem('paymentId499');
-        } 
-         if (referenceNo === localStorage.getItem('paymentId499')) {
+        }
+        if (referenceNo === localStorage.getItem('paymentId499')) {
             localStorage.removeItem('paymentId199');
         };
     }

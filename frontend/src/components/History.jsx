@@ -72,6 +72,7 @@ function History() {
             console.log("Deleted article response", data)
             if (response.ok) {
                 getArticle()
+                alert("Article deleted")
             }
         } catch (error) {
             console.log(error)

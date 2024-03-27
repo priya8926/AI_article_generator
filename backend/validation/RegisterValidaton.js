@@ -16,7 +16,7 @@ const RegisterValidation = z.object({
         .string({ required_error: "Phone is required" })
         .trim()
         .min(10, "Phone number must be atleast 10 character")
-        .max(20, "Phone number must not be more than 20 character"),
+        .max(12, "Phone number must not be more than 12 character"),
     password: z
         .string({ required_error: "Passwrdd is required" })
         .min(7, "Password must be atleast 7 character")

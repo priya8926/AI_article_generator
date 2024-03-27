@@ -4,7 +4,6 @@ const paymentSchema = new mongoose.Schema({
     subscriptionId: {
         type: String,
         require: true,
-        unique: true
     },
     emailId: {
         type: String,
