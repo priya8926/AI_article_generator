@@ -12,11 +12,8 @@ const SubscriptionSchema = new mongoose.Schema({
     planId: {
         type: String,
     },
-    amount199: {
-        type: String,
-    },
-    amount499: {
-        type: String,
+    paymentId :{
+        type : String
     },
     createdAt: {
         type: String,

@@ -30,6 +30,7 @@ function Signup() {
         },
         body: JSON.stringify(user)
       })
+      
       if (response.ok) {
         const data = await response.json();
         console.log("response from registrain form", data)
@@ -41,12 +42,12 @@ function Signup() {
           password: ""
         })
         alert("Registration successful")
-        const selectedAmount = localStorage.getItem('selectedAmount');
-        if (selectedAmount === '199') {
-          localStorage.removeItem('paymentId199');
-        } else if (selectedAmount === '499') {
-          localStorage.removeItem('paymentId499');
-        }
+        // const selectedAmount = localStorage.getItem('selectedAmount');
+        // if (selectedAmount === '199') {
+        //   localStorage.removeItem('paymentId199');
+        // } else if (selectedAmount === '499') {
+        //   localStorage.removeItem('paymentId499');
+        // }
         navigate("/home")
       } else {
         alert("invalid credential")

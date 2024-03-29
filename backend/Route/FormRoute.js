@@ -10,12 +10,21 @@ const Razorpay = require("razorpay")
 const crypto = require('crypto');
 const Payment = require('../models/PaymentSuccess')
 const Subscription = require('../models/Subscription')
+const sendEmail = require('../auth/sendEmail')
 
 // Form category logic
 FormRoute.route("/category").post(UserMiddleware, async (req, res) => {
     try {
+        const user = req.user
         if (!req.user) {
             return res.status(401).json({ message: "User not authenticated." });
+        }
+
+        if (!user.subscription) {
+            if (selectedAmount === '199') {
+                localStorage.removeItem("paymentId199")
+            }
+            localStorage.removeItem("paymentId499")
         }
         const data = req.body
         console.log(data)
@@ -188,15 +197,50 @@ FormRoute.route("/login").post(async (req, res) => {
         console.log(error)
     }
 })
+//forgot pasword
+FormRoute.route("/password/forgot").post(async(req,res) =>{
+    try {
+        const user = await User.findOne({email : req.body.email})
+
+        if(!user){
+            res.status(404).json({message : "user not found"})
+        }
+        const resetToken = user.getResetPassToken()
+        await user.save({validateBeforeSave: false});
+
+        const resetPasswordUrl =  `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}`
+        const message = `Your password reset token is :- \n\n ${resetPasswordUrl} /n/nIf you have not requested for this 
+        email then ignore it `
+
+        // send the url to user's email id defined in user model
+         try {
+            await sendEmail({
+                email : user.email,
+                subject : "Ai article generator reset password",
+                message,
+            }),
+            res.status(200).json({success : true , message : "email sent successfully"})
+         } catch (error) {
+            user.resetPasswordToken = undefined
+            user.resetPasswordExpire = undefined
+            await user.save({validateBeforeSave:false})
+            res.status(500).json({success : false , error})
+         }
+    } catch (error) {
+        console.log(error)
+    }
+})
+// reset password token
+FormRoute.route('/password/reset/:token').put(async (req, res) => {
+
+})
 // get logged in user data
 FormRoute.route("/user").get(UserMiddleware, async (req, res) => {
     try {
         const userData = req.user;
-
-        console.log("user data ", userData)
-
+        console.log("user data", userData) 
         res.status(200).json({ userData })
-        // res.status(200).json({msg : "hii user"})
+
     } catch (error) {
         console.log("error fetching user data ", error)
         res.status(500).json({ error: "Internal server error" });
@@ -298,9 +342,9 @@ FormRoute.route("/buySubscription").post(UserMiddleware, async (req, res) => {
         })
         const Paymentdata = await Payment.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
         const subData = await Subscription.create({ emailId, subscriptionId: subscription.id, planId: subscription.plan_id, paymentId: referenceNo })
-        
+
         if (!Paymentdata.subscriptionId || !subData.subscriptionId) {
-            await User.remove({ subscription  });
+            await User.remove({ subscription });
         } else {
             user.subscription.id = subscription.id
             user.subscription.status = subscription.status

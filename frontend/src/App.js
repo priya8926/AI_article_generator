@@ -26,6 +26,8 @@ import LengthLayout from './components/AdminLayout/LengthLayout';
 import AdminContact from './components/AdminLayout/AdminContact';
 import AdminSubscription from './components/AdminLayout/AdminSubscription';
 import { useForm } from './store/User';
+import Termsandcondtions from './components/Termsandcondtions'
+import Carreer from './components/Carreer';
 // import Faq from './components/Faq';
 
 function App() {
@@ -47,6 +49,8 @@ function App() {
         <Route path='/services' element={<Service />} />
         {/* <Route path='/faqs' element={<Faq/>} /> */}
         <Route path='/paymentsuccess' element={<PaymentSuccess />} />
+        <Route path='/termsandcondtions' element={<Termsandcondtions />} />
+        <Route path='/career' element={<Carreer />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='*' element={<PageNotFound />} />
 

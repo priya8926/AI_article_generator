@@ -3,12 +3,35 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User'
 
 function Subscription() {
-    const { isLoggedIn, user, paymentId, setPaymentId, AuthenticationToken } = useForm()
+    const { isLoggedIn, user, paymentId, setPaymentId ,AuthenticationToken} = useForm()
     const Navigate = useNavigate();
+    const[planId199 , setPlanId199] = useState()
+    const[planId499 , setPlanId499] = useState()
+
+    const userPlanId = async()=>{
+        const response = await fetch("http://localhost:8083/api/user",{
+            method: "GET",
+            headers: {
+                Authorization : AuthenticationToken,
+                "Content-Type": "application/json",
+            },
+        })
+        if(response.ok){
+            const data = await response.json()
+            console.log("user's details... " , data.userData)
+            if(data.userData.planId === "plan_Nnj0ceCKrBcnZI"){
+                setPlanId499(data.userData.planId)
+            }else{
+                setPlanId199(data.userData.planId)
+            }
+        }
+    }
+    
     useEffect(() => {
         if (isLoggedIn === false) {
             Navigate('/')
         }
+        userPlanId()
     }, [isLoggedIn])
     const handleBtnClick = async (amount) => {
         try {
@@ -99,16 +122,19 @@ function Subscription() {
                                         <ul>
                                             <li>50 Article Generation: Subscribers can generate 50 articles without any restrictions on length or frequency.</li>
                                             <li>Customization Options: Access to advanced customization options for specifying parameters such as topic, length, tone, and style for each article.</li>
-                                            <li>Enhanced Content Quality: Premium AI models and advanced language processing algorithms ensure articles of exceptional quality and relevance.</li>
+                                            <li>Enhanced Content Quality: Premium AI models and advanced language processing algorithms ensure articles of exceptional quality and relevance.
+                                            </li>
                                         </ul>
                                     </p>
                                     <div>
                                         <NavLink >
-                                            <button className="btn btn-primary upgrade-btn  mx-5 " onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                            <button className="btn btn-primary upgrade-btn  mx-5 " onClick={(event) => handleBtnClick(199, event)} disabled={planId199}> {planId199 ? 'Your Current Plan' : 'Upgrade'}</button>
                                         </NavLink>
+                                        {/* <NavLink >
+                                            <button className="btn btn-primary upgrade-btn  mx-5 " onClick={(event) => handleBtnClick(199, event)} disabled={paymentId['199']}> {paymentId['199'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                        </NavLink> */}
                                     </div>
                                 </div>
-
                             </div>
                             <div className="col-lg-4 col-md-6 col-sm-12 wow fadeIn" data-wow-delay="0.5s">
                                 <div className="service-item d-flex flex-column justify-content-center text-start rounded "  >
@@ -122,8 +148,11 @@ function Subscription() {
                                     </p>
                                     <div>
                                         <NavLink  >
-                                            <button className="btn btn-primary upgrade-btn mx-5 " onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                            <button className="btn btn-primary upgrade-btn mx-5 " onClick={(event) => handleBtnClick(499, event)} disabled={planId499}> {planId499 ? 'Your Current Plan' : 'Upgrade'}</button>
                                         </NavLink>
+                                        {/* <NavLink  >
+                                            <button className="btn btn-primary upgrade-btn mx-5 " onClick={(event) => handleBtnClick(499, event)} disabled={paymentId['499']}> {paymentId['499'] ? 'Your Current Plan' : 'Upgrade'}</button>
+                                        </NavLink> */}
                                     </div>
                                 </div>
 

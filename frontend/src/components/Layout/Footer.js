@@ -66,10 +66,10 @@ function Footer() {
               <NavLink className="btn btn-link" to="">
                 Privacy Policy
               </NavLink>
-              <NavLink className="btn btn-link" to="">
+              <NavLink className="btn btn-link" to="/termsandcondtions">
                 Terms &amp; Condition
               </NavLink>
-              <NavLink className="btn btn-link" to="">
+              <NavLink className="btn btn-link" to="/career">
                 Career
               </NavLink>
             </div>
@@ -99,14 +99,6 @@ function Footer() {
                   AIArticle
                 </NavLink>
                 , All Right Reserved.
-                Designed By
-                <NavLink className="border-bottom" to="https://htmlcodex.com">
-                  HTML Codex
-                </NavLink>
-                Distributed By
-                <NavLink className="border-bottom" to="https://themewagon.com">
-                  ThemeWagon
-                </NavLink>
               </div>
               <div className="col-md-6 text-center text-md-end">
                 <div className="footer-menu">
@@ -118,7 +110,7 @@ function Footer() {
             </div>
           </div>
         </div>
-      </div >
+      </div>
 
     </>
   )

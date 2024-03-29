@@ -31,12 +31,12 @@ export const FormProvider = ({ children }) => {
             if (amount === "199") {
                 localStorage.setItem("paymentId199", referenceNo);
                 setPaymentId(prev => ({ ...prev, '199': referenceNo }));
+
             } else if (amount === "499") {
                 localStorage.setItem("paymentId499", referenceNo);
                 setPaymentId(prev => ({ ...prev, '499': referenceNo }));
             }
         }
-        
     }, [referenceNo])
 
     let isLoggedIn = !!token // true if token exixts
@@ -65,6 +65,10 @@ export const FormProvider = ({ children }) => {
                 console.log("logged in user data", data.userData)
                 setUser(data.userData)
                 console.log("email", data.userData.email)
+                if (!data.userData.subscription) {
+                        localStorage.removeItem("paymentId199", referenceNo);
+                        localStorage.removeItem("paymentId499", referenceNo);
+                    }
             }
         } catch (error) {
             console.log(error, "error fetching user data")

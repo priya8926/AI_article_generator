@@ -1,6 +1,8 @@
 const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const validator = require("validator")
+const crypto = require("crypto")
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
@@ -12,6 +14,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your email"],
     unique: true,
+    validate: [validator.isEmail, 'Please provide a valid Email address'],
   },
   phone: {
     type: String,
@@ -27,12 +30,12 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  planId:{
-    type :String,
+  planId: {
+    type: String,
   },
   subscription: {
     id: String,
-    status : String
+    status: String
   },
   isAdmin: {
     type: Boolean,
@@ -41,17 +44,19 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: String,
     default: () => new Date().toLocaleDateString('en-IN', {
-        weekday: 'short',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-        timeZone: 'Asia/Kolkata',
+      weekday: 'short',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
+      timeZone: 'Asia/Kolkata',
     }),
-}
+  },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 // Middleware to hash the password before saving
 userSchema.pre("save", async function (next) {
@@ -95,6 +100,22 @@ userSchema.methods.generateToken = function () {
     console.log("token generation error", error)
   }
 }
+//generate reset password token
+userSchema.methods.getResetPassToken =  async function() {
+  try {
+    // generating token
+    let resetToken = crypto.randomBytes(20).toString('hex');
 
+    //hashing and adding reserpassword to userschema
+    this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    this.resetPasswordExpire = Date.now() + 15 * 60 * 1000
+
+    return resetToken;
+
+  } catch (error) {
+    console.log("error creating reset password token")
+  }
+}
 const User = mongoose.model("User", userSchema)
 module.exports = User;

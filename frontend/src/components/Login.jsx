@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {useNavigate } from 'react-router-dom'
+import {NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../store/User';
 import Hero from './Layout/Hero'
 
@@ -72,9 +72,9 @@ function Login() {
                                             </span>
                                         </p>
                                     </div>
+                                    <NavLink to="" className="d-flex"><p>Forgot password?</p></NavLink>
                                     <div className='d-flex'>
                                         <button type='submit' className='btn btn-primary'>Login Now</button>
-
                                     </div>
                                 </form>
                             </div>
